@@ -525,13 +525,29 @@
                 'headline' => 'Verify what exists, where it exists',
                 'citation' => null,
                 'subheading' => 'Authenticated Evidence for Field Operations & Assets',
-                'body' => 'From proof of delivery to car rental damage inspection to property listings — confirm field documentation with timestamped, geolocated photography that can\'t be recycled or manipulated.',
+                'body' => 'From proof of delivery to car rental damage inspection to warehouse inventory checks — confirm field documentation with timestamped, geolocated photography that can\'t be recycled or manipulated.',
                 'bullets' => [
                     'Timestamped, geolocated asset photography',
                     'Photo manipulation and staging detection',
                 ],
                 'image' => 'images/mockups/asset-warehouse.webp?v=2',
                 'imageAlt' => 'Asset warehouse inventory verification',
+            ],
+            [
+                'id' => 'property',
+                'label' => 'Property Inspections',
+                'icon' => 'home',
+                'headline' => 'Streamlining Remote Property Inspections',
+                'citation' => null,
+                'subheading' => 'Protect Your Rental Investment and Prevent Deposit Fraud',
+                'body' => 'Transition from time-consuming manual site visits to secure, remote condition verification. PixaProof empowers property owners to verify the exact state of their rentals from the comfort of home. Ensure tenants leave the property clean and undamaged, eliminating the risk of renters submitting old or AI-altered photos to falsely claim their full security deposit.',
+                'bullets' => [
+                    'Capture property and furniture condition using mathematically authenticated timestamps and unalterable GPS coordinates.',
+                    'Require in-the-moment photography to completely block the use of older images, recycled camera-roll shots, or AI-edited deepfakes.',
+                    'Return tenant deposits with complete peace of mind, knowing your physical property and assets are genuinely intact.',
+                ],
+                'image' => 'images/mockups/property-inspection.webp',
+                'imageAlt' => 'Remote rental property inspection with authenticated live capture',
             ],
         ];
     @endphp
@@ -627,7 +643,7 @@
 
         {{-- And more --}}
         <p class="mt-8 text-center text-sm text-neutral-500">
-            Also used for: marketplace item verification, property listings, vehicle ownership, and site inspections.
+            Also used for: marketplace item verification, vehicle ownership, and site inspections.
         </p>
     </x-section>
 

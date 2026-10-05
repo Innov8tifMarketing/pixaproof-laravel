@@ -14,6 +14,11 @@ class HomePageTest extends TestCase
             ->assertSee('Loan Draw Inspections')
             ->assertSee('Insurance Claims')
             ->assertSee('Field Operations &amp; Assets', false)
+            ->assertSee('Property Inspections')
+            ->assertSee('Protect Your Rental Investment and Prevent Deposit Fraud')
+            ->assertSee('images/mockups/property-inspection.webp', false)
+            ->assertSee('warehouse inventory checks')
+            ->assertDontSee('property listings')
             ->assertSee("activeTab: 'loan-draw'", false)
             ->assertDontSee('KYC Onboarding')
             ->assertDontSee('kyc-id-document')
@@ -26,7 +31,7 @@ class HomePageTest extends TestCase
     {
         $html = $this->get('/')->assertOk()->getContent();
 
-        foreach (['loan-draw', 'insurance', 'asset'] as $id) {
+        foreach (['loan-draw', 'insurance', 'asset', 'property'] as $id) {
             $this->assertSame(1, substr_count($html, "activeTab = '{$id}'"), "Desktop tab button for {$id}");
             $this->assertSame(1, substr_count($html, "activeTab = activeTab === '{$id}' ? '' : '{$id}'"), "Mobile accordion trigger for {$id}");
             $this->assertSame(2, substr_count($html, "x-show=\"activeTab === '{$id}'\""), "Mobile and desktop panels for {$id}");
