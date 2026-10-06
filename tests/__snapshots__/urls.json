@@ -307,12 +307,12 @@
             "status": 404,
             "head": {
                 "title": "Page not found",
-                "description": "PixaProof verifies image authenticity at the point of capture — stopping fraudulent photos, AI-generated documents, and tampered evidence before they enter…",
+                "description": "PixaProof verifies images at the point of capture, stopping fraudulent photos, AI-generated documents and tampered evidence before they enter your workflow.",
                 "canonical": null,
                 "robots": "noindex, follow",
                 "meta": {
                     "og:description": [
-                        "PixaProof verifies image authenticity at the point of capture — stopping fraudulent photos, AI-generated documents, and tampered evidence before they enter…"
+                        "PixaProof verifies images at the point of capture, stopping fraudulent photos, AI-generated documents and tampered evidence before they enter your workflow."
                     ],
                     "og:image": [
                         "{app_url}/img/asset/YXNzZXRzL29nLWltYWdlLndlYnA/og-image.webp?w=1200&h=630&fit=crop&fm=jpg&q=85&s={signature}"
@@ -342,7 +342,7 @@
                         "summary_large_image"
                     ],
                     "twitter:description": [
-                        "PixaProof verifies image authenticity at the point of capture — stopping fraudulent photos, AI-generated documents, and tampered evidence before they enter…"
+                        "PixaProof verifies images at the point of capture, stopping fraudulent photos, AI-generated documents and tampered evidence before they enter your workflow."
                     ],
                     "twitter:image": [
                         "{app_url}/img/asset/YXNzZXRzL29nLWltYWdlLndlYnA/og-image.webp?w=1200&h=630&fit=crop&fm=jpg&q=85&s={signature}"
@@ -455,7 +455,7 @@
         "GET /llms.txt": {
             "status": 200,
             "content_type": "text/plain; charset=UTF-8",
-            "body": "# Pixaproof\n\n> PixaProof verifies image authenticity at the point of capture — stopping fraudulent photos, AI-generated documents, and tampered evidence before they enter your workflow.\n\n## Pages\n\n- [Contact]({app_url}/contact): Get in touch with the PixaProof team. Email our sales team to book a demo, discuss your use case, or explore integration options.\n- [Home]({app_url}): PixaProof AI-powered verification detects image tampering in seconds—protecting your business from fraudulent claims, fake documents, and compliance failures.\n- [Privacy Policy]({app_url}/privacy): PixaProof privacy policy — how we collect, use, and protect your data when using our image verification platform.\n"
+            "body": "# Pixaproof\n\n> PixaProof verifies images at the point of capture, stopping fraudulent photos, AI-generated documents and tampered evidence before they enter your workflow.\n\n## Pages\n\n- [Contact]({app_url}/contact): Get in touch with the PixaProof team. Email our sales team to book a demo, discuss your use case, or explore integration options.\n- [Home]({app_url}): PixaProof AI-powered verification detects image tampering in seconds—protecting your business from fraudulent claims, fake documents, and compliance failures.\n- [Privacy Policy]({app_url}/privacy): PixaProof privacy policy — how we collect, use, and protect your data when using our image verification platform.\n"
         },
         "POST /csp-report": {
             "status": 204

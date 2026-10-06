@@ -133,7 +133,7 @@ class ImportStatamicContent extends Command
      */
     private const array SEO_BRAND = [
         'title_site_name' => false,
-        'default_description' => 'PixaProof verifies image authenticity at the point of capture — stopping fraudulent photos, AI-generated documents, and tampered evidence before they enter your workflow.',
+        'default_description' => 'PixaProof verifies images at the point of capture, stopping fraudulent photos, AI-generated documents and tampered evidence before they enter your workflow.',
         'default_image' => 'og-image.webp',
         'favicon' => 'pixaproof-icon.png',
         'ga4_id' => 'G-VKS70BYBWN',
