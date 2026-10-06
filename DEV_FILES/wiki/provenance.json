@@ -1098,6 +1098,12 @@
   "reason": ""
  },
  {
+  "path": "deploy/server/etc/supervisor/conf.d/pixaproof-prod-worker.conf",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
   "path": "deploy/server/home/deployer/pixaproof-laravel/Caddyfile",
   "origin": "C",
   "status": "custom",

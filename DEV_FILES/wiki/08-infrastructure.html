@@ -176,6 +176,7 @@
 <table>
 <tr><th>Piece</th><th>Where</th><th>Notes</th></tr>
 <tr><td>Caddy vhost</td><td><a class="src" href="../../deploy/server/home/deployer/pixaproof-laravel/Caddyfile"><code>deploy/server/home/deployer/pixaproof-laravel/Caddyfile</code></a></td><td>Reference copy; <code>dep server:diff prod</code> reports drift. <code>handle_errors</code> only covers Caddy's own errors, so Statamic's 404 page shows</td></tr>
+<tr><td>Queue worker</td><td><a class="src" href="../../deploy/server/etc/supervisor/conf.d/pixaproof-prod-worker.conf"><code>deploy/server/etc/supervisor/conf.d/pixaproof-prod-worker.conf</code></a></td><td>Reference copy of <code>/etc/supervisor/conf.d/pixaproof-prod-worker.conf</code>; runs as <code>www-data</code>, logs to <code>log/worker.log</code></td></tr>
 <tr><td>Scheduler cron</td><td><a class="src" href="../../deploy/server/etc/cron.d/pixaproof-laravel"><code>deploy/server/etc/cron.d/pixaproof-laravel</code></a></td><td>Reference copy; install by hand</td></tr>
 <tr><td>Backups</td><td><code>db:backup</code>, <code>backup:offsite</code></td><td>SQLite + media + <code>.env</code> to Backblaze B2 with rclone</td></tr>
 <tr><td>PHP extensions</td><td>apt (ondrej/sury)</td><td><code>php8.4-imagick</code> (ImageMagick 6.9) for the toolkit's generated share cards; installed 2026-10-06</td></tr>

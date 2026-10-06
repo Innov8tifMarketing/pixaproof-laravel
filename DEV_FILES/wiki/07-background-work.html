@@ -36,7 +36,7 @@
 </div>
 
 <h2>Queue</h2>
-<p>The queue is Laravel's database driver <span class="prov laravel" title="Laravel">Laravel</span>, run in production by a Supervisor worker that every deploy restarts (<code>queue:restart</code> in <a class="src" href="../../deploy.php"><code>deploy.php</code></a>). Statamic queues some listeners, including updating its search index when an entry is saved. In tests the queue is <code>sync</code>, so those listeners run inline. That is how the Eloquent-driver cache bug in <a href="03-content-seo.html">page 3</a> surfaced.</p>
+<p>The queue is Laravel's database driver <span class="prov laravel" title="Laravel">Laravel</span>, run in production by the Supervisor program <code>pixaproof-prod-worker</code> (as <code>www-data</code>, like PHP-FPM; reference copy <a class="src" href="../../deploy/server/etc/supervisor/conf.d/pixaproof-prod-worker.conf"><code>deploy/server/etc/supervisor/conf.d/pixaproof-prod-worker.conf</code></a>), which every deploy restarts (<code>queue:restart</code> in <a class="src" href="../../deploy.php"><code>deploy.php</code></a>). Until 2026-10-07 the site had no worker; nothing was queued before Statamic. Statamic queues some listeners, including updating its search index when an entry is saved. In tests the queue is <code>sync</code>, so those listeners run inline. That is how the Eloquent-driver cache bug in <a href="03-content-seo.html">page 3</a> surfaced.</p>
 
 <h2>Scheduler</h2>
 <table>

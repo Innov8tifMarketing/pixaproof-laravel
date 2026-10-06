@@ -312,9 +312,12 @@ fast-forwarded to the branch and deployed to production.
   - sitemap.xml (3 URLs), robots.txt (`/cp/` disallow + `Sitemap:`), llms.txt, favicons and the
     manifest are served.
   - The 404 page, `/cp` login, enforced CSP + HSTS, and no report-only CSP on `/cp` are all correct.
+- **Queue worker added** (`/etc/supervisor/conf.d/pixaproof-prod-worker.conf`, copied from innov8tif's,
+  as `www-data`). The 17 pending jobs drained with 0 failures, and the worker log shows the cron's
+  `HandleEntrySchedule` being processed, which confirms the scheduler too. `dep queue:restart prod` now
+  restarts it.
+- **Production CP super user** created by the owner (1 super user).
 - **Open:**
-  - No queue worker exists for pixaproof (17 Statamic jobs pending).
-  - The production CP user (`php please make:user`) still needs to be created.
   - `POST /technology` now answers 419 (CSRF), not a redirect, consistent with the intended GET-only
     redirects.
 

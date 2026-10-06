@@ -136,6 +136,12 @@ dep list
 5. Maintenance mode ON → swap symlink → restart PHP-FPM → maintenance OFF → restart queue → refresh caches → warm Statamic's Stache
 6. HTTP health check (5 retries) → auto-rollback if it fails
 
+### Queue worker
+
+Supervisor runs `pixaproof-prod-worker` (`queue:work` as `www-data`); every deploy restarts it. Reference copy:
+[`deploy/server/etc/supervisor/conf.d/pixaproof-prod-worker.conf`](deploy/server/etc/supervisor/conf.d/pixaproof-prod-worker.conf).
+`dep queue:status prod` shows it.
+
 ### Scheduler
 
 Statamic's scheduled entries and the Marketing Toolkit's reports and Search Console import need Laravel's
