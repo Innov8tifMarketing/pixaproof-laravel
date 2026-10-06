@@ -11,8 +11,6 @@
     <!-- Fonts: Inter (via @fontsource) -->
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @livewireStyles
-    @livewireScripts
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}" />

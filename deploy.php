@@ -393,6 +393,17 @@ task('migrate:safe', function () {
     info('Migrations completed');
 });
 
+desc('Import the Statamic content on the first deploy (never overwrites control panel edits)');
+task('content:import', function () {
+    $output = run('cd {{release_path}} && {{bin/php}} artisan pixaproof:import-content --once 2>&1');
+    writeln($output);
+});
+
+desc('Warm the Stache (Statamic\'s flat-file index: blueprints, fieldsets)');
+task('statamic:stache:warm', function () {
+    run('cd {{release_path}} && {{bin/php}} please stache:warm');
+});
+
 desc('Restart PHP-FPM');
 task('php-fpm:restart', function () {
     $version = get('php_version', '8.4');
@@ -655,6 +666,7 @@ after('npm:build', 'db:ensure-sqlite');
 
 after('db:ensure-sqlite', 'db:backup');
 after('db:backup', 'migrate:safe');
+after('migrate:safe', 'content:import');
 
 before('deploy:symlink', 'artisan:down');
 
@@ -662,6 +674,7 @@ after('deploy:symlink', 'php-fpm:restart');
 after('deploy:symlink', 'artisan:up');
 after('deploy:symlink', 'queue:restart');
 after('deploy:symlink', 'artisan:cache:refresh');
+after('artisan:cache:refresh', 'statamic:stache:warm');
 
 after('artisan:storage:link', 'storage:link-custom');
 

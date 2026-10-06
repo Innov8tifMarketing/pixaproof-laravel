@@ -20,7 +20,7 @@ use Statamic\Facades\Site;
 use Statamic\Structures\CollectionStructure;
 use Statamic\Structures\Nav as StatamicNav;
 
-#[Signature('pixaproof:import-content')]
+#[Signature('pixaproof:import-content {--once : Do nothing if the pages collection exists, so edits made in the control panel are kept}')]
 #[Description('Create the Statamic content the Laravel site used to hard-code: pages, navigation, assets, SEO & brand values and redirects')]
 class ImportStatamicContent extends Command
 {
@@ -141,6 +141,12 @@ class ImportStatamicContent extends Command
 
     public function handle(): int
     {
+        if ($this->option('once') && Collection::findByHandle('pages')) {
+            $this->components->info('Content already imported; nothing to do.');
+
+            return self::SUCCESS;
+        }
+
         $this->importAssets();
         $entryIds = $this->importPages();
         $this->importNavigations($entryIds);

@@ -1,13 +1,11 @@
 import './bootstrap';
 
+import Alpine from 'alpinejs';
+import collapse from '@alpinejs/collapse';
+import intersect from '@alpinejs/intersect';
+
 // Motion animation library (motion.dev)
 import { animate, scroll, spring } from 'motion';
-
-// Alpine.js is included via Livewire 3, which bundles:
-// - @alpinejs/persist
-// - @alpinejs/intersect
-// - @alpinejs/collapse
-// - @alpinejs/focus
 
 // Expose Motion functions globally for Alpine.js integration
 window.Motion = {
@@ -374,17 +372,10 @@ document.addEventListener('DOMContentLoaded', () => {
     Motion.initScrubSection();
 });
 
-// Livewire session expiration handler
-document.addEventListener('livewire:init', () => {
-    Livewire.hook('request', ({ fail }) => {
-        fail(({ status, preventDefault }) => {
-            if (status === 419) {
-                preventDefault();
-                if (confirm('Your session has expired. Would you like to refresh the page?')) {
-                    window.location.reload();
-                }
-            }
-        });
-    });
-});
+// Alpine.js with the plugins the templates use (x-collapse, x-intersect).
+// Started last, so Alpine expressions can use window.Motion.
+Alpine.plugin(collapse);
+Alpine.plugin(intersect);
+window.Alpine = Alpine;
+Alpine.start();
 

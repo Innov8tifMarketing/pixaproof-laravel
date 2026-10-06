@@ -14,7 +14,6 @@
         "jotham-lec/statamic-marketing-toolkit": "^0.18.2",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
-        "livewire/livewire": "^3.7",
         "statamic/cms": "^6.35",
         "statamic/eloquent-driver": "^5.12"
     },
@@ -53,6 +52,7 @@
             "composer install",
             "./secrets-init",
             "@php artisan migrate --force",
+            "@php artisan pixaproof:import-content --once",
             "npm install",
             "npm run build"
         ],

@@ -112,6 +112,27 @@ class ImportStatamicContentTest extends TestCase
         $this->assertCount(2, Nav::all());
     }
 
+    public function test_once_imports_into_an_empty_site(): void
+    {
+        $this->artisan('pixaproof:import-content', ['--once' => true])->assertSuccessful();
+
+        $this->assertSame(3, Entry::whereCollection('pages')->count());
+    }
+
+    public function test_once_keeps_content_edited_after_the_first_import(): void
+    {
+        $this->artisan('pixaproof:import-content')->assertSuccessful();
+
+        $contact = Entry::query()->where('collection', 'pages')->where('slug', 'contact')->first();
+        $contact->set('title', 'Talk to us')->save();
+
+        $this->artisan('pixaproof:import-content', ['--once' => true])
+            ->expectsOutputToContain('nothing to do')
+            ->assertSuccessful();
+
+        $this->assertSame('Talk to us', Entry::find($contact->id())->get('title'));
+    }
+
     public function test_it_fails_when_a_redirect_row_is_rejected(): void
     {
         Redirect::query()->create(['source' => '/', 'target' => '/technology', 'status' => 301, 'active' => true]);

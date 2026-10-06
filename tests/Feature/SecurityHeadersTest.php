@@ -101,6 +101,8 @@ class SecurityHeadersTest extends TestCase
     #[DataProvider('pageProvider')]
     public function test_no_inline_script_or_style_is_rendered_without_the_nonce(string $path): void
     {
+        config(['seo.tracking.environments' => ['testing'], 'seo.tracking.gtm' => 'GTM-TEST123']);
+
         $response = $this->get($path);
         $html = $response->getContent();
 
@@ -110,10 +112,11 @@ class SecurityHeadersTest extends TestCase
 
         preg_match_all('/<(script|style)(?![^>]*\ssrc=)([^>]*)>/i', $html, $tags, PREG_SET_ORDER);
 
-        foreach ($tags as [$tag, $element, $attributes]) {
-            if (str_contains($attributes, 'type="application/ld+json"')) {
-                continue;
-            }
+        $executable = array_filter($tags, fn (array $tag) => ! str_contains($tag[2], 'type="application/ld+json"'));
+
+        $this->assertNotEmpty($executable, "Expected the tracking tags' inline scripts on {$path}.");
+
+        foreach ($executable as [$tag, $element, $attributes]) {
 
             $this->assertStringContainsString(
                 'nonce="'.$nonce.'"',

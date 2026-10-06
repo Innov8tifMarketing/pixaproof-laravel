@@ -1,0 +1,4 @@
+# Laravel scheduler for pixaproof.com. Runs Statamic's scheduled entries
+# (HandleEntrySchedule) and the Marketing Toolkit's scheduled reports and
+# Search Console import. Install by hand: see deploy/server/README.md.
+* * * * * deployer cd /home/deployer/pixaproof-laravel/current && php artisan schedule:run >> /dev/null 2>&1
