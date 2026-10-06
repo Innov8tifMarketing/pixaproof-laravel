@@ -29,7 +29,7 @@ host('prod')
     ->set('remote_user', 'deployer')
     ->setIdentityFile('~/.ssh/alicloud-innov8tif.pub')
     ->setSshArguments(['-o IdentitiesOnly=yes'])
-    ->set('deploy_path', '/home/deployer/pixaproof')
+    ->set('deploy_path', '/home/deployer/pixaproof-laravel')
     ->set('branch', 'main')
     ->set('labels', ['stage' => 'prod'])
     ->set('url', 'https://pixaproof.com');

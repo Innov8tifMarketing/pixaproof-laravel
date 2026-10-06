@@ -57,7 +57,7 @@ Deployment is driven by **[Deployer](https://deployer.org/)** via [`deploy.php`]
 | **Host** | `prod` (`47.237.191.213`) |
 | **Cloud Provider** | Alibaba Cloud (Singapore region) |
 | **Deploy User** | `deployer` |
-| **Deploy Path** | `/home/deployer/pixaproof` |
+| **Deploy Path** | `/home/deployer/pixaproof-laravel` |
 | **Branch** | `main` |
 | **Releases Kept** | 5 (auto-rotated) |
 
@@ -141,7 +141,7 @@ MAIL_HOST=smtp.example.com
 MAIL_FROM_ADDRESS=noreply@pixaproof.com
 ```
 
-The `.env` file lives on the server under `/home/deployer/pixaproof/shared/.env` and is symlinked into each release.
+The `.env` file lives on the server under `/home/deployer/pixaproof-laravel/shared/.env` and is symlinked into each release.
 
 ## License
 

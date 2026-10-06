@@ -1,13 +1,13 @@
 pixaproof.com {
   import security_headers
-  root * /home/deployer/pixaproof/current/public
+  root * /home/deployer/pixaproof-laravel/current/public
   file_server
   php_fastcgi * unix//run/php/php8.4-fpm.sock {
     resolve_root_symlink
   }
 
   log {
-    output file /home/deployer/pixaproof/log/access.log {
+    output file /home/deployer/pixaproof-laravel/log/access.log {
       # No 'mode' directive: it makes Caddy chmod() the file at startup, which
       # only succeeds if Caddy OWNS it. A log file created by anything else
       # (logrotate, a deploy, an admin) then aborts the ENTIRE config load and
