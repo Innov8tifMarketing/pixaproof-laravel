@@ -12,7 +12,10 @@
 /node_modules
 /public/build
 /public/hot
+/public/media
 /public/storage
+/public/vendor/statamic
+/public/vendor/statamic-marketing-toolkit
 /storage/*.key
 /storage/pail
 /vendor

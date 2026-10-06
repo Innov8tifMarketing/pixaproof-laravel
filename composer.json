@@ -11,9 +11,12 @@
     "require": {
         "php": "^8.4",
         "blade-ui-kit/blade-heroicons": "^2.6",
+        "jotham-lec/statamic-marketing-toolkit": "^0.18.2",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
-        "livewire/livewire": "^3.7"
+        "livewire/livewire": "^3.7",
+        "statamic/cms": "^6.35",
+        "statamic/eloquent-driver": "^5.12"
     },
     "require-dev": {
         "deployer/deployer": "^7.5",
@@ -43,6 +46,9 @@
         }
     },
     "scripts": {
+        "pre-update-cmd": [
+            "Statamic\\Console\\Composer\\Scripts::preUpdateCmd"
+        ],
         "setup": [
             "composer install",
             "./secrets-init",
@@ -64,7 +70,8 @@
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan statamic:install --ansi"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
