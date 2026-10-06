@@ -1,0 +1,43 @@
+<h1>9. Tests &amp; quality gates</h1>
+<p class="lede">About 70 PHPUnit tests in roughly 25 seconds. One test guards the whole public URL surface; the rest pin down specific promises (security headers, the import, the homepage's structure).</p>
+
+{{diagram:tests}}
+
+<h2>How tests get their content</h2>
+<p>[[tests/TestCase.php]] {{C}} on {{L}} uses <code>RefreshDatabase</code> with <code>$seed = true</code>. Laravel 13 migrates the in-memory SQLite database once per run, seeds it with [[database/seeders/DatabaseSeeder.php]] (which runs <code>pixaproof:import-content</code>), and wraps each test in a transaction that is rolled back. Before the database is refreshed the <code>media</code> disk is faked, so the import's image copies never touch <code>public/media</code>; the <code>csp</code> log channel is <code>null</code>, so test reports never reach <code>storage/logs</code>.</p>
+<p>[[tests/Feature/ImportStatamicContentTest.php]] needs an empty site, so its <code>setUp()</code> deletes the seeded content inside the test's transaction.</p>
+
+<h2>The URL snapshot</h2>
+<p>[[tests/Feature/Guard/UrlSnapshotTest.php]] requests every public URL (the 3 pages, a 404, all 22 legacy redirects, <code>sitemap.xml</code>, <code>robots.txt</code>, <code>llms.txt</code>, <code>POST /csp-report</code>) and records the status, the <code>Location</code>, and the head metadata: title, description, canonical, robots, every <code>og:</code>/<code>twitter:</code> tag and the decoded JSON-LD. It compares the result with [[tests/__snapshots__/urls.json]].</p>
+<ul>
+<li>Per-machine and per-request values are normalised: the app URL (<code>{app_url}</code>), CSP nonces, <code>?v=</code> hashes, Glide <code>s=</code> signatures (derived from <code>APP_KEY</code>) and sitemap dates. The order of llms.txt's list lines is sorted, because the toolkit orders pages saved in the same second arbitrarily.</li>
+<li>Indexing is switched on for the test (<code>noindex_outside_production</code> off), so the snapshot shows production's robots meta.</li>
+<li>For an <em>intended</em> change: <code>UPDATE_SNAPSHOTS=1 php artisan test --filter=UrlSnapshotTest</code>, then review the diff in git like code.</li>
+</ul>
+
+<h2>The other tests</h2>
+<table>
+<tr><th>File</th><th>Promise</th></tr>
+<tr><td>[[tests/Feature/SecurityHeadersTest.php]]</td><td>Headers on every page; nonces on every executable inline script (with tracking switched on); fresh nonce per request; no report-only policy on <code>/cp</code></td></tr>
+<tr><td>[[tests/Feature/CspReportRouteTest.php]]</td><td>The collector works without a session or CSRF token; the site's routes still have them</td></tr>
+<tr><td>[[tests/Feature/PublicRoutesTest.php]]</td><td>Pages render; legacy paths redirect, only for GET/HEAD; privacy shows its last-edited date</td></tr>
+<tr><td>[[tests/Feature/HomePageTest.php]], [[tests/Feature/HomepageComponentsTest.php]]</td><td>Homepage sections, anchors and components</td></tr>
+<tr><td>[[tests/Feature/ImportStatamicContentTest.php]]</td><td>The import creates, updates in place, honours <code>--once</code> and fails on a bad redirect row</td></tr>
+<tr><td>[[tests/Feature/DatabaseSchemaTest.php]]</td><td><code>leads</code> is gone; the Statamic and toolkit tables exist</td></tr>
+<tr><td>[[tests/Feature/ViteManifestSriTest.php]]</td><td>The built manifest carries correct integrity hashes</td></tr>
+</table>
+
+<h2>Gates</h2>
+<pre><code>php artisan test --compact
+vendor/bin/pint --test
+vendor/bin/phpstan --memory-limit=1G     # level 5; 128M crashes a worker
+php artisan sheath:lint                  # Blade lint
+npm run build</code></pre>
+
+<div class="box read">
+<ol>
+<li>[[tests/TestCase.php]]</li>
+<li>[[tests/Feature/Guard/UrlSnapshotTest.php]]</li>
+<li>[[phpunit.xml]] (the test environment: in-memory SQLite, serialising array cache)</li>
+</ol>
+</div>

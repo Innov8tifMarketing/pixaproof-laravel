@@ -1,0 +1,29 @@
+// The whole site on one page. Fill colour = provenance: red Laravel default,
+// purple Statamic default, blue addon, yellow written in this repo.
+digraph overview {
+  rankdir=LR;
+  graph [fontname="Helvetica", fontsize=11, nodesep=0.35, ranksep=0.5, bgcolor="transparent"];
+  node  [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled", fillcolor="#ffffff", color="#8a8a8a"];
+  edge  [fontname="Helvetica", fontsize=8, color="#6b6b6b"];
+
+  visitor [label="Visitor / crawler", shape=ellipse, fillcolor="#ffffff"];
+  editor  [label="Editor", shape=ellipse, fillcolor="#ffffff"];
+  caddy   [label="Caddy\n(TLS, static files)", fillcolor="#ffffff", URL="08-infrastructure.html"];
+  laravel [label="Laravel 13\nbootstrap/app.php", fillcolor="#fde2df", URL="01-request-lifecycle.html"];
+  headers [label="SecurityHeaders\n(CSP + nonce)", fillcolor="#fff1c7", URL="06-security.html"];
+  statamic [label="Statamic 6\nfront-end route + /cp", fillcolor="#ece4fb", URL="05-control-panel.html"];
+  toolkit [label="Marketing Toolkit\nmeta · JSON-LD · sitemap · robots\nfavicons · GA4 · redirects", fillcolor="#e0eefb", URL="03-content-seo.html"];
+  views   [label="Blade templates\nlayout · home · contact · default", fillcolor="#fff1c7", URL="02-frontend.html"];
+  db      [label="SQLite\ncontent (eloquent-driver) · users\nredirects · 404 log · queue", shape=cylinder, fillcolor="#e0eefb", URL="04-database.html"];
+  importer [label="pixaproof:import-content", fillcolor="#fff1c7", URL="03-content-seo.html"];
+  csp     [label="POST /csp-report\n→ csp log", fillcolor="#fff1c7", URL="06-security.html"];
+
+  visitor -> caddy -> laravel -> headers;
+  laravel -> statamic -> views;
+  statamic -> toolkit [label="tags in the layout"];
+  views -> toolkit [style=dashed, label="<s:seo:head />"];
+  statamic -> db; toolkit -> db;
+  editor -> statamic [label="/cp"];
+  importer -> db [label="first deploy"];
+  visitor -> csp [style=dashed, label="browser reports"];
+}

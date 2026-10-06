@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3. Content & SEO · pixaproof.com wiki</title>
+<link rel="stylesheet" href="assets/wiki.css">
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">pixaproof.com<br><small>codebase wiki</small></div>
+  <ol><li><a href="index.html">0. Start here</a></li><li><a href="00-provenance.html">0b. Stock vs custom</a></li><li><a href="01-request-lifecycle.html">1. A request, end to end</a></li><li><a href="02-frontend.html">2. Templates & frontend</a></li><li><a href="03-content-seo.html" class="current">3. Content & SEO</a></li><li><a href="04-database.html">4. Database</a></li><li><a href="05-control-panel.html">5. Control panel</a></li><li><a href="06-security.html">6. Security headers & CSP</a></li><li><a href="07-background-work.html">7. Commands, queue, scheduler</a></li><li><a href="08-infrastructure.html">8. Deployment & infrastructure</a></li><li><a href="09-testing-quality.html">9. Tests & quality gates</a></li><li><a href="10-whiteboard.html">10. Whiteboard defense</a></li></ol>
+  <p class="prov-legend"><span class="prov laravel">Laravel</span> framework default<br>
+  <span class="prov statamic">Statamic</span> Statamic default<br>
+  <span class="prov addon">Addon</span> a package we installed<br>
+  <span class="prov custom">Custom</span> written in this repo<br>
+  Diagram boxes use the same colours. <a href="00-provenance.html">Full map</a></p>
+  <p class="legend">Paths like <code>app/Http/Middleware/SecurityHeaders.php</code> are relative to the repo root.
+  Links open the file in your browser; <kbd>gf</kbd> on the path in your editor works too.</p>
+</nav>
+<main>
+<h1>3. Content &amp; SEO</h1>
+<p class="lede">Content lives in SQLite through Statamic's Eloquent driver; its shape lives in YAML blueprints in git. One command creates all of it. The Marketing Toolkit turns it into every SEO output the site has.</p>
+
+<figure class="diagram" id="fig-content-model"><svg style="max-width:min(100%, 856px)"
+ viewBox="0.00 0.00 642.00 338.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 334)">
+<title>content</title>
+<g id="clust1" class="cluster">
+<title>cluster_db</title>
+<path fill="#f3f6fb" stroke="#6b9fd6" d="M442,-8C442,-8 621.5,-8 621.5,-8 627.5,-8 633.5,-14 633.5,-20 633.5,-20 633.5,-310 633.5,-310 633.5,-316 627.5,-322 621.5,-322 621.5,-322 442,-322 442,-322 436,-322 430,-316 430,-310 430,-310 430,-20 430,-20 430,-14 436,-8 442,-8"/>
+<text xml:space="preserve" text-anchor="middle" x="531.75" y="-307.55" font-family="Helvetica,sans-Serif" font-size="11.00">SQLite (eloquent&#45;driver + toolkit tables)</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_files</title>
+<path fill="#fbf7f0" stroke="#b08a4a" d="M174.75,-131C174.75,-131 351.5,-131 351.5,-131 357.5,-131 363.5,-137 363.5,-143 363.5,-143 363.5,-251 363.5,-251 363.5,-257 357.5,-263 351.5,-263 351.5,-263 174.75,-263 174.75,-263 168.75,-263 162.75,-257 162.75,-251 162.75,-251 162.75,-143 162.75,-143 162.75,-137 168.75,-131 174.75,-131"/>
+<text xml:space="preserve" text-anchor="middle" x="263.12" y="-248.55" font-family="Helvetica,sans-Serif" font-size="11.00">Flat files in git</text>
+</g>
+<!-- importer -->
+<g id="node1" class="node">
+<title>importer</title>
+<g id="a_node1"><a xlink:href="../../app/Console/Commands/ImportStatamicContent.php" xlink:title="pixaproof:import&#45;content\n(&#45;&#45;once on deploy)">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M311.62,-96C311.62,-96 214.62,-96 214.62,-96 208.62,-96 202.62,-90 202.62,-84 202.62,-84 202.62,-72 202.62,-72 202.62,-66 208.62,-60 214.62,-60 214.62,-60 311.62,-60 311.62,-60 317.62,-60 323.62,-66 323.62,-72 323.62,-72 323.62,-84 323.62,-84 323.62,-90 317.62,-96 311.62,-96"/>
+<text xml:space="preserve" text-anchor="middle" x="263.12" y="-80.5" font-family="Helvetica,sans-Serif" font-size="10.00">pixaproof:import&#45;content</text>
+<text xml:space="preserve" text-anchor="middle" x="263.12" y="-68.5" font-family="Helvetica,sans-Serif" font-size="10.00">(&#45;&#45;once on deploy)</text>
+</a>
+</g>
+</g>
+<!-- pages -->
+<g id="node4" class="node">
+<title>pages</title>
+<path fill="#ece4fb" stroke="#8a8a8a" d="M596.25,-234C596.25,-234 466.25,-234 466.25,-234 460.25,-234 454.25,-228 454.25,-222 454.25,-222 454.25,-202 454.25,-202 454.25,-196 460.25,-190 466.25,-190 466.25,-190 596.25,-190 596.25,-190 602.25,-190 608.25,-196 608.25,-202 608.25,-202 608.25,-222 608.25,-222 608.25,-228 602.25,-234 596.25,-234"/>
+<text xml:space="preserve" text-anchor="middle" x="531.25" y="-220.5" font-family="Helvetica,sans-Serif" font-size="10.00">collection pages</text>
+<text xml:space="preserve" text-anchor="middle" x="531.25" y="-208.5" font-family="Helvetica,sans-Serif" font-size="10.00">entries home · contact · privacy</text>
+<text xml:space="preserve" text-anchor="middle" x="531.25" y="-196.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ tree</text>
+</g>
+<!-- importer&#45;&gt;pages -->
+<g id="edge1" class="edge">
+<title>importer&#45;&gt;pages</title>
+<path fill="none" stroke="#6b6b6b" d="M323.97,-80.41C356.9,-84.96 395.87,-96.21 420,-123 436.92,-141.79 413.43,-159.91 430,-179 434.13,-183.76 438.96,-187.83 444.22,-191.32"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="442.38,-194.3 452.8,-196.24 445.86,-188.23 442.38,-194.3"/>
+</g>
+<!-- navs -->
+<g id="node5" class="node">
+<title>navs</title>
+<path fill="#ece4fb" stroke="#8a8a8a" d="M580.88,-168C580.88,-168 481.62,-168 481.62,-168 475.62,-168 469.62,-162 469.62,-156 469.62,-156 469.62,-144 469.62,-144 469.62,-138 475.62,-132 481.62,-132 481.62,-132 580.88,-132 580.88,-132 586.88,-132 592.88,-138 592.88,-144 592.88,-144 592.88,-156 592.88,-156 592.88,-162 586.88,-168 580.88,-168"/>
+<text xml:space="preserve" text-anchor="middle" x="531.25" y="-146.5" font-family="Helvetica,sans-Serif" font-size="10.00">navigations main · footer</text>
+</g>
+<!-- importer&#45;&gt;navs -->
+<g id="edge2" class="edge">
+<title>importer&#45;&gt;navs</title>
+<path fill="none" stroke="#6b6b6b" d="M324.07,-69.91C355.63,-68.9 393.23,-73.26 420,-94 430.12,-101.84 420.63,-112.29 430,-121 438.16,-128.59 448.19,-134.2 458.71,-138.35"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="457.32,-141.58 467.92,-141.54 459.62,-134.96 457.32,-141.58"/>
+</g>
+<!-- globals -->
+<g id="node6" class="node">
+<title>globals</title>
+<path fill="#e0eefb" stroke="#8a8a8a" d="M559.12,-110C559.12,-110 503.38,-110 503.38,-110 497.38,-110 491.38,-104 491.38,-98 491.38,-98 491.38,-86 491.38,-86 491.38,-80 497.38,-74 503.38,-74 503.38,-74 559.12,-74 559.12,-74 565.12,-74 571.12,-80 571.12,-86 571.12,-86 571.12,-98 571.12,-98 571.12,-104 565.12,-110 559.12,-110"/>
+<text xml:space="preserve" text-anchor="middle" x="531.25" y="-94.5" font-family="Helvetica,sans-Serif" font-size="10.00">global set seo</text>
+<text xml:space="preserve" text-anchor="middle" x="531.25" y="-82.5" font-family="Helvetica,sans-Serif" font-size="10.00">(SEO &amp; brand)</text>
+</g>
+<!-- importer&#45;&gt;globals -->
+<g id="edge3" class="edge">
+<title>importer&#45;&gt;globals</title>
+<path fill="none" stroke="#6b6b6b" d="M323.81,-67.35C352.89,-63.6 388.32,-61.18 420,-65 439.94,-67.41 461.48,-72.18 480.18,-77.05"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="479.1,-80.38 489.67,-79.6 480.92,-73.62 479.1,-80.38"/>
+</g>
+<!-- assets -->
+<g id="node7" class="node">
+<title>assets</title>
+<path fill="#ece4fb" stroke="#8a8a8a" d="M587.25,-52C587.25,-52 475.25,-52 475.25,-52 469.25,-52 463.25,-46 463.25,-40 463.25,-40 463.25,-28 463.25,-28 463.25,-22 469.25,-16 475.25,-16 475.25,-16 587.25,-16 587.25,-16 593.25,-16 599.25,-22 599.25,-28 599.25,-28 599.25,-40 599.25,-40 599.25,-46 593.25,-52 587.25,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="531.25" y="-36.5" font-family="Helvetica,sans-Serif" font-size="10.00">asset container assets</text>
+<text xml:space="preserve" text-anchor="middle" x="531.25" y="-24.5" font-family="Helvetica,sans-Serif" font-size="10.00">(meta; files in public/media)</text>
+</g>
+<!-- importer&#45;&gt;assets -->
+<g id="edge4" class="edge">
+<title>importer&#45;&gt;assets</title>
+<path fill="none" stroke="#6b6b6b" d="M323.96,-66.74C340.03,-63.8 357.41,-60.7 373.5,-58 398.93,-53.73 426.73,-49.37 451.77,-45.56"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="452.2,-49.04 461.56,-44.08 451.15,-42.12 452.2,-49.04"/>
+</g>
+<!-- redirects -->
+<g id="node8" class="node">
+<title>redirects</title>
+<path fill="#e0eefb" stroke="#8a8a8a" d="M582,-292C582,-292 480.5,-292 480.5,-292 474.5,-292 468.5,-286 468.5,-280 468.5,-280 468.5,-268 468.5,-268 468.5,-262 474.5,-256 480.5,-256 480.5,-256 582,-256 582,-256 588,-256 594,-262 594,-268 594,-268 594,-280 594,-280 594,-286 588,-292 582,-292"/>
+<text xml:space="preserve" text-anchor="middle" x="531.25" y="-270.5" font-family="Helvetica,sans-Serif" font-size="10.00">seo_redirects · seo_404s</text>
+</g>
+<!-- importer&#45;&gt;redirects -->
+<g id="edge6" class="edge">
+<title>importer&#45;&gt;redirects</title>
+<path fill="none" stroke="#6b6b6b" d="M313.49,-96.47C330.34,-104.12 348.66,-114.03 363.5,-126 395.23,-151.59 402.74,-161.32 420,-198.25 429,-217.5 415.52,-229.45 430,-245 437.47,-253.02 447.01,-258.87 457.22,-263.12"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="456.02,-266.41 466.62,-266.5 458.39,-259.82 456.02,-266.41"/>
+<text xml:space="preserve" text-anchor="middle" x="396.75" y="-200.4" font-family="Helvetica,sans-Serif" font-size="8.00">Csv::import()</text>
+</g>
+<!-- csv -->
+<g id="node2" class="node">
+<title>csv</title>
+<g id="a_node2"><a xlink:href="../../database/seo/redirects.csv" xlink:title="database/seo/redirects.csv">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M121.75,-96C121.75,-96 12,-96 12,-96 6,-96 0,-90 0,-84 0,-84 0,-72 0,-72 0,-66 6,-60 12,-60 12,-60 121.75,-60 121.75,-60 127.75,-60 133.75,-66 133.75,-72 133.75,-72 133.75,-84 133.75,-84 133.75,-90 127.75,-96 121.75,-96"/>
+<text xml:space="preserve" text-anchor="middle" x="66.88" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">database/seo/redirects.csv</text>
+</a>
+</g>
+</g>
+<!-- csv&#45;&gt;importer -->
+<g id="edge5" class="edge">
+<title>csv&#45;&gt;importer</title>
+<path fill="none" stroke="#6b6b6b" d="M134.18,-78C152.48,-78 172.4,-78 190.96,-78"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="190.79,-81.5 200.79,-78 190.79,-74.5 190.79,-81.5"/>
+</g>
+<!-- cp -->
+<g id="node3" class="node">
+<title>cp</title>
+<g id="a_node3"><a xlink:href="05-control-panel.html" xlink:title="Control panel /cp">
+<path fill="#ece4fb" stroke="#8a8a8a" d="M296.25,-312C296.25,-312 230,-312 230,-312 224,-312 218,-306 218,-300 218,-300 218,-288 218,-288 218,-282 224,-276 230,-276 230,-276 296.25,-276 296.25,-276 302.25,-276 308.25,-282 308.25,-288 308.25,-288 308.25,-300 308.25,-300 308.25,-306 302.25,-312 296.25,-312"/>
+<text xml:space="preserve" text-anchor="middle" x="263.12" y="-290.5" font-family="Helvetica,sans-Serif" font-size="10.00">Control panel /cp</text>
+</a>
+</g>
+</g>
+<!-- cp&#45;&gt;pages -->
+<g id="edge7" class="edge">
+<title>cp&#45;&gt;pages</title>
+<path fill="none" stroke="#6b6b6b" d="M308.46,-302.82C342.74,-306.96 389.36,-306.37 420,-281 432.79,-270.41 418.54,-257.02 430,-245 434.08,-240.72 438.73,-236.99 443.74,-233.75"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="445.46,-236.8 452.44,-228.83 442.01,-230.71 445.46,-236.8"/>
+</g>
+<!-- cp&#45;&gt;navs -->
+<g id="edge8" class="edge">
+<title>cp&#45;&gt;navs</title>
+<path fill="none" stroke="#6b6b6b" d="M308.7,-282.54C325.85,-278.08 345.61,-272.87 363.5,-268 388.68,-261.14 402.88,-271.7 420,-252 441.48,-227.28 408.59,-203.78 430,-179 437.63,-170.17 447.77,-163.95 458.67,-159.58"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="459.54,-162.98 467.86,-156.43 457.27,-156.36 459.54,-162.98"/>
+</g>
+<!-- cp&#45;&gt;globals -->
+<g id="edge9" class="edge">
+<title>cp&#45;&gt;globals</title>
+<path fill="none" stroke="#6b6b6b" d="M308.27,-288.85C326.5,-285.17 347.15,-278.84 363.5,-268 369.58,-263.97 368.21,-260.02 373.5,-255 391.7,-237.74 407.25,-244.61 420,-223 431.57,-203.38 415.44,-138.52 430,-121 442.23,-106.29 461.42,-98.78 479.76,-95.03"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="480.21,-98.51 489.5,-93.41 479.06,-91.6 480.21,-98.51"/>
+</g>
+<!-- cp&#45;&gt;redirects -->
+<g id="edge10" class="edge">
+<title>cp&#45;&gt;redirects</title>
+<path fill="none" stroke="#6b6b6b" d="M308.64,-304.7C339.91,-310.71 382.66,-315.94 420,-310 437.86,-307.16 456.76,-301.88 473.77,-296.22"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="474.91,-299.53 483.22,-292.96 472.62,-292.92 474.91,-299.53"/>
+</g>
+<!-- bp1 -->
+<g id="node9" class="node">
+<title>bp1</title>
+<g id="a_node9"><a xlink:href="../../resources/blueprints/collections/pages/page.yaml" xlink:title="blueprints/collections/pages/page.yaml">
+<path fill="#ece4fb" stroke="#8a8a8a" d="M343.5,-233C343.5,-233 182.75,-233 182.75,-233 176.75,-233 170.75,-227 170.75,-221 170.75,-221 170.75,-209 170.75,-209 170.75,-203 176.75,-197 182.75,-197 182.75,-197 343.5,-197 343.5,-197 349.5,-197 355.5,-203 355.5,-209 355.5,-209 355.5,-221 355.5,-221 355.5,-227 349.5,-233 343.5,-233"/>
+<text xml:space="preserve" text-anchor="middle" x="263.12" y="-211.5" font-family="Helvetica,sans-Serif" font-size="10.00">blueprints/collections/pages/page.yaml</text>
+</a>
+</g>
+</g>
+<!-- bp1&#45;&gt;pages -->
+<g id="edge11" class="edge">
+<title>bp1&#45;&gt;pages</title>
+<path fill="none" stroke="#6b6b6b" stroke-dasharray="5,2" d="M355.71,-213.97C383.86,-213.65 414.76,-213.3 442.63,-212.99"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="442.49,-216.49 452.45,-212.88 442.41,-209.49 442.49,-216.49"/>
+<text xml:space="preserve" text-anchor="middle" x="396.75" y="-215.83" font-family="Helvetica,sans-Serif" font-size="8.00">fields</text>
+</g>
+<!-- bp2 -->
+<g id="node10" class="node">
+<title>bp2</title>
+<g id="a_node10"><a xlink:href="../../resources/blueprints/globals/seo.yaml" xlink:title="blueprints/globals/seo.yaml">
+<path fill="#e0eefb" stroke="#8a8a8a" d="M318.38,-175C318.38,-175 207.88,-175 207.88,-175 201.88,-175 195.88,-169 195.88,-163 195.88,-163 195.88,-151 195.88,-151 195.88,-145 201.88,-139 207.88,-139 207.88,-139 318.38,-139 318.38,-139 324.38,-139 330.38,-145 330.38,-151 330.38,-151 330.38,-163 330.38,-163 330.38,-169 324.38,-175 318.38,-175"/>
+<text xml:space="preserve" text-anchor="middle" x="263.12" y="-153.5" font-family="Helvetica,sans-Serif" font-size="10.00">blueprints/globals/seo.yaml</text>
+</a>
+</g>
+</g>
+<!-- bp2&#45;&gt;globals -->
+<g id="edge12" class="edge">
+<title>bp2&#45;&gt;globals</title>
+<path fill="none" stroke="#6b6b6b" stroke-dasharray="5,2" d="M330.57,-174.04C360.66,-177.78 395.01,-176 420,-157 433.22,-146.95 418.32,-132.8 430,-121 443.13,-107.73 461.93,-100.44 479.71,-96.48"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="480.21,-99.94 489.39,-94.64 478.91,-93.06 480.21,-99.94"/>
+</g>
+</g>
+</svg>
+<figcaption><a href="diagrams/content-model.svg" target="_blank">open full size</a> · source: <a href="diagrams/content-model.dot">diagrams/content-model.dot</a></figcaption></figure>
+
+<h2>The content</h2>
+<table>
+<tr><th>What</th><th>Handle</th><th class="p">Origin</th><th>Notes</th></tr>
+<tr><td>Collection</td><td><code>pages</code></td><td class="p"><span class="prov statamic" title="Statamic">Statamic</span></td><td>Structured, root entry = home, route <code>{parent_uri}/{slug}</code></td></tr>
+<tr><td>Entries</td><td><code>home</code>, <code>contact</code>, <code>privacy</code></td><td class="p"><span class="prov statamic" title="Statamic">Statamic</span></td><td>Fields: title, markdown <code>content</code>, slug, template, SEO tab (<code>import: seo::seo</code>) — <a class="src" href="../../resources/blueprints/collections/pages/page.yaml"><code>resources/blueprints/collections/pages/page.yaml</code></a></td></tr>
+<tr><td>Navigations</td><td><code>main</code>, <code>footer</code></td><td class="p"><span class="prov statamic" title="Statamic">Statamic</span></td><td>URL items (anchors) plus the home entry</td></tr>
+<tr><td>Global set</td><td><code>seo</code> ("SEO &amp; brand")</td><td class="p"><span class="prov addon" title="Addon: Toolkit">Addon: Toolkit</span></td><td>Created by <code>seo:install</code>: <a class="src" href="../../resources/blueprints/globals/seo.yaml"><code>resources/blueprints/globals/seo.yaml</code></a></td></tr>
+<tr><td>Asset container</td><td><code>assets</code></td><td class="p"><span class="prov statamic" title="Statamic">Statamic</span></td><td><code>media</code> disk → <code>public/media</code> (production: <code>shared/data/media</code>). Holds <code>og-image.webp</code> and <code>pixaproof-icon.png</code></td></tr>
+<tr><td>Redirects</td><td><code>seo_redirects</code></td><td class="p"><span class="prov addon" title="Addon: Toolkit">Addon: Toolkit</span></td><td>22 rows from <a class="src" href="../../database/seo/redirects.csv"><code>database/seo/redirects.csv</code></a></td></tr>
+</table>
+
+<h2>The import command</h2>
+<p><a class="src" href="../../app/Console/Commands/ImportStatamicContent.php"><code>app/Console/Commands/ImportStatamicContent.php</code></a> <span class="prov custom" title="Custom">Custom</span> on <span class="prov statamic" title="Statamic">Statamic</span> (<code>php artisan pixaproof:import-content</code>) uses only Statamic's PHP API and the toolkit's own CSV importer (<code>JothamLec\MarketingToolkit\Redirects\Csv::import()</code>). It creates or updates, in order: the asset container and its two images, the collection, its entries and tree, the two navigations, the SEO &amp; brand set (running <code>seo:install</code>), the SEO &amp; brand values, and the redirects. It then checks the counts (3 pages, 2 navigations, 22 redirects) and fails if they are off.</p>
+<ul>
+<li><strong>Run again</strong>, it updates in place: same entry IDs, "0 created, 22 updated".</li>
+<li><strong><code>--once</code></strong> does nothing when the <code>pages</code> collection exists. Deploys and <code>composer setup</code> use this, so control panel edits are never overwritten.</li>
+<li><code>DatabaseSeeder</code> runs it, which is how the tests get their content.</li>
+</ul>
+
+<div class="box why">
+<p><strong>Two Eloquent-driver bugs are worked around in the command.</strong> (1) Saving an asset container through <code>$container-&gt;save()</code> skips the repository's cache reset, so a <code>null</code> cached by an earlier lookup survives and Statamic's search indexer crashes; the command saves through <code>AssetContainer::save($container)</code>. (2) A brand-new navigation tree is always stored empty (<code>makeModelFromContract()</code> writes <code>[]</code> when there is no model yet); the command saves the tree once empty, as the control panel does, then adds the items. Both are worth reporting upstream.</p>
+</div>
+
+<h2>SEO output</h2>
+<p>All of it comes from the Marketing Toolkit <span class="prov addon" title="Addon: Toolkit">Addon: Toolkit</span>. The layout's <code>&lt;s:seo:head /&gt;</code> prints, in this order: the tracking tags (GA4 from SEO &amp; brand, GTM from <code>SEO_GTM_ID</code>; production only), the meta tags, then the icon links.</p>
+<table>
+<tr><th>Output</th><th>Value comes from</th></tr>
+<tr><td><code>&lt;title&gt;</code></td><td>The entry's <code>seo.title</code>, else its title. No site name: <code>title_site_name</code> is false. Home's <code>seo.title</code> is "Verify Every Image. Eliminate Fraud."</td></tr>
+<tr><td>Description</td><td>The entry's <code>seo.description</code>, else SEO &amp; brand's default (cut at 160 characters)</td></tr>
+<tr><td>Canonical, <code>og:url</code></td><td>The entry's URL (query strings dropped)</td></tr>
+<tr><td>Share image</td><td>SEO &amp; brand's default image, as a 1200×630 Glide crop</td></tr>
+<tr><td>Robots meta</td><td><code>max-snippet:-1, max-image-preview:large, …</code> in production; <code>noindex</code> everywhere else; <code>noindex, follow</code> on 404s</td></tr>
+<tr><td>JSON-LD</td><td>WebSite, Organization, WebPage and (inner pages) BreadcrumbList</td></tr>
+<tr><td>sitemap.xml, llms.txt</td><td>Every published entry in a routed collection</td></tr>
+<tr><td>robots.txt</td><td>SEO &amp; brand's disallow lines (<code>/cp/</code>) plus a <code>Sitemap:</code> line</td></tr>
+<tr><td>Favicons + manifest</td><td>SEO &amp; brand's icon (a PNG, so no Imagick is needed)</td></tr>
+</table>
+
+<h3>Our two changes to the toolkit's defaults (<a class="src" href="../../config/seo.php"><code>config/seo.php</code></a>)</h3>
+<ul>
+<li><code>description.length</code> 155 → 160, matching SEO &amp; brand's field limit, so hand-written descriptions aren't cut.</li>
+<li><code>og.enabled</code> → false. Generated share cards need PHP's <code>imagick</code>, which production doesn't have yet. Install it and flip this to get a card per page.</li>
+</ul>
+
+<div class="box read">
+<ol>
+<li><a class="src" href="../../app/Console/Commands/ImportStatamicContent.php"><code>app/Console/Commands/ImportStatamicContent.php</code></a></li>
+<li><a class="src" href="../../resources/blueprints/collections/pages/page.yaml"><code>resources/blueprints/collections/pages/page.yaml</code></a></li>
+<li><a class="src" href="../../config/seo.php"><code>config/seo.php</code></a> (search for <code>tracking</code>, <code>robots</code>, <code>og</code>)</li>
+<li><code>vendor/jotham-lec/statamic-marketing-toolkit/docs/developers.md</code>: what each value falls back to</li>
+</ol>
+</div>
+
+<footer class="pager"><a href="02-frontend.html">← 2. Templates & frontend</a><a href="04-database.html">4. Database →</a></footer>
+</main>
+</body>
+</html>

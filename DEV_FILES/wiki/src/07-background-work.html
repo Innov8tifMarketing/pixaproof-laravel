@@ -1,0 +1,36 @@
+<h1>7. Commands, queue, scheduler</h1>
+<p class="lede">There is little background work. Most of it comes from Statamic and the toolkit, and it needs two things running on the server: the queue worker and the scheduler cron.</p>
+
+<h2>Commands you will run</h2>
+<table>
+<tr><th>Command</th><th class="p">Origin</th><th>What for</th></tr>
+<tr><td><code>php artisan pixaproof:import-content [--once]</code></td><td class="p">{{C}}</td><td>Create or refresh the content (<a href="03-content-seo.html">page 3</a>)</td></tr>
+<tr><td><code>php please make:user</code></td><td class="p">{{S}}</td><td>A control panel login</td></tr>
+<tr><td><code>php please stache:warm</code> / <code>stache:clear</code></td><td class="p">{{S}}</td><td>Statamic's flat-file index (blueprints). Deploys warm it</td></tr>
+<tr><td><code>php please seo:report</code></td><td class="p">{{A:Toolkit}}</td><td>A site report with a score (Pro)</td></tr>
+<tr><td><code>php please seo:install --fields</code></td><td class="p">{{A:Toolkit}}</td><td>Add fields a newer toolkit version brings to SEO &amp; brand</td></tr>
+</table>
+<div class="box why">
+<p><strong>There is no <code>csp:summary</code>.</strong> The docblock in [[config/csp.php]] says to aggregate reports with <code>php artisan csp:summary</code>, but no such command exists in this repo. Read <code>storage/logs/csp-*.log</code> directly (one JSON object per line, with a <code>fingerprint</code> per directive, origin and path).</p>
+</div>
+
+<h2>Queue</h2>
+<p>The queue is Laravel's database driver {{L}}, run in production by a Supervisor worker that every deploy restarts (<code>queue:restart</code> in [[deploy.php]]). Statamic queues some listeners, including updating its search index when an entry is saved. In tests the queue is <code>sync</code>, so those listeners run inline. That is how the Eloquent-driver cache bug in <a href="03-content-seo.html">page 3</a> surfaced.</p>
+
+<h2>Scheduler</h2>
+<table>
+<tr><th>Scheduled</th><th class="p">Origin</th><th>When</th></tr>
+<tr><td><code>Statamic\Jobs\HandleEntrySchedule</code> (scheduled entries go live; the toolkit then flushes the sitemap)</td><td class="p">{{S}}</td><td>Every minute</td></tr>
+<tr><td>Statamic's licence check (<code>statamic-outpost</code>)</td><td class="p">{{S}}</td><td>Hourly</td></tr>
+<tr><td><code>statamic:seo:search-console</code></td><td class="p">{{A:Toolkit}}</td><td>Daily 04:30 (once credentials are set)</td></tr>
+<tr><td>Scheduled site reports</td><td class="p">{{A:Toolkit}}</td><td>As set in Tools → SEO</td></tr>
+</table>
+<p>They only run if the server runs Laravel's scheduler every minute. The cron line is kept as a reference copy in [[deploy/server/etc/cron.d/pixaproof-laravel]] and installed by hand (<code>php artisan schedule:list</code> shows the schedule).</p>
+
+<div class="box read">
+<ol>
+<li>[[app/Console/Commands/ImportStatamicContent.php]]</li>
+<li>[[routes/console.php]] (empty: nothing of ours is scheduled)</li>
+<li>[[deploy/server/etc/cron.d/pixaproof-laravel]]</li>
+</ol>
+</div>

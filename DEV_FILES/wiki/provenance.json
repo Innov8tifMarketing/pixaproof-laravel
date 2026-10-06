@@ -1,0 +1,1832 @@
+[
+ {
+  "path": ".claude/IMPLEMENTATION.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".claude/docs/architecture.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".claude/docs/index.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".claude/docs/pages/developers.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".claude/docs/pages/homepage.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".claude/docs/pages/solutions-banking.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".claude/docs/pages/solutions-ecommerce.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".claude/docs/pages/solutions-government.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".claude/docs/pages/solutions-healthcare.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".claude/docs/pages/solutions-insurance.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".claude/docs/pages/technology.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".claude/docs/pixaproof-company.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".claude/docs/pixaproof-product.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".claude/docs/site-structure.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".claude/docs/stylesheet-guidelines.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".claude/docs/tech-stack.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".claude/skills/auto-documenter/SKILL.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".claude/skills/infer-conventions/SKILL.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/infer-conventions/references/checklist.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/SKILL.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/rules/advanced-queries.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/rules/architecture.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/rules/blade-views.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/rules/caching.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/rules/collections.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/rules/config.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/rules/db-performance.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/rules/eloquent.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/rules/error-handling.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/rules/events-notifications.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/rules/http-client.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/rules/mail.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/rules/migrations.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/rules/queue-jobs.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/rules/routing.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/rules/scheduling.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/rules/security.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/rules/style.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/laravel-best-practices/rules/validation.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/project-consultant/SKILL.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".claude/skills/tailwindcss-development/SKILL.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/testing-best-practices/SKILL.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/testing-best-practices/rules/assertions.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/testing-best-practices/rules/endpoint-tests.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/testing-best-practices/rules/finding-features.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/testing-best-practices/rules/isolation.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/testing-best-practices/rules/naming.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/testing-best-practices/rules/performance.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/testing-best-practices/rules/review.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/testing-best-practices/rules/security.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".claude/skills/testing-best-practices/rules/test-data.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update"
+ },
+ {
+  "path": ".codex/skills/auto-documenter/SKILL.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".codex/skills/project-consultant/SKILL.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".editorconfig",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": ".env.tmpl",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".envrc",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": ".gitattributes",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": ".gitignore",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": ".mcp.json",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:install"
+ },
+ {
+  "path": ".php-cs-fixer.dist.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "AGENTS.md",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:update (bottom half); the top half is written here"
+ },
+ {
+  "path": "DEV_FILES/statamic-conversion/00-plan.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/00-provenance.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/01-request-lifecycle.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/02-frontend.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/03-content-seo.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/04-database.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/05-control-panel.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/06-security.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/07-background-work.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/08-infrastructure.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/09-testing-quality.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/10-whiteboard.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/assets/wiki.css",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/build.py",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/diagrams/content-model.dot",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/diagrams/content-model.svg",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/diagrams/deploy.dot",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/diagrams/deploy.svg",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/diagrams/overview.dot",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/diagrams/overview.svg",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/diagrams/page-composition.dot",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/diagrams/page-composition.svg",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/diagrams/request-lifecycle.dot",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/diagrams/request-lifecycle.svg",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/diagrams/tests.dot",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/diagrams/tests.svg",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/index.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/provenance.json",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/provenance.py",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/src/00-provenance.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/src/01-request-lifecycle.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/src/02-frontend.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/src/03-content-seo.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/src/04-database.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/src/05-control-panel.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/src/06-security.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/src/07-background-work.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/src/08-infrastructure.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/src/09-testing-quality.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/src/10-whiteboard.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "DEV_FILES/wiki/src/index.html",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "README.md",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "app/Console/Commands/ImportStatamicContent.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "app/Http/Controllers/Controller.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "app/Http/Controllers/CspReportController.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "app/Http/Middleware/SecurityHeaders.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "app/Models/User.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "app/Providers/AppServiceProvider.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "artisan",
+  "origin": "L",
+  "status": "stock",
+  "reason": "identical to baseline-laravel"
+ },
+ {
+  "path": "boost.json",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php artisan boost:install / boost:update"
+ },
+ {
+  "path": "bootstrap/app.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "bootstrap/cache/.gitignore",
+  "origin": "L",
+  "status": "stock",
+  "reason": "identical to baseline-laravel"
+ },
+ {
+  "path": "bootstrap/providers.php",
+  "origin": "L",
+  "status": "stock",
+  "reason": "identical to baseline-laravel"
+ },
+ {
+  "path": "composer.json",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "composer.lock",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "config/app.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "config/auth.php",
+  "origin": "L",
+  "status": "stock",
+  "reason": "identical to baseline-laravel"
+ },
+ {
+  "path": "config/boost.php",
+  "origin": "A",
+  "status": "published",
+  "reason": "vendor/laravel/boost/config/boost.php (reformatted or edited)"
+ },
+ {
+  "path": "config/cache.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "config/csp.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "config/database.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "config/filesystems.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "config/logging.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "config/mail.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "config/queue.php",
+  "origin": "L",
+  "status": "stock",
+  "reason": "identical to baseline-laravel"
+ },
+ {
+  "path": "config/seo.php",
+  "origin": "A",
+  "status": "published",
+  "reason": "vendor/jotham-lec/statamic-marketing-toolkit/config/seo.php (reformatted or edited)"
+ },
+ {
+  "path": "config/services.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "config/session.php",
+  "origin": "L",
+  "status": "stock",
+  "reason": "identical to baseline-laravel"
+ },
+ {
+  "path": "config/sheath.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "config/statamic/antlers.php",
+  "origin": "S",
+  "status": "stock",
+  "reason": "identical to baseline-statamic"
+ },
+ {
+  "path": "config/statamic/api.php",
+  "origin": "S",
+  "status": "edited",
+  "reason": "changed from baseline-statamic"
+ },
+ {
+  "path": "config/statamic/assets.php",
+  "origin": "S",
+  "status": "edited",
+  "reason": "changed from baseline-statamic"
+ },
+ {
+  "path": "config/statamic/autosave.php",
+  "origin": "S",
+  "status": "stock",
+  "reason": "identical to baseline-statamic"
+ },
+ {
+  "path": "config/statamic/cp.php",
+  "origin": "S",
+  "status": "edited",
+  "reason": "changed from baseline-statamic"
+ },
+ {
+  "path": "config/statamic/editions.php",
+  "origin": "S",
+  "status": "edited",
+  "reason": "changed from baseline-statamic"
+ },
+ {
+  "path": "config/statamic/eloquent-driver.php",
+  "origin": "A",
+  "status": "published",
+  "reason": "vendor/statamic/eloquent-driver/config/eloquent-driver.php (reformatted or edited)"
+ },
+ {
+  "path": "config/statamic/forms.php",
+  "origin": "S",
+  "status": "edited",
+  "reason": "changed from baseline-statamic"
+ },
+ {
+  "path": "config/statamic/git.php",
+  "origin": "S",
+  "status": "stock",
+  "reason": "identical to baseline-statamic"
+ },
+ {
+  "path": "config/statamic/graphql.php",
+  "origin": "S",
+  "status": "stock",
+  "reason": "identical to baseline-statamic"
+ },
+ {
+  "path": "config/statamic/live_preview.php",
+  "origin": "S",
+  "status": "edited",
+  "reason": "changed from baseline-statamic"
+ },
+ {
+  "path": "config/statamic/markdown.php",
+  "origin": "S",
+  "status": "stock",
+  "reason": "identical to baseline-statamic"
+ },
+ {
+  "path": "config/statamic/oauth.php",
+  "origin": "S",
+  "status": "stock",
+  "reason": "identical to baseline-statamic"
+ },
+ {
+  "path": "config/statamic/protect.php",
+  "origin": "S",
+  "status": "stock",
+  "reason": "identical to baseline-statamic"
+ },
+ {
+  "path": "config/statamic/revisions.php",
+  "origin": "S",
+  "status": "stock",
+  "reason": "identical to baseline-statamic"
+ },
+ {
+  "path": "config/statamic/routes.php",
+  "origin": "S",
+  "status": "stock",
+  "reason": "identical to baseline-statamic"
+ },
+ {
+  "path": "config/statamic/search.php",
+  "origin": "S",
+  "status": "stock",
+  "reason": "identical to baseline-statamic"
+ },
+ {
+  "path": "config/statamic/stache.php",
+  "origin": "S",
+  "status": "edited",
+  "reason": "changed from baseline-statamic"
+ },
+ {
+  "path": "config/statamic/static_caching.php",
+  "origin": "S",
+  "status": "edited",
+  "reason": "changed from baseline-statamic"
+ },
+ {
+  "path": "config/statamic/system.php",
+  "origin": "S",
+  "status": "stock",
+  "reason": "identical to baseline-statamic"
+ },
+ {
+  "path": "config/statamic/templates.php",
+  "origin": "S",
+  "status": "edited",
+  "reason": "changed from baseline-statamic"
+ },
+ {
+  "path": "config/statamic/users.php",
+  "origin": "S",
+  "status": "edited",
+  "reason": "changed from baseline-statamic"
+ },
+ {
+  "path": "config/statamic/webauthn.php",
+  "origin": "S",
+  "status": "edited",
+  "reason": "changed from baseline-statamic"
+ },
+ {
+  "path": "content/assets/.gitkeep",
+  "origin": "S",
+  "status": "generated",
+  "reason": "php artisan statamic:install (empty content folders)"
+ },
+ {
+  "path": "content/collections/.gitkeep",
+  "origin": "S",
+  "status": "generated",
+  "reason": "php artisan statamic:install (empty content folders)"
+ },
+ {
+  "path": "content/globals/.gitkeep",
+  "origin": "S",
+  "status": "generated",
+  "reason": "php artisan statamic:install (empty content folders)"
+ },
+ {
+  "path": "content/navigation/.gitkeep",
+  "origin": "S",
+  "status": "generated",
+  "reason": "php artisan statamic:install (empty content folders)"
+ },
+ {
+  "path": "content/taxonomies/.gitkeep",
+  "origin": "S",
+  "status": "generated",
+  "reason": "php artisan statamic:install (empty content folders)"
+ },
+ {
+  "path": "database/.gitignore",
+  "origin": "L",
+  "status": "stock",
+  "reason": "identical to baseline-laravel"
+ },
+ {
+  "path": "database/factories/UserFactory.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "database/migrations/0001_01_01_000000_create_users_table.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "database/migrations/0001_01_01_000001_create_cache_table.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "database/migrations/0001_01_01_000002_create_jobs_table.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "database/migrations/2024_03_07_100000_create_asset_containers_table.php",
+  "origin": "A",
+  "status": "published",
+  "reason": "vendor/statamic/eloquent-driver/database/migrations/2024_03_07_100000_create_asset_containers_table.php"
+ },
+ {
+  "path": "database/migrations/2024_03_07_100000_create_asset_table.php",
+  "origin": "A",
+  "status": "published",
+  "reason": "vendor/statamic/eloquent-driver/database/migrations/2024_03_07_100000_create_asset_table.php"
+ },
+ {
+  "path": "database/migrations/2024_03_07_100000_create_collections_table.php",
+  "origin": "A",
+  "status": "published",
+  "reason": "vendor/statamic/eloquent-driver/database/migrations/2024_03_07_100000_create_collections_table.php"
+ },
+ {
+  "path": "database/migrations/2024_03_07_100000_create_entries_table_with_string_ids.php",
+  "origin": "A",
+  "status": "published",
+  "reason": "vendor/statamic/eloquent-driver/database/migrations/entries/2024_03_07_100000_create_entries_table_with_string_ids.php"
+ },
+ {
+  "path": "database/migrations/2024_03_07_100000_create_global_variables_table.php",
+  "origin": "A",
+  "status": "published",
+  "reason": "vendor/statamic/eloquent-driver/database/migrations/2024_03_07_100000_create_global_variables_table.php"
+ },
+ {
+  "path": "database/migrations/2024_03_07_100000_create_globals_table.php",
+  "origin": "A",
+  "status": "published",
+  "reason": "vendor/statamic/eloquent-driver/database/migrations/2024_03_07_100000_create_globals_table.php"
+ },
+ {
+  "path": "database/migrations/2024_03_07_100000_create_navigation_trees_table.php",
+  "origin": "A",
+  "status": "published",
+  "reason": "vendor/statamic/eloquent-driver/database/migrations/2024_03_07_100000_create_navigation_trees_table.php"
+ },
+ {
+  "path": "database/migrations/2024_03_07_100000_create_navigations_table.php",
+  "origin": "A",
+  "status": "published",
+  "reason": "vendor/statamic/eloquent-driver/database/migrations/2024_03_07_100000_create_navigations_table.php"
+ },
+ {
+  "path": "database/migrations/2025_07_07_100000_create_addon_settings_table.php",
+  "origin": "A",
+  "status": "published",
+  "reason": "vendor/statamic/eloquent-driver/database/migrations/2025_07_07_100000_create_addon_settings_table.php"
+ },
+ {
+  "path": "database/migrations/2025_12_31_104355_create_leads_table.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "database/migrations/2026_01_08_041318_add_enterprise_fields_to_leads_table.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "database/migrations/2026_10_06_143033_statamic_webauthn_table.php",
+  "origin": "S",
+  "status": "published",
+  "reason": "vendor/statamic/cms/src/Console/Commands/stubs/auth/statamic_webauthn_table.php.stub (reformatted or edited)"
+ },
+ {
+  "path": "database/migrations/2026_10_06_143105_statamic_auth_tables.php",
+  "origin": "S",
+  "status": "published",
+  "reason": "vendor/statamic/cms/src/Console/Commands/stubs/auth/statamic_auth_tables.php.stub (reformatted or edited)"
+ },
+ {
+  "path": "database/migrations/2026_10_06_152703_drop_leads_table.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "database/seeders/DatabaseSeeder.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "database/seo/pixaproof-icon.png",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "database/seo/redirects.csv",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "deploy.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "deploy/server/README.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "deploy/server/etc/cron.d/pixaproof-laravel",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "deploy/server/home/deployer/pixaproof-laravel/Caddyfile",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "docs/plans/2026-01-29-mega-landing-page-design.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "docs/plans/2026-01-29-website-content-overhaul-design.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "docs/plans/heroicons-mapping.md",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "flake.lock",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "flake.nix",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "nixpacks.toml",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "opencode.json",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "package-lock.json",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "package.json",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "phpstan.neon",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "phpunit.xml",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "pint.json",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "please",
+  "origin": "S",
+  "status": "generated",
+  "reason": "php artisan statamic:install"
+ },
+ {
+  "path": "public/.htaccess",
+  "origin": "L",
+  "status": "stock",
+  "reason": "identical to baseline-laravel"
+ },
+ {
+  "path": "public/images/backgrounds/circuit-dark.svg",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/backgrounds/dots-subtle.svg",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/backgrounds/gradient-mesh.svg",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/backgrounds/grid-tech.svg",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/backgrounds/hero-abstract.svg",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/backgrounds/hero-insurance.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/backgrounds/hexagon-pattern.svg",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/backgrounds/noise-grain.svg",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/backgrounds/wave-lines.svg",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/heroes/hero-banking.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/heroes/hero-developers.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/heroes/hero-ecommerce.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/heroes/hero-enterprise.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/heroes/hero-government.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/heroes/hero-healthcare.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/heroes/hero-home.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/heroes/hero-how-it-works.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/heroes/hero-insurance-claim.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/heroes/hero-technology.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/innov8tif-logo-white.png",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/innov8tif-logo.png",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/mockups/asset-warehouse.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/mockups/hero-ai-generated-id.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/mockups/hero-live-capture.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/mockups/hero-tampered-gallery.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/mockups/insurance-car-damage.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/mockups/kyc-id-document.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/mockups/loan-draw-construction.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/mockups/prevention-camera-live.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/mockups/prevention-gallery-fraud.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/mockups/property-inspection.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/mockups/solution-flow-capture.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/og-image.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/images/pixaproof-wordmark.svg",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/index.php",
+  "origin": "L",
+  "status": "stock",
+  "reason": "identical to baseline-laravel"
+ },
+ {
+  "path": "public/videos/device-farm-poster.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/videos/device-farm.mp4",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/videos/device-farm.webm",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/videos/emulator-poster.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/videos/emulator.mp4",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/videos/emulator.webm",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/videos/genuine-device-poster.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/videos/genuine-device.mp4",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/videos/genuine-device.webm",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/videos/virtual-camera-poster.webp",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/videos/virtual-camera.mp4",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "public/videos/virtual-camera.webm",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "rector.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/blueprints/collections/pages/page.yaml",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/blueprints/globals/seo.yaml",
+  "origin": "A",
+  "status": "generated",
+  "reason": "php please seo:install (Marketing Toolkit)"
+ },
+ {
+  "path": "resources/css/app.css",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "resources/fonts/century-gothic-bold-italic.woff2",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/fonts/century-gothic-bold.woff2",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/fonts/century-gothic-italic.woff2",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/fonts/century-gothic-regular.woff2",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/fonts/century-gothic-semibold.woff2",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/js/app.js",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "resources/js/bootstrap.js",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/users/groups.yaml",
+  "origin": "S",
+  "status": "generated",
+  "reason": "php artisan statamic:install"
+ },
+ {
+  "path": "resources/users/roles.yaml",
+  "origin": "S",
+  "status": "generated",
+  "reason": "php artisan statamic:install"
+ },
+ {
+  "path": "resources/views/components/button.blade.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/views/components/check-list.blade.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/views/components/footer.blade.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/views/components/graphics/hero-comparison.blade.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/views/components/graphics/phone-mockup.blade.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/views/components/graphics/prevention-visual.blade.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/views/components/graphics/solution-flow.blade.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/views/components/icon-card.blade.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/views/components/navbar.blade.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/views/components/rotating-text.blade.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/views/components/section.blade.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/views/components/stat.blade.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/views/contact.blade.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/views/default.blade.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/views/errors/404.blade.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/views/home.blade.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "resources/views/layout.blade.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "routes/console.php",
+  "origin": "L",
+  "status": "stock",
+  "reason": "identical to baseline-laravel"
+ },
+ {
+  "path": "routes/web.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "scratch.org",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "secrets-init",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "storage/app/.gitignore",
+  "origin": "L",
+  "status": "stock",
+  "reason": "identical to baseline-laravel"
+ },
+ {
+  "path": "storage/app/private/.gitignore",
+  "origin": "L",
+  "status": "stock",
+  "reason": "identical to baseline-laravel"
+ },
+ {
+  "path": "storage/app/public/.gitignore",
+  "origin": "L",
+  "status": "stock",
+  "reason": "identical to baseline-laravel"
+ },
+ {
+  "path": "storage/framework/.gitignore",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "storage/framework/cache/.gitignore",
+  "origin": "S",
+  "status": "stock",
+  "reason": "identical to baseline-statamic"
+ },
+ {
+  "path": "storage/framework/cache/data/.gitignore",
+  "origin": "L",
+  "status": "stock",
+  "reason": "identical to baseline-laravel"
+ },
+ {
+  "path": "storage/framework/sessions/.gitignore",
+  "origin": "L",
+  "status": "stock",
+  "reason": "identical to baseline-laravel"
+ },
+ {
+  "path": "storage/framework/testing/.gitignore",
+  "origin": "L",
+  "status": "stock",
+  "reason": "identical to baseline-laravel"
+ },
+ {
+  "path": "storage/framework/views/.gitignore",
+  "origin": "L",
+  "status": "stock",
+  "reason": "identical to baseline-laravel"
+ },
+ {
+  "path": "storage/logs/.gitignore",
+  "origin": "L",
+  "status": "stock",
+  "reason": "identical to baseline-laravel"
+ },
+ {
+  "path": "storage/statamic/.gitignore",
+  "origin": "S",
+  "status": "generated",
+  "reason": "php artisan statamic:install"
+ },
+ {
+  "path": "tests/Feature/CspReportRouteTest.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "tests/Feature/DatabaseSchemaTest.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "tests/Feature/ExampleTest.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "tests/Feature/Guard/UrlSnapshotTest.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "tests/Feature/HomePageTest.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "tests/Feature/HomepageComponentsTest.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "tests/Feature/ImportStatamicContentTest.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "tests/Feature/PublicRoutesTest.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "tests/Feature/SecurityHeadersTest.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "tests/Feature/ViteManifestSriTest.php",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "tests/TestCase.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "tests/Unit/ExampleTest.php",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ },
+ {
+  "path": "tests/__snapshots__/urls.json",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "vite-plugin-sri.js",
+  "origin": "C",
+  "status": "custom",
+  "reason": ""
+ },
+ {
+  "path": "vite.config.js",
+  "origin": "L",
+  "status": "edited",
+  "reason": "changed from baseline-laravel"
+ }
+]

@@ -1,0 +1,31 @@
+<h1>1. A request, end to end</h1>
+<p class="lede">Every URL takes one of five paths: a static file, our single app route, a toolkit route, the control panel, or Statamic's catch-all that finds an entry. Knowing which path a URL takes tells you where to look when it misbehaves.</p>
+
+{{diagram:request-lifecycle}}
+
+<h2>Step by step</h2>
+<ol class="steps">
+<li><strong>Caddy</strong> terminates TLS. If the path is a real file under <code>public/</code> (built assets, <code>media/</code>, <code>videos/</code>, images) it serves it and PHP never runs. That is why the old <code>public/robots.txt</code> and favicons had to be deleted: while they existed, the toolkit's routes for those paths were never reached. See [[deploy/server/home/deployer/pixaproof-laravel/Caddyfile]].</li>
+<li><strong>Laravel boots</strong> from [[bootstrap/app.php]] {{L}}. The only change from the skeleton is <code>$middleware-&gt;append(SecurityHeaders::class)</code> {{C}}, which adds the CSP and other headers to every response on the way out (<a href="06-security.html">page 6</a>).</li>
+<li><strong>The router</strong> tries routes in registration order: ours ([[routes/web.php]], only <code>POST /csp-report</code>), Laravel's <code>/up</code>, the packages' routes, and Statamic's catch-all <code>{segments?}</code> last.</li>
+<li><strong>Toolkit routes</strong> {{A:Toolkit}} answer <code>/sitemap.xml</code>, <code>/robots.txt</code>, <code>/llms.txt</code>, <code>/favicon.ico</code>, <code>/apple-touch-icon.png</code>, <code>/icon-192.png</code>, <code>/icon-512.png</code> and <code>/site.webmanifest</code>, without a session or cookies so they cache well.</li>
+<li><strong>The catch-all</strong> {{S}} looks the URI up in the entries table (<code>/</code> is the root entry of the structured <code>pages</code> collection, <code>/contact</code> and <code>/privacy</code> its children) and renders the entry's <code>template</code>.</li>
+<li><strong>Nothing found?</strong> Statamic returns a 404. On the way out the toolkit's <code>HandleMissing</code> middleware {{A:Toolkit}} checks the redirect rules: a match becomes a 301 (that is how <code>/technology</code> reaches <code>/#how-it-works</code>); otherwise the 404 is counted in the 404 log and <code>errors/404.blade.php</code> renders.</li>
+</ol>
+
+<div class="box why">
+<p><strong>Redirects only answer GET and HEAD, and only for URLs that would 404.</strong> The old <code>Route::redirect</code> lines answered any method and took priority over pages. With the toolkit, a page always wins over a rule, so a page that comes back takes its address back automatically. A <code>POST /technology</code> is a plain 404. This was an intended change, and a test covers it.</p>
+</div>
+
+<div class="box laravel">
+<p>Why can the catch-all be "last"? Laravel matches routes in the order they were registered, and Statamic registers <code>{segments?}</code> after the application's own routes. Any route in <code>routes/web.php</code> therefore beats an entry with the same URI. That is also how Phase A ran safely: the old <code>Route::view</code> pages kept answering while the entries were being built.</p>
+</div>
+
+<div class="box read">
+<ol>
+<li>[[bootstrap/app.php]]</li>
+<li>[[routes/web.php]]</li>
+<li><code>vendor/jotham-lec/statamic-marketing-toolkit/routes/web.php</code>: the public toolkit routes and the "skip if a file exists in public/" checks.</li>
+<li><code>vendor/jotham-lec/statamic-marketing-toolkit/src/Http/Middleware/HandleMissing.php</code></li>
+</ol>
+</div>

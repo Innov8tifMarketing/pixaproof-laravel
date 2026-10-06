@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>7. Commands, queue, scheduler · pixaproof.com wiki</title>
+<link rel="stylesheet" href="assets/wiki.css">
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">pixaproof.com<br><small>codebase wiki</small></div>
+  <ol><li><a href="index.html">0. Start here</a></li><li><a href="00-provenance.html">0b. Stock vs custom</a></li><li><a href="01-request-lifecycle.html">1. A request, end to end</a></li><li><a href="02-frontend.html">2. Templates & frontend</a></li><li><a href="03-content-seo.html">3. Content & SEO</a></li><li><a href="04-database.html">4. Database</a></li><li><a href="05-control-panel.html">5. Control panel</a></li><li><a href="06-security.html">6. Security headers & CSP</a></li><li><a href="07-background-work.html" class="current">7. Commands, queue, scheduler</a></li><li><a href="08-infrastructure.html">8. Deployment & infrastructure</a></li><li><a href="09-testing-quality.html">9. Tests & quality gates</a></li><li><a href="10-whiteboard.html">10. Whiteboard defense</a></li></ol>
+  <p class="prov-legend"><span class="prov laravel">Laravel</span> framework default<br>
+  <span class="prov statamic">Statamic</span> Statamic default<br>
+  <span class="prov addon">Addon</span> a package we installed<br>
+  <span class="prov custom">Custom</span> written in this repo<br>
+  Diagram boxes use the same colours. <a href="00-provenance.html">Full map</a></p>
+  <p class="legend">Paths like <code>app/Http/Middleware/SecurityHeaders.php</code> are relative to the repo root.
+  Links open the file in your browser; <kbd>gf</kbd> on the path in your editor works too.</p>
+</nav>
+<main>
+<h1>7. Commands, queue, scheduler</h1>
+<p class="lede">There is little background work. Most of it comes from Statamic and the toolkit, and it needs two things running on the server: the queue worker and the scheduler cron.</p>
+
+<h2>Commands you will run</h2>
+<table>
+<tr><th>Command</th><th class="p">Origin</th><th>What for</th></tr>
+<tr><td><code>php artisan pixaproof:import-content [--once]</code></td><td class="p"><span class="prov custom" title="Custom">Custom</span></td><td>Create or refresh the content (<a href="03-content-seo.html">page 3</a>)</td></tr>
+<tr><td><code>php please make:user</code></td><td class="p"><span class="prov statamic" title="Statamic">Statamic</span></td><td>A control panel login</td></tr>
+<tr><td><code>php please stache:warm</code> / <code>stache:clear</code></td><td class="p"><span class="prov statamic" title="Statamic">Statamic</span></td><td>Statamic's flat-file index (blueprints). Deploys warm it</td></tr>
+<tr><td><code>php please seo:report</code></td><td class="p"><span class="prov addon" title="Addon: Toolkit">Addon: Toolkit</span></td><td>A site report with a score (Pro)</td></tr>
+<tr><td><code>php please seo:install --fields</code></td><td class="p"><span class="prov addon" title="Addon: Toolkit">Addon: Toolkit</span></td><td>Add fields a newer toolkit version brings to SEO &amp; brand</td></tr>
+</table>
+<div class="box why">
+<p><strong>There is no <code>csp:summary</code>.</strong> The docblock in <a class="src" href="../../config/csp.php"><code>config/csp.php</code></a> says to aggregate reports with <code>php artisan csp:summary</code>, but no such command exists in this repo. Read <code>storage/logs/csp-*.log</code> directly (one JSON object per line, with a <code>fingerprint</code> per directive, origin and path).</p>
+</div>
+
+<h2>Queue</h2>
+<p>The queue is Laravel's database driver <span class="prov laravel" title="Laravel">Laravel</span>, run in production by a Supervisor worker that every deploy restarts (<code>queue:restart</code> in <a class="src" href="../../deploy.php"><code>deploy.php</code></a>). Statamic queues some listeners, including updating its search index when an entry is saved. In tests the queue is <code>sync</code>, so those listeners run inline. That is how the Eloquent-driver cache bug in <a href="03-content-seo.html">page 3</a> surfaced.</p>
+
+<h2>Scheduler</h2>
+<table>
+<tr><th>Scheduled</th><th class="p">Origin</th><th>When</th></tr>
+<tr><td><code>Statamic\Jobs\HandleEntrySchedule</code> (scheduled entries go live; the toolkit then flushes the sitemap)</td><td class="p"><span class="prov statamic" title="Statamic">Statamic</span></td><td>Every minute</td></tr>
+<tr><td>Statamic's licence check (<code>statamic-outpost</code>)</td><td class="p"><span class="prov statamic" title="Statamic">Statamic</span></td><td>Hourly</td></tr>
+<tr><td><code>statamic:seo:search-console</code></td><td class="p"><span class="prov addon" title="Addon: Toolkit">Addon: Toolkit</span></td><td>Daily 04:30 (once credentials are set)</td></tr>
+<tr><td>Scheduled site reports</td><td class="p"><span class="prov addon" title="Addon: Toolkit">Addon: Toolkit</span></td><td>As set in Tools → SEO</td></tr>
+</table>
+<p>They only run if the server runs Laravel's scheduler every minute. The cron line is kept as a reference copy in <a class="src" href="../../deploy/server/etc/cron.d/pixaproof-laravel"><code>deploy/server/etc/cron.d/pixaproof-laravel</code></a> and installed by hand (<code>php artisan schedule:list</code> shows the schedule).</p>
+
+<div class="box read">
+<ol>
+<li><a class="src" href="../../app/Console/Commands/ImportStatamicContent.php"><code>app/Console/Commands/ImportStatamicContent.php</code></a></li>
+<li><a class="src" href="../../routes/console.php"><code>routes/console.php</code></a> (empty: nothing of ours is scheduled)</li>
+<li><a class="src" href="../../deploy/server/etc/cron.d/pixaproof-laravel"><code>deploy/server/etc/cron.d/pixaproof-laravel</code></a></li>
+</ol>
+</div>
+
+<footer class="pager"><a href="06-security.html">← 6. Security headers & CSP</a><a href="08-infrastructure.html">8. Deployment & infrastructure →</a></footer>
+</main>
+</body>
+</html>

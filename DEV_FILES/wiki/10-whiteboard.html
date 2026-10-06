@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10. Whiteboard defense · pixaproof.com wiki</title>
+<link rel="stylesheet" href="assets/wiki.css">
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">pixaproof.com<br><small>codebase wiki</small></div>
+  <ol><li><a href="index.html">0. Start here</a></li><li><a href="00-provenance.html">0b. Stock vs custom</a></li><li><a href="01-request-lifecycle.html">1. A request, end to end</a></li><li><a href="02-frontend.html">2. Templates & frontend</a></li><li><a href="03-content-seo.html">3. Content & SEO</a></li><li><a href="04-database.html">4. Database</a></li><li><a href="05-control-panel.html">5. Control panel</a></li><li><a href="06-security.html">6. Security headers & CSP</a></li><li><a href="07-background-work.html">7. Commands, queue, scheduler</a></li><li><a href="08-infrastructure.html">8. Deployment & infrastructure</a></li><li><a href="09-testing-quality.html">9. Tests & quality gates</a></li><li><a href="10-whiteboard.html" class="current">10. Whiteboard defense</a></li></ol>
+  <p class="prov-legend"><span class="prov laravel">Laravel</span> framework default<br>
+  <span class="prov statamic">Statamic</span> Statamic default<br>
+  <span class="prov addon">Addon</span> a package we installed<br>
+  <span class="prov custom">Custom</span> written in this repo<br>
+  Diagram boxes use the same colours. <a href="00-provenance.html">Full map</a></p>
+  <p class="legend">Paths like <code>app/Http/Middleware/SecurityHeaders.php</code> are relative to the repo root.
+  Links open the file in your browser; <kbd>gf</kbd> on the path in your editor works too.</p>
+</nav>
+<main>
+<h1>10. Whiteboard defense</h1>
+<p class="lede">Questions you should be able to answer at a whiteboard after reading this wiki. Try each one before opening the answer.</p>
+
+<h2>Requests and routing</h2>
+<details><summary>A visitor opens <code>/technology</code>. Trace every step to the page they end up on.</summary>
+<p>Caddy finds no file, so PHP runs. No app or toolkit route matches, so Statamic's catch-all looks for an entry with URI <code>/technology</code>, finds none and returns 404. On the way out the toolkit's <code>HandleMissing</code> matches the redirect rule (imported from <code>database/seo/redirects.csv</code>) and turns it into a 301 to <code>/#how-it-works</code>, counting a hit. The browser loads <code>/</code> and scrolls to the How It Works section.</p></details>
+<details><summary>Why did <code>public/robots.txt</code> have to be deleted?</summary>
+<p>Caddy serves existing files before PHP runs, and the toolkit doesn't even register its route when the file exists. The static file would have hidden the toolkit's robots.txt (with the <code>/cp/</code> disallow and the <code>Sitemap:</code> line).</p></details>
+<details><summary>An editor creates an entry at <code>/technology</code>. What happens to the redirect?</summary>
+<p>The page wins: redirects only apply to requests that would otherwise 404. The rule stays in the table, unused, until the page is removed again.</p></details>
+
+<h2>Content</h2>
+<details><summary>Where does the homepage's <code>&lt;title&gt;</code> come from, and why isn't it "Home"?</summary>
+<p>The <code>home</code> entry's <code>seo.title</code>, set by the import to "Verify Every Image. Eliminate Fraud." The toolkit would otherwise use the site name for the home page. No site name is appended to any title because SEO &amp; brand's <code>title_site_name</code> is false.</p></details>
+<details><summary>Why does a deploy never overwrite a title an editor changed?</summary>
+<p>Deploys run <code>pixaproof:import-content --once</code>, which returns straight away when the <code>pages</code> collection exists. Only the first deploy imports.</p></details>
+<details><summary>Content is in SQLite, but the blueprint is a YAML file. Why the split?</summary>
+<p>The Eloquent driver is configured per repository. Content (entries, navigations, globals, asset meta) changes in the control panel and belongs with the backed-up database; blueprints define the structure, change with the code and are reviewed in git.</p></details>
+
+<h2>Security</h2>
+<details><summary>Why does the site send two CSP headers?</summary>
+<p>The enforced one holds only directives that can't break a page (frame-ancestors, object-src, base-uri). The strict target policy is report-only; violations go to <code>/csp-report</code> and the <code>csp</code> log until the policy is clean enough to enforce.</p></details>
+<details><summary>Why don't the JSON-LD blocks need a nonce?</summary>
+<p><code>application/ld+json</code> is a data block; browsers never execute it, so CSP's script rules don't apply.</p></details>
+
+<h2>Operations</h2>
+<details><summary>Scheduled entries stopped going live. What do you check first?</summary>
+<p>The scheduler cron (<code>deploy/server/etc/cron.d/pixaproof-laravel</code>, installed by hand). Statamic's <code>HandleEntrySchedule</code> only runs from <code>schedule:run</code>.</p></details>
+<details><summary>You want a generated share card per page. What two things change?</summary>
+<p>Install PHP's <code>imagick</code> on the server (<code>apt install php8.4-imagick</code>, reload PHP-FPM), then set <code>og.enabled</code> to true in <code>config/seo.php</code> and update the URL snapshot (share images become <code>/og.png</code> and <code>/og/{uri}.png</code>).</p></details>
+<details><summary>A test passes alone but fails in the full suite. Where do you look?</summary>
+<p>State that outlives the transaction: files written outside the faked <code>media</code> disk, the Blueprint YAML written by <code>seo:install</code>, or a cache store that isn't per-test. The database itself is rolled back after every test.</p></details>
+
+<footer class="pager"><a href="09-testing-quality.html">← 9. Tests & quality gates</a><span></span></footer>
+</main>
+</body>
+</html>

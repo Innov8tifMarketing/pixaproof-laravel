@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>6. Security headers & CSP · pixaproof.com wiki</title>
+<link rel="stylesheet" href="assets/wiki.css">
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">pixaproof.com<br><small>codebase wiki</small></div>
+  <ol><li><a href="index.html">0. Start here</a></li><li><a href="00-provenance.html">0b. Stock vs custom</a></li><li><a href="01-request-lifecycle.html">1. A request, end to end</a></li><li><a href="02-frontend.html">2. Templates & frontend</a></li><li><a href="03-content-seo.html">3. Content & SEO</a></li><li><a href="04-database.html">4. Database</a></li><li><a href="05-control-panel.html">5. Control panel</a></li><li><a href="06-security.html" class="current">6. Security headers & CSP</a></li><li><a href="07-background-work.html">7. Commands, queue, scheduler</a></li><li><a href="08-infrastructure.html">8. Deployment & infrastructure</a></li><li><a href="09-testing-quality.html">9. Tests & quality gates</a></li><li><a href="10-whiteboard.html">10. Whiteboard defense</a></li></ol>
+  <p class="prov-legend"><span class="prov laravel">Laravel</span> framework default<br>
+  <span class="prov statamic">Statamic</span> Statamic default<br>
+  <span class="prov addon">Addon</span> a package we installed<br>
+  <span class="prov custom">Custom</span> written in this repo<br>
+  Diagram boxes use the same colours. <a href="00-provenance.html">Full map</a></p>
+  <p class="legend">Paths like <code>app/Http/Middleware/SecurityHeaders.php</code> are relative to the repo root.
+  Links open the file in your browser; <kbd>gf</kbd> on the path in your editor works too.</p>
+</nav>
+<main>
+<h1>6. Security headers &amp; CSP</h1>
+<p class="lede">The most custom part of the site. Every response gets security headers, an enforced Content-Security-Policy that can't break anything, and a strict report-only policy whose violations are collected and logged.</p>
+
+<h2>SecurityHeaders <span class="prov custom" title="Custom">Custom</span></h2>
+<p><a class="src" href="../../app/Http/Middleware/SecurityHeaders.php"><code>app/Http/Middleware/SecurityHeaders.php</code></a> is appended to the global middleware in <a class="src" href="../../bootstrap/app.php"><code>bootstrap/app.php</code></a>. On every request it calls <code>Vite::useCspNonce()</code> (so <code>@vite</code> tags and the toolkit's inline scripts get the nonce), and on the way out it sets, unless a header is already present:</p>
+<table>
+<tr><th>Header</th><th>Value</th></tr>
+<tr><td><code>Content-Security-Policy</code> (enforced)</td><td><code>frame-ancestors 'self'; object-src 'none'; base-uri 'self'</code> + reporting</td></tr>
+<tr><td><code>Content-Security-Policy-Report-Only</code></td><td>The full target policy: <code>default-src 'self'</code>, scripts and styles by nonce, Google Tag Manager and Analytics allowed, <code>'unsafe-eval'</code> for Alpine. <strong>Not sent on <code>/cp</code>.</strong></td></tr>
+<tr><td><code>Reporting-Endpoints</code></td><td><code>csp-endpoint</code> → <code>route('csp.report')</code></td></tr>
+<tr><td>Others</td><td><code>X-Frame-Options</code>, <code>X-Content-Type-Options</code>, <code>Referrer-Policy</code>, <code>Permissions-Policy</code>, COOP, CORP; HSTS in production over HTTPS. <code>X-Powered-By</code> removed.</td></tr>
+</table>
+
+<h2>Collecting reports <span class="prov custom" title="Custom">Custom</span></h2>
+<p>Browsers POST violations to <code>/csp-report</code> (<a class="src" href="../../app/Http/Controllers/CspReportController.php"><code>app/Http/Controllers/CspReportController.php</code></a>). The route (<a class="src" href="../../routes/web.php"><code>routes/web.php</code></a>) strips session and CSRF middleware (a browser report has neither) and is throttled to 300 a minute. The controller accepts both report formats (<code>application/csp-report</code> and the Reporting API's list), drops browser-extension noise (<code>chrome-extension:</code> and friends), de-duplicates identical reports for 10 minutes and writes one JSON line each to the <code>csp</code> log channel (<code>storage/logs/csp-*.log</code>). Every knob is in <a class="src" href="../../config/csp.php"><code>config/csp.php</code></a>.</p>
+
+<h2>Subresource integrity <span class="prov custom" title="Custom">Custom</span> on <span class="prov laravel" title="Laravel">Laravel</span></h2>
+<p><a class="src" href="../../vite-plugin-sri.js"><code>vite-plugin-sri.js</code></a> adds a SHA hash for every built file to the Vite manifest; Laravel's <code>@vite</code> prints it as <code>integrity="…"</code>. A tampered asset on a CDN or disk then fails to load instead of running.</p>
+
+<div class="box why">
+<p><strong>Why two policies?</strong> The enforced policy contains only directives that can't break the page. The strict one is report-only until the logs show it is clean on real traffic. Then it can be promoted. JSON-LD blocks (<code>type="application/ld+json"</code>) have no nonce on purpose: browsers never execute data blocks, so CSP doesn't apply to them.</p>
+</div>
+
+<div class="box why">
+<p><strong>Caddy and these headers.</strong> The server's shared <code>security_headers</code> snippet sets its headers only if absent (<code>?</code>), so the application's CSP wins.</p>
+</div>
+
+<div class="box read">
+<ol>
+<li><a class="src" href="../../app/Http/Middleware/SecurityHeaders.php"><code>app/Http/Middleware/SecurityHeaders.php</code></a></li>
+<li><a class="src" href="../../app/Http/Controllers/CspReportController.php"><code>app/Http/Controllers/CspReportController.php</code></a></li>
+<li><a class="src" href="../../tests/Feature/SecurityHeadersTest.php"><code>tests/Feature/SecurityHeadersTest.php</code></a> (what is promised, as tests)</li>
+</ol>
+</div>
+
+<footer class="pager"><a href="05-control-panel.html">← 5. Control panel</a><a href="07-background-work.html">7. Commands, queue, scheduler →</a></footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,31 @@
+// Where content lives and who writes it. Fill colour = provenance.
+digraph content {
+  rankdir=LR;
+  graph [fontname="Helvetica", fontsize=11, nodesep=0.3, ranksep=0.5, bgcolor="transparent"];
+  node  [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled", fillcolor="#ffffff", color="#8a8a8a"];
+  edge  [fontname="Helvetica", fontsize=8, color="#6b6b6b"];
+
+  importer [label="pixaproof:import-content\n(--once on deploy)", fillcolor="#fff1c7", URL="../../app/Console/Commands/ImportStatamicContent.php"];
+  csv      [label="database/seo/redirects.csv", fillcolor="#fff1c7", URL="../../database/seo/redirects.csv"];
+  cp       [label="Control panel /cp", fillcolor="#ece4fb", URL="05-control-panel.html"];
+
+  subgraph cluster_db {
+    label="SQLite (eloquent-driver + toolkit tables)"; style="rounded,filled"; fillcolor="#f3f6fb"; color="#6b9fd6";
+    pages   [label="collection pages\nentries home · contact · privacy\n+ tree", fillcolor="#ece4fb"];
+    navs    [label="navigations main · footer", fillcolor="#ece4fb"];
+    globals [label="global set seo\n(SEO & brand)", fillcolor="#e0eefb"];
+    assets  [label="asset container assets\n(meta; files in public/media)", fillcolor="#ece4fb"];
+    redirects [label="seo_redirects · seo_404s", fillcolor="#e0eefb"];
+  }
+
+  subgraph cluster_files {
+    label="Flat files in git"; style="rounded,filled"; fillcolor="#fbf7f0"; color="#b08a4a";
+    bp1 [label="blueprints/collections/pages/page.yaml", fillcolor="#ece4fb", URL="../../resources/blueprints/collections/pages/page.yaml"];
+    bp2 [label="blueprints/globals/seo.yaml", fillcolor="#e0eefb", URL="../../resources/blueprints/globals/seo.yaml"];
+  }
+
+  importer -> pages; importer -> navs; importer -> globals; importer -> assets;
+  csv -> importer; importer -> redirects [label="Csv::import()"];
+  cp -> pages; cp -> navs; cp -> globals; cp -> redirects;
+  bp1 -> pages [style=dashed, label="fields"]; bp2 -> globals [style=dashed];
+}

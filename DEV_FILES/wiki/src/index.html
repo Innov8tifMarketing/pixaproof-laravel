@@ -1,0 +1,42 @@
+<h1>pixaproof.com: a map of the codebase</h1>
+<p class="lede">This wiki is a guide to the code, not a copy of it. Each page starts with a diagram, explains how that part fits together, and ends with a short list of files to read in order. Click any box in a diagram to open the page or file it names.</p>
+
+<h2>What this application is, in one paragraph</h2>
+<p>pixaproof.com is the marketing site for <strong>PixaProof</strong>, Innov8tif's image-authenticity verification product. It has three pages: a long single-page landing (<code>/</code>) with anchor navigation, a contact page that sends visitors to the sales team's email (<code>/contact</code>), and the privacy policy (<code>/privacy</code>). There are no forms and no logins for visitors. Its job is to rank, to load fast and safely, and to send people to "Request Demo".</p>
+<p><strong>The stack:</strong> Laravel 13 {{L}} with Statamic 6 Core installed inside it {{S}}. Statamic owns the pages, navigation, assets and the control panel. Packages {{A}} add the Eloquent driver (content in SQLite) and the Marketing Toolkit (every SEO tag, the sitemap, robots.txt, llms.txt, favicons, GA4 and the redirects). Our code {{C}} is the Blade templates and components, the security headers and CSP reporting, the content import command and the deployment. <a href="00-provenance.html">Page 0b</a> sorts every file into those four buckets.</p>
+
+{{diagram:overview}}
+
+<h2>The five ideas that explain most of the code</h2>
+<table>
+<tr><th>Idea</th><th>Where you'll see it</th></tr>
+<tr><td><strong>1. Statamic default first, then the toolkit, then Laravel, then custom.</strong> The site was converted from plain Laravel in October 2026 with that rule. When you are about to write something, check whether Statamic or the toolkit already does it.</td><td><a href="00-provenance.html">Page 0b</a></td></tr>
+<tr><td><strong>2. Copy lives in templates, settings live in the CP.</strong> The homepage and contact copy are Blade; titles, descriptions, navigation, redirects, the privacy text and the GA4 ID are content an editor can change at <code>/cp</code>.</td><td><a href="02-frontend.html">Page 2</a>, <a href="03-content-seo.html">Page 3</a></td></tr>
+<tr><td><strong>3. Nothing SEO-related is hand-written.</strong> One tag, <code>&lt;s:seo:head /&gt;</code>, prints every meta tag, JSON-LD block, icon link and tracking script.</td><td><a href="03-content-seo.html">Page 3</a></td></tr>
+<tr><td><strong>4. One SQLite file holds everything.</strong> Content, users, redirects, the 404 log, the cache and the queue. Deploys back it up before migrating.</td><td><a href="04-database.html">Page 4</a>, <a href="08-infrastructure.html">Page 8</a></td></tr>
+<tr><td><strong>5. A snapshot test guards every public URL.</strong> Titles, descriptions, canonicals, JSON-LD and the 22 legacy redirects are recorded; any change has to be intended.</td><td><a href="09-testing-quality.html">Page 9</a></td></tr>
+</table>
+
+<h2>How to use this wiki</h2>
+<ol class="steps">
+  <li><strong>Page 0b, stock vs custom.</strong> What is Laravel's, what is Statamic's, what is a package, and what we wrote, file by file.</li>
+  <li><strong>Page 1, a request end to end.</strong> Caddy → Laravel → app route, toolkit route or Statamic catch-all → template.</li>
+  <li><strong>Pages 2–3, templates and content.</strong> How a page is assembled, and where its words and SEO values come from.</li>
+  <li><strong>Pages 4–8, the machinery.</strong> Database, control panel, security headers, commands and scheduler, deployment.</li>
+  <li><strong>Page 9, how we know it works.</strong> Tests and quality gates.</li>
+  <li><strong>Page 10, check yourself.</strong> Whiteboard questions with hidden answers.</li>
+</ol>
+
+<div class="box statamic">
+<p>Statamic in one minute: a <strong>collection</strong> is a content type (here <code>pages</code>); an <strong>entry</strong> is one item in it; a <strong>blueprint</strong> (YAML) lists an entry's fields; a <strong>template</strong> is the view an entry renders with; a <strong>navigation</strong> is an editable menu; a <strong>global set</strong> is site-wide settings; <strong>tags</strong> like <code>&lt;s:nav:main&gt;</code> are Statamic's view helpers, usable in Blade.</p>
+</div>
+
+<div class="box read">
+<ol>
+<li>[[bootstrap/app.php]]: routing and the one middleware we add.</li>
+<li>[[resources/views/layout.blade.php]]: every page's shell.</li>
+<li>[[app/Console/Commands/ImportStatamicContent.php]]: everything the site's content is made of.</li>
+<li>[[config/seo.php]]: the toolkit's options and our two changes.</li>
+<li>[[DEV_FILES/statamic-conversion/00-plan.md]]: why it is built this way.</li>
+</ol>
+</div>

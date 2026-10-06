@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0. Start here · pixaproof.com wiki</title>
+<link rel="stylesheet" href="assets/wiki.css">
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">pixaproof.com<br><small>codebase wiki</small></div>
+  <ol><li><a href="index.html" class="current">0. Start here</a></li><li><a href="00-provenance.html">0b. Stock vs custom</a></li><li><a href="01-request-lifecycle.html">1. A request, end to end</a></li><li><a href="02-frontend.html">2. Templates & frontend</a></li><li><a href="03-content-seo.html">3. Content & SEO</a></li><li><a href="04-database.html">4. Database</a></li><li><a href="05-control-panel.html">5. Control panel</a></li><li><a href="06-security.html">6. Security headers & CSP</a></li><li><a href="07-background-work.html">7. Commands, queue, scheduler</a></li><li><a href="08-infrastructure.html">8. Deployment & infrastructure</a></li><li><a href="09-testing-quality.html">9. Tests & quality gates</a></li><li><a href="10-whiteboard.html">10. Whiteboard defense</a></li></ol>
+  <p class="prov-legend"><span class="prov laravel">Laravel</span> framework default<br>
+  <span class="prov statamic">Statamic</span> Statamic default<br>
+  <span class="prov addon">Addon</span> a package we installed<br>
+  <span class="prov custom">Custom</span> written in this repo<br>
+  Diagram boxes use the same colours. <a href="00-provenance.html">Full map</a></p>
+  <p class="legend">Paths like <code>app/Http/Middleware/SecurityHeaders.php</code> are relative to the repo root.
+  Links open the file in your browser; <kbd>gf</kbd> on the path in your editor works too.</p>
+</nav>
+<main>
+<h1>pixaproof.com: a map of the codebase</h1>
+<p class="lede">This wiki is a guide to the code, not a copy of it. Each page starts with a diagram, explains how that part fits together, and ends with a short list of files to read in order. Click any box in a diagram to open the page or file it names.</p>
+
+<h2>What this application is, in one paragraph</h2>
+<p>pixaproof.com is the marketing site for <strong>PixaProof</strong>, Innov8tif's image-authenticity verification product. It has three pages: a long single-page landing (<code>/</code>) with anchor navigation, a contact page that sends visitors to the sales team's email (<code>/contact</code>), and the privacy policy (<code>/privacy</code>). There are no forms and no logins for visitors. Its job is to rank, to load fast and safely, and to send people to "Request Demo".</p>
+<p><strong>The stack:</strong> Laravel 13 <span class="prov laravel" title="Laravel">Laravel</span> with Statamic 6 Core installed inside it <span class="prov statamic" title="Statamic">Statamic</span>. Statamic owns the pages, navigation, assets and the control panel. Packages <span class="prov addon" title="Addon">Addon</span> add the Eloquent driver (content in SQLite) and the Marketing Toolkit (every SEO tag, the sitemap, robots.txt, llms.txt, favicons, GA4 and the redirects). Our code <span class="prov custom" title="Custom">Custom</span> is the Blade templates and components, the security headers and CSP reporting, the content import command and the deployment. <a href="00-provenance.html">Page 0b</a> sorts every file into those four buckets.</p>
+
+<figure class="diagram" id="fig-overview"><svg style="max-width:min(100%, 1672px)"
+ viewBox="0.00 0.00 1254.00 217.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 213)">
+<title>overview</title>
+<!-- visitor -->
+<g id="node1" class="node">
+<title>visitor</title>
+<ellipse fill="#ffffff" stroke="#8a8a8a" cx="50.66" cy="-144" rx="50.66" ry="18"/>
+<text xml:space="preserve" text-anchor="middle" x="50.66" y="-140.5" font-family="Helvetica,sans-Serif" font-size="10.00">Visitor / crawler</text>
+</g>
+<!-- caddy -->
+<g id="node3" class="node">
+<title>caddy</title>
+<g id="a_node3"><a xlink:href="08-infrastructure.html" xlink:title="Caddy\n(TLS, static files)">
+<path fill="#ffffff" stroke="#8a8a8a" d="M274.08,-209C274.08,-209 207.08,-209 207.08,-209 201.08,-209 195.08,-203 195.08,-197 195.08,-197 195.08,-185 195.08,-185 195.08,-179 201.08,-173 207.08,-173 207.08,-173 274.08,-173 274.08,-173 280.08,-173 286.08,-179 286.08,-185 286.08,-185 286.08,-197 286.08,-197 286.08,-203 280.08,-209 274.08,-209"/>
+<text xml:space="preserve" text-anchor="middle" x="240.58" y="-193.5" font-family="Helvetica,sans-Serif" font-size="10.00">Caddy</text>
+<text xml:space="preserve" text-anchor="middle" x="240.58" y="-181.5" font-family="Helvetica,sans-Serif" font-size="10.00">(TLS, static files)</text>
+</a>
+</g>
+</g>
+<!-- visitor&#45;&gt;caddy -->
+<g id="edge1" class="edge">
+<title>visitor&#45;&gt;caddy</title>
+<path fill="none" stroke="#6b6b6b" d="M92.9,-154.31C119.63,-161 154.77,-169.79 183.96,-177.09"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="182.8,-180.41 193.35,-179.44 184.5,-173.62 182.8,-180.41"/>
+</g>
+<!-- csp -->
+<g id="node11" class="node">
+<title>csp</title>
+<g id="a_node11"><a xlink:href="06-security.html" xlink:title="POST /csp&#45;report\n→ csp log">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M274.83,-148C274.83,-148 206.33,-148 206.33,-148 200.33,-148 194.33,-142 194.33,-136 194.33,-136 194.33,-124 194.33,-124 194.33,-118 200.33,-112 206.33,-112 206.33,-112 274.83,-112 274.83,-112 280.83,-112 286.83,-118 286.83,-124 286.83,-124 286.83,-136 286.83,-136 286.83,-142 280.83,-148 274.83,-148"/>
+<text xml:space="preserve" text-anchor="middle" x="240.58" y="-132.5" font-family="Helvetica,sans-Serif" font-size="10.00">POST /csp&#45;report</text>
+<text xml:space="preserve" text-anchor="middle" x="240.58" y="-120.5" font-family="Helvetica,sans-Serif" font-size="10.00">→ csp log</text>
+</a>
+</g>
+</g>
+<!-- visitor&#45;&gt;csp -->
+<g id="edge12" class="edge">
+<title>visitor&#45;&gt;csp</title>
+<path fill="none" stroke="#6b6b6b" stroke-dasharray="5,2" d="M100.54,-140.36C125.65,-138.49 156.38,-136.2 182.55,-134.25"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="182.62,-137.75 192.33,-133.52 182.1,-130.77 182.62,-137.75"/>
+<text xml:space="preserve" text-anchor="middle" x="147.83" y="-140.82" font-family="Helvetica,sans-Serif" font-size="8.00">browser reports</text>
+</g>
+<!-- editor -->
+<g id="node2" class="node">
+<title>editor</title>
+<ellipse fill="#ffffff" stroke="#8a8a8a" cx="370.83" cy="-130" rx="27" ry="18"/>
+<text xml:space="preserve" text-anchor="middle" x="370.83" y="-126.5" font-family="Helvetica,sans-Serif" font-size="10.00">Editor</text>
+</g>
+<!-- statamic -->
+<g id="node6" class="node">
+<title>statamic</title>
+<g id="a_node6"><a xlink:href="05-control-panel.html" xlink:title="Statamic 6\nfront&#45;end route + /cp">
+<path fill="#ece4fb" stroke="#8a8a8a" d="M556.83,-148C556.83,-148 476.33,-148 476.33,-148 470.33,-148 464.33,-142 464.33,-136 464.33,-136 464.33,-124 464.33,-124 464.33,-118 470.33,-112 476.33,-112 476.33,-112 556.83,-112 556.83,-112 562.83,-112 568.83,-118 568.83,-124 568.83,-124 568.83,-136 568.83,-136 568.83,-142 562.83,-148 556.83,-148"/>
+<text xml:space="preserve" text-anchor="middle" x="516.58" y="-132.5" font-family="Helvetica,sans-Serif" font-size="10.00">Statamic 6</text>
+<text xml:space="preserve" text-anchor="middle" x="516.58" y="-120.5" font-family="Helvetica,sans-Serif" font-size="10.00">front&#45;end route + /cp</text>
+</a>
+</g>
+</g>
+<!-- editor&#45;&gt;statamic -->
+<g id="edge10" class="edge">
+<title>editor&#45;&gt;statamic</title>
+<path fill="none" stroke="#6b6b6b" d="M398.19,-130C413.5,-130 433.49,-130 452.62,-130"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="452.54,-133.5 462.54,-130 452.54,-126.5 452.54,-133.5"/>
+<text xml:space="preserve" text-anchor="middle" x="441.08" y="-132.15" font-family="Helvetica,sans-Serif" font-size="8.00">/cp</text>
+</g>
+<!-- laravel -->
+<g id="node4" class="node">
+<title>laravel</title>
+<g id="a_node4"><a xlink:href="01-request-lifecycle.html" xlink:title="Laravel 13\nbootstrap/app.php">
+<path fill="#fde2df" stroke="#8a8a8a" d="M405.83,-209C405.83,-209 335.83,-209 335.83,-209 329.83,-209 323.83,-203 323.83,-197 323.83,-197 323.83,-185 323.83,-185 323.83,-179 329.83,-173 335.83,-173 335.83,-173 405.83,-173 405.83,-173 411.83,-173 417.83,-179 417.83,-185 417.83,-185 417.83,-197 417.83,-197 417.83,-203 411.83,-209 405.83,-209"/>
+<text xml:space="preserve" text-anchor="middle" x="370.83" y="-193.5" font-family="Helvetica,sans-Serif" font-size="10.00">Laravel 13</text>
+<text xml:space="preserve" text-anchor="middle" x="370.83" y="-181.5" font-family="Helvetica,sans-Serif" font-size="10.00">bootstrap/app.php</text>
+</a>
+</g>
+</g>
+<!-- caddy&#45;&gt;laravel -->
+<g id="edge2" class="edge">
+<title>caddy&#45;&gt;laravel</title>
+<path fill="none" stroke="#6b6b6b" d="M286.43,-191C294.77,-191 303.58,-191 312.24,-191"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="311.96,-194.5 321.96,-191 311.96,-187.5 311.96,-194.5"/>
+</g>
+<!-- headers -->
+<g id="node5" class="node">
+<title>headers</title>
+<g id="a_node5"><a xlink:href="06-security.html" xlink:title="SecurityHeaders\n(CSP + nonce)">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M548.95,-209C548.95,-209 484.2,-209 484.2,-209 478.2,-209 472.2,-203 472.2,-197 472.2,-197 472.2,-185 472.2,-185 472.2,-179 478.2,-173 484.2,-173 484.2,-173 548.95,-173 548.95,-173 554.95,-173 560.95,-179 560.95,-185 560.95,-185 560.95,-197 560.95,-197 560.95,-203 554.95,-209 548.95,-209"/>
+<text xml:space="preserve" text-anchor="middle" x="516.58" y="-193.5" font-family="Helvetica,sans-Serif" font-size="10.00">SecurityHeaders</text>
+<text xml:space="preserve" text-anchor="middle" x="516.58" y="-181.5" font-family="Helvetica,sans-Serif" font-size="10.00">(CSP + nonce)</text>
+</a>
+</g>
+</g>
+<!-- laravel&#45;&gt;headers -->
+<g id="edge3" class="edge">
+<title>laravel&#45;&gt;headers</title>
+<path fill="none" stroke="#6b6b6b" d="M418.1,-191C431.57,-191 446.41,-191 460.37,-191"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="460.32,-194.5 470.32,-191 460.32,-187.5 460.32,-194.5"/>
+</g>
+<!-- laravel&#45;&gt;statamic -->
+<g id="edge4" class="edge">
+<title>laravel&#45;&gt;statamic</title>
+<path fill="none" stroke="#6b6b6b" d="M415.35,-172.53C429.98,-166.32 446.49,-159.32 461.82,-152.81"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="462.97,-156.12 470.81,-149 460.24,-149.68 462.97,-156.12"/>
+</g>
+<!-- toolkit -->
+<g id="node7" class="node">
+<title>toolkit</title>
+<g id="a_node7"><a xlink:href="03-content-seo.html" xlink:title="Marketing Toolkit\nmeta · JSON&#45;LD · sitemap · robots\nfavicons · GA4 · redirects">
+<path fill="#e0eefb" stroke="#8a8a8a" d="M1006.08,-156C1006.08,-156 861.08,-156 861.08,-156 855.08,-156 849.08,-150 849.08,-144 849.08,-144 849.08,-124 849.08,-124 849.08,-118 855.08,-112 861.08,-112 861.08,-112 1006.08,-112 1006.08,-112 1012.08,-112 1018.08,-118 1018.08,-124 1018.08,-124 1018.08,-144 1018.08,-144 1018.08,-150 1012.08,-156 1006.08,-156"/>
+<text xml:space="preserve" text-anchor="middle" x="933.58" y="-142.5" font-family="Helvetica,sans-Serif" font-size="10.00">Marketing Toolkit</text>
+<text xml:space="preserve" text-anchor="middle" x="933.58" y="-130.5" font-family="Helvetica,sans-Serif" font-size="10.00">meta · JSON&#45;LD · sitemap · robots</text>
+<text xml:space="preserve" text-anchor="middle" x="933.58" y="-118.5" font-family="Helvetica,sans-Serif" font-size="10.00">favicons · GA4 · redirects</text>
+</a>
+</g>
+</g>
+<!-- statamic&#45;&gt;toolkit -->
+<g id="edge6" class="edge">
+<title>statamic&#45;&gt;toolkit</title>
+<path fill="none" stroke="#6b6b6b" d="M560.79,-148.45C574.88,-153.57 590.78,-158.43 605.83,-161 683.27,-174.21 772.18,-165.33 837.68,-154.33"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="838.06,-157.82 847.32,-152.67 836.87,-150.92 838.06,-157.82"/>
+<text xml:space="preserve" text-anchor="middle" x="683.2" y="-169.76" font-family="Helvetica,sans-Serif" font-size="8.00">tags in the layout</text>
+</g>
+<!-- views -->
+<g id="node8" class="node">
+<title>views</title>
+<g id="a_node8"><a xlink:href="02-frontend.html" xlink:title="Blade templates\nlayout · home · contact · default">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M748.58,-148C748.58,-148 617.83,-148 617.83,-148 611.83,-148 605.83,-142 605.83,-136 605.83,-136 605.83,-124 605.83,-124 605.83,-118 611.83,-112 617.83,-112 617.83,-112 748.58,-112 748.58,-112 754.58,-112 760.58,-118 760.58,-124 760.58,-124 760.58,-136 760.58,-136 760.58,-142 754.58,-148 748.58,-148"/>
+<text xml:space="preserve" text-anchor="middle" x="683.2" y="-132.5" font-family="Helvetica,sans-Serif" font-size="10.00">Blade templates</text>
+<text xml:space="preserve" text-anchor="middle" x="683.2" y="-120.5" font-family="Helvetica,sans-Serif" font-size="10.00">layout · home · contact · default</text>
+</a>
+</g>
+</g>
+<!-- statamic&#45;&gt;views -->
+<g id="edge5" class="edge">
+<title>statamic&#45;&gt;views</title>
+<path fill="none" stroke="#6b6b6b" d="M569.21,-130C577.21,-130 585.66,-130 594.19,-130"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="593.91,-133.5 603.91,-130 593.91,-126.5 593.91,-133.5"/>
+</g>
+<!-- db -->
+<g id="node9" class="node">
+<title>db</title>
+<g id="a_node9"><a xlink:href="04-database.html" xlink:title="SQLite\ncontent (eloquent&#45;driver) · users\nredirects · 404 log · queue">
+<path fill="#e0eefb" stroke="#8a8a8a" d="M1246.33,-98.75C1246.33,-101.78 1211.81,-104.25 1169.33,-104.25 1126.84,-104.25 1092.33,-101.78 1092.33,-98.75 1092.33,-98.75 1092.33,-49.25 1092.33,-49.25 1092.33,-46.22 1126.84,-43.75 1169.33,-43.75 1211.81,-43.75 1246.33,-46.22 1246.33,-49.25 1246.33,-49.25 1246.33,-98.75 1246.33,-98.75"/>
+<path fill="none" stroke="#8a8a8a" d="M1246.33,-98.75C1246.33,-95.72 1211.81,-93.25 1169.33,-93.25 1126.84,-93.25 1092.33,-95.72 1092.33,-98.75"/>
+<text xml:space="preserve" text-anchor="middle" x="1169.33" y="-82.5" font-family="Helvetica,sans-Serif" font-size="10.00">SQLite</text>
+<text xml:space="preserve" text-anchor="middle" x="1169.33" y="-70.5" font-family="Helvetica,sans-Serif" font-size="10.00">content (eloquent&#45;driver) · users</text>
+<text xml:space="preserve" text-anchor="middle" x="1169.33" y="-58.5" font-family="Helvetica,sans-Serif" font-size="10.00">redirects · 404 log · queue</text>
+</a>
+</g>
+</g>
+<!-- statamic&#45;&gt;db -->
+<g id="edge8" class="edge">
+<title>statamic&#45;&gt;db</title>
+<path fill="none" stroke="#6b6b6b" d="M561.77,-111.63C575.63,-106.64 591.16,-101.84 605.83,-99 771.28,-66.99 968.99,-66.75 1080.48,-70.02"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="1080.37,-73.51 1090.47,-70.33 1080.58,-66.52 1080.37,-73.51"/>
+</g>
+<!-- toolkit&#45;&gt;db -->
+<g id="edge9" class="edge">
+<title>toolkit&#45;&gt;db</title>
+<path fill="none" stroke="#6b6b6b" d="M1018.3,-112.51C1038.74,-107.26 1060.64,-101.64 1081.23,-96.36"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="1081.9,-99.8 1090.72,-93.92 1080.16,-93.02 1081.9,-99.8"/>
+</g>
+<!-- views&#45;&gt;toolkit -->
+<g id="edge7" class="edge">
+<title>views&#45;&gt;toolkit</title>
+<path fill="none" stroke="#6b6b6b" stroke-dasharray="5,2" d="M760.75,-131.23C785.08,-131.62 812.3,-132.06 837.76,-132.47"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="837.37,-135.97 847.42,-132.63 837.48,-128.97 837.37,-135.97"/>
+<text xml:space="preserve" text-anchor="middle" x="804.83" y="-134.51" font-family="Helvetica,sans-Serif" font-size="8.00">&lt;s:seo:head /&gt;</text>
+</g>
+<!-- importer -->
+<g id="node10" class="node">
+<title>importer</title>
+<g id="a_node10"><a xlink:href="03-content-seo.html" xlink:title="pixaproof:import&#45;content">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M982.08,-36C982.08,-36 885.08,-36 885.08,-36 879.08,-36 873.08,-30 873.08,-24 873.08,-24 873.08,-12 873.08,-12 873.08,-6 879.08,0 885.08,0 885.08,0 982.08,0 982.08,0 988.08,0 994.08,-6 994.08,-12 994.08,-12 994.08,-24 994.08,-24 994.08,-30 988.08,-36 982.08,-36"/>
+<text xml:space="preserve" text-anchor="middle" x="933.58" y="-14.5" font-family="Helvetica,sans-Serif" font-size="10.00">pixaproof:import&#45;content</text>
+</a>
+</g>
+</g>
+<!-- importer&#45;&gt;db -->
+<g id="edge11" class="edge">
+<title>importer&#45;&gt;db</title>
+<path fill="none" stroke="#6b6b6b" d="M994.38,-28.24C1019.24,-32.87 1048.3,-38.75 1074.33,-45.25 1076.59,-45.82 1078.88,-46.4 1081.19,-47.01"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="1080.04,-50.32 1090.61,-49.56 1081.87,-43.57 1080.04,-50.32"/>
+<text xml:space="preserve" text-anchor="middle" x="1055.2" y="-47.4" font-family="Helvetica,sans-Serif" font-size="8.00">first deploy</text>
+</g>
+</g>
+</svg>
+<figcaption><a href="diagrams/overview.svg" target="_blank">open full size</a> · source: <a href="diagrams/overview.dot">diagrams/overview.dot</a></figcaption></figure>
+
+<h2>The five ideas that explain most of the code</h2>
+<table>
+<tr><th>Idea</th><th>Where you'll see it</th></tr>
+<tr><td><strong>1. Statamic default first, then the toolkit, then Laravel, then custom.</strong> The site was converted from plain Laravel in October 2026 with that rule. When you are about to write something, check whether Statamic or the toolkit already does it.</td><td><a href="00-provenance.html">Page 0b</a></td></tr>
+<tr><td><strong>2. Copy lives in templates, settings live in the CP.</strong> The homepage and contact copy are Blade; titles, descriptions, navigation, redirects, the privacy text and the GA4 ID are content an editor can change at <code>/cp</code>.</td><td><a href="02-frontend.html">Page 2</a>, <a href="03-content-seo.html">Page 3</a></td></tr>
+<tr><td><strong>3. Nothing SEO-related is hand-written.</strong> One tag, <code>&lt;s:seo:head /&gt;</code>, prints every meta tag, JSON-LD block, icon link and tracking script.</td><td><a href="03-content-seo.html">Page 3</a></td></tr>
+<tr><td><strong>4. One SQLite file holds everything.</strong> Content, users, redirects, the 404 log, the cache and the queue. Deploys back it up before migrating.</td><td><a href="04-database.html">Page 4</a>, <a href="08-infrastructure.html">Page 8</a></td></tr>
+<tr><td><strong>5. A snapshot test guards every public URL.</strong> Titles, descriptions, canonicals, JSON-LD and the 22 legacy redirects are recorded; any change has to be intended.</td><td><a href="09-testing-quality.html">Page 9</a></td></tr>
+</table>
+
+<h2>How to use this wiki</h2>
+<ol class="steps">
+  <li><strong>Page 0b, stock vs custom.</strong> What is Laravel's, what is Statamic's, what is a package, and what we wrote, file by file.</li>
+  <li><strong>Page 1, a request end to end.</strong> Caddy → Laravel → app route, toolkit route or Statamic catch-all → template.</li>
+  <li><strong>Pages 2–3, templates and content.</strong> How a page is assembled, and where its words and SEO values come from.</li>
+  <li><strong>Pages 4–8, the machinery.</strong> Database, control panel, security headers, commands and scheduler, deployment.</li>
+  <li><strong>Page 9, how we know it works.</strong> Tests and quality gates.</li>
+  <li><strong>Page 10, check yourself.</strong> Whiteboard questions with hidden answers.</li>
+</ol>
+
+<div class="box statamic">
+<p>Statamic in one minute: a <strong>collection</strong> is a content type (here <code>pages</code>); an <strong>entry</strong> is one item in it; a <strong>blueprint</strong> (YAML) lists an entry's fields; a <strong>template</strong> is the view an entry renders with; a <strong>navigation</strong> is an editable menu; a <strong>global set</strong> is site-wide settings; <strong>tags</strong> like <code>&lt;s:nav:main&gt;</code> are Statamic's view helpers, usable in Blade.</p>
+</div>
+
+<div class="box read">
+<ol>
+<li><a class="src" href="../../bootstrap/app.php"><code>bootstrap/app.php</code></a>: routing and the one middleware we add.</li>
+<li><a class="src" href="../../resources/views/layout.blade.php"><code>resources/views/layout.blade.php</code></a>: every page's shell.</li>
+<li><a class="src" href="../../app/Console/Commands/ImportStatamicContent.php"><code>app/Console/Commands/ImportStatamicContent.php</code></a>: everything the site's content is made of.</li>
+<li><a class="src" href="../../config/seo.php"><code>config/seo.php</code></a>: the toolkit's options and our two changes.</li>
+<li><a class="src" href="../../DEV_FILES/statamic-conversion/00-plan.md"><code>DEV_FILES/statamic-conversion/00-plan.md</code></a>: why it is built this way.</li>
+</ol>
+</div>
+
+<footer class="pager"><span></span><a href="00-provenance.html">0b. Stock vs custom →</a></footer>
+</main>
+</body>
+</html>

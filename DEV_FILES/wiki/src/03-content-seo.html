@@ -1,0 +1,57 @@
+<h1>3. Content &amp; SEO</h1>
+<p class="lede">Content lives in SQLite through Statamic's Eloquent driver; its shape lives in YAML blueprints in git. One command creates all of it. The Marketing Toolkit turns it into every SEO output the site has.</p>
+
+{{diagram:content-model}}
+
+<h2>The content</h2>
+<table>
+<tr><th>What</th><th>Handle</th><th class="p">Origin</th><th>Notes</th></tr>
+<tr><td>Collection</td><td><code>pages</code></td><td class="p">{{S}}</td><td>Structured, root entry = home, route <code>{parent_uri}/{slug}</code></td></tr>
+<tr><td>Entries</td><td><code>home</code>, <code>contact</code>, <code>privacy</code></td><td class="p">{{S}}</td><td>Fields: title, markdown <code>content</code>, slug, template, SEO tab (<code>import: seo::seo</code>) — [[resources/blueprints/collections/pages/page.yaml]]</td></tr>
+<tr><td>Navigations</td><td><code>main</code>, <code>footer</code></td><td class="p">{{S}}</td><td>URL items (anchors) plus the home entry</td></tr>
+<tr><td>Global set</td><td><code>seo</code> ("SEO &amp; brand")</td><td class="p">{{A:Toolkit}}</td><td>Created by <code>seo:install</code>: [[resources/blueprints/globals/seo.yaml]]</td></tr>
+<tr><td>Asset container</td><td><code>assets</code></td><td class="p">{{S}}</td><td><code>media</code> disk → <code>public/media</code> (production: <code>shared/data/media</code>). Holds <code>og-image.webp</code> and <code>pixaproof-icon.png</code></td></tr>
+<tr><td>Redirects</td><td><code>seo_redirects</code></td><td class="p">{{A:Toolkit}}</td><td>22 rows from [[database/seo/redirects.csv]]</td></tr>
+</table>
+
+<h2>The import command</h2>
+<p>[[app/Console/Commands/ImportStatamicContent.php]] {{C}} on {{S}} (<code>php artisan pixaproof:import-content</code>) uses only Statamic's PHP API and the toolkit's own CSV importer (<code>JothamLec\MarketingToolkit\Redirects\Csv::import()</code>). It creates or updates, in order: the asset container and its two images, the collection, its entries and tree, the two navigations, the SEO &amp; brand set (running <code>seo:install</code>), the SEO &amp; brand values, and the redirects. It then checks the counts (3 pages, 2 navigations, 22 redirects) and fails if they are off.</p>
+<ul>
+<li><strong>Run again</strong>, it updates in place: same entry IDs, "0 created, 22 updated".</li>
+<li><strong><code>--once</code></strong> does nothing when the <code>pages</code> collection exists. Deploys and <code>composer setup</code> use this, so control panel edits are never overwritten.</li>
+<li><code>DatabaseSeeder</code> runs it, which is how the tests get their content.</li>
+</ul>
+
+<div class="box why">
+<p><strong>Two Eloquent-driver bugs are worked around in the command.</strong> (1) Saving an asset container through <code>$container-&gt;save()</code> skips the repository's cache reset, so a <code>null</code> cached by an earlier lookup survives and Statamic's search indexer crashes; the command saves through <code>AssetContainer::save($container)</code>. (2) A brand-new navigation tree is always stored empty (<code>makeModelFromContract()</code> writes <code>[]</code> when there is no model yet); the command saves the tree once empty, as the control panel does, then adds the items. Both are worth reporting upstream.</p>
+</div>
+
+<h2>SEO output</h2>
+<p>All of it comes from the Marketing Toolkit {{A:Toolkit}}. The layout's <code>&lt;s:seo:head /&gt;</code> prints, in this order: the tracking tags (GA4 from SEO &amp; brand, GTM from <code>SEO_GTM_ID</code>; production only), the meta tags, then the icon links.</p>
+<table>
+<tr><th>Output</th><th>Value comes from</th></tr>
+<tr><td><code>&lt;title&gt;</code></td><td>The entry's <code>seo.title</code>, else its title. No site name: <code>title_site_name</code> is false. Home's <code>seo.title</code> is "Verify Every Image. Eliminate Fraud."</td></tr>
+<tr><td>Description</td><td>The entry's <code>seo.description</code>, else SEO &amp; brand's default (cut at 160 characters)</td></tr>
+<tr><td>Canonical, <code>og:url</code></td><td>The entry's URL (query strings dropped)</td></tr>
+<tr><td>Share image</td><td>SEO &amp; brand's default image, as a 1200×630 Glide crop</td></tr>
+<tr><td>Robots meta</td><td><code>max-snippet:-1, max-image-preview:large, …</code> in production; <code>noindex</code> everywhere else; <code>noindex, follow</code> on 404s</td></tr>
+<tr><td>JSON-LD</td><td>WebSite, Organization, WebPage and (inner pages) BreadcrumbList</td></tr>
+<tr><td>sitemap.xml, llms.txt</td><td>Every published entry in a routed collection</td></tr>
+<tr><td>robots.txt</td><td>SEO &amp; brand's disallow lines (<code>/cp/</code>) plus a <code>Sitemap:</code> line</td></tr>
+<tr><td>Favicons + manifest</td><td>SEO &amp; brand's icon (a PNG, so no Imagick is needed)</td></tr>
+</table>
+
+<h3>Our two changes to the toolkit's defaults ([[config/seo.php]])</h3>
+<ul>
+<li><code>description.length</code> 155 → 160, matching SEO &amp; brand's field limit, so hand-written descriptions aren't cut.</li>
+<li><code>og.enabled</code> → false. Generated share cards need PHP's <code>imagick</code>, which production doesn't have yet. Install it and flip this to get a card per page.</li>
+</ul>
+
+<div class="box read">
+<ol>
+<li>[[app/Console/Commands/ImportStatamicContent.php]]</li>
+<li>[[resources/blueprints/collections/pages/page.yaml]]</li>
+<li>[[config/seo.php]] (search for <code>tracking</code>, <code>robots</code>, <code>og</code>)</li>
+<li><code>vendor/jotham-lec/statamic-marketing-toolkit/docs/developers.md</code>: what each value falls back to</li>
+</ol>
+</div>

@@ -1,0 +1,33 @@
+<h1>5. Control panel</h1>
+<p class="lede"><code>/cp</code> is Statamic's control panel {{S}}, with the Marketing Toolkit's screens {{A:Toolkit}} added. It is where everything that isn't page copy gets edited.</p>
+
+<h2>What an editor can change</h2>
+<table>
+<tr><th>Screen</th><th>Changes</th><th class="p">Origin</th></tr>
+<tr><td>Collections → Pages</td><td>Each page's title, slug, template, SEO tab (title, description, share image, noindex, canonical…), and the privacy policy's text (markdown)</td><td class="p">{{S}}</td></tr>
+<tr><td>Navigation → Main / Footer</td><td>The header and footer links</td><td class="p">{{S}}</td></tr>
+<tr><td>Assets</td><td>Images in <code>public/media</code> (share image, icon)</td><td class="p">{{S}}</td></tr>
+<tr><td>Globals → SEO &amp; brand</td><td>Default description and share image, icon, publisher, GA4 ID, robots.txt lines, verification codes</td><td class="p">{{A:Toolkit}}</td></tr>
+<tr><td>Tools → SEO</td><td>Redirects (with hits and CSV import/export), the 404 log, site reports</td><td class="p">{{A:Toolkit}}</td></tr>
+<tr><td>Dashboard</td><td>The SEO widget (<code>config/statamic/cp.php</code>)</td><td class="p">{{A:Toolkit}}</td></tr>
+</table>
+<p>The homepage and contact copy are <em>not</em> editable here: they live in [[resources/views/home.blade.php]] and [[resources/views/contact.blade.php]].</p>
+
+<h2>Editions and users</h2>
+<ul>
+<li><strong>Statamic Core</strong> (free): one control panel user, no roles, no revisions. [[config/statamic/editions.php]] keeps <code>'pro' =&gt; false</code>.</li>
+<li><strong>Marketing Toolkit Pro</strong>: set in the same file. Local and staging need no licence; the live site does.</li>
+<li>Users are Statamic database users {{S}} on Laravel's <code>users</code> table and <code>App\Models\User</code>. Create one with <code>php please make:user</code> (make it a super user). Each environment has its own.</li>
+</ul>
+
+<div class="box why">
+<p><strong>Why the control panel has no report-only CSP.</strong> Statamic's control panel is a Vue application that doesn't follow the site's policy. Reporting its violations would bury the site's own. [[app/Http/Middleware/SecurityHeaders.php]] skips that one header when <code>Statamic::isCpRoute()</code> is true; the enforced headers still apply.</p>
+</div>
+
+<div class="box read">
+<ol>
+<li>[[config/statamic/cp.php]] (the widget)</li>
+<li>[[config/statamic/editions.php]]</li>
+<li><code>vendor/jotham-lec/statamic-marketing-toolkit/docs/editors.md</code>: every SEO &amp; brand field</li>
+</ol>
+</div>

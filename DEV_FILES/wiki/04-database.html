@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4. Database · pixaproof.com wiki</title>
+<link rel="stylesheet" href="assets/wiki.css">
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">pixaproof.com<br><small>codebase wiki</small></div>
+  <ol><li><a href="index.html">0. Start here</a></li><li><a href="00-provenance.html">0b. Stock vs custom</a></li><li><a href="01-request-lifecycle.html">1. A request, end to end</a></li><li><a href="02-frontend.html">2. Templates & frontend</a></li><li><a href="03-content-seo.html">3. Content & SEO</a></li><li><a href="04-database.html" class="current">4. Database</a></li><li><a href="05-control-panel.html">5. Control panel</a></li><li><a href="06-security.html">6. Security headers & CSP</a></li><li><a href="07-background-work.html">7. Commands, queue, scheduler</a></li><li><a href="08-infrastructure.html">8. Deployment & infrastructure</a></li><li><a href="09-testing-quality.html">9. Tests & quality gates</a></li><li><a href="10-whiteboard.html">10. Whiteboard defense</a></li></ol>
+  <p class="prov-legend"><span class="prov laravel">Laravel</span> framework default<br>
+  <span class="prov statamic">Statamic</span> Statamic default<br>
+  <span class="prov addon">Addon</span> a package we installed<br>
+  <span class="prov custom">Custom</span> written in this repo<br>
+  Diagram boxes use the same colours. <a href="00-provenance.html">Full map</a></p>
+  <p class="legend">Paths like <code>app/Http/Middleware/SecurityHeaders.php</code> are relative to the repo root.
+  Links open the file in your browser; <kbd>gf</kbd> on the path in your editor works too.</p>
+</nav>
+<main>
+<h1>4. Database</h1>
+<p class="lede">One SQLite file holds everything that changes at runtime. Locally it is <code>database/database.sqlite</code>; in production it is <code>shared/data/sqlite/database.sqlite</code>, outside the releases so deploys never replace it.</p>
+
+<h2>Tables, by owner</h2>
+<table>
+<tr><th>Tables</th><th class="p">Origin</th><th>Holds</th></tr>
+<tr><td><code>users</code>, <code>password_reset_tokens</code>, <code>sessions</code>, <code>cache</code>, <code>cache_locks</code>, <code>jobs</code>, <code>job_batches</code>, <code>failed_jobs</code></td><td class="p"><span class="prov laravel" title="Laravel">Laravel</span></td><td>Skeleton tables. <code>cache</code> is the production cache store (the toolkit needs a serialising store)</td></tr>
+<tr><td><code>users</code> columns <code>super</code>, <code>avatar</code>, <code>preferences</code>, <code>last_login</code>, two-factor columns; <code>role_user</code>, <code>group_user</code>, <code>password_activation_tokens</code>, <code>webauthn</code></td><td class="p"><span class="prov statamic" title="Statamic">Statamic</span></td><td>Statamic database users (control panel logins)</td></tr>
+<tr><td><code>entries</code>, <code>collections</code>, <code>trees</code>, <code>navigations</code>, <code>global_sets</code>, <code>global_set_variables</code>, <code>asset_containers</code>, <code>assets_meta</code>, <code>addon_settings</code></td><td class="p"><span class="prov addon" title="Addon: eloquent-driver">Addon: eloquent-driver</span></td><td>Statamic content. <code>trees</code> holds both the collection tree and the navigation trees</td></tr>
+<tr><td><code>seo_redirects</code>, <code>seo_404s</code>, <code>seo_reports</code>, <code>seo_report_pages</code>, <code>seo_search_stats</code></td><td class="p"><span class="prov addon" title="Addon: Toolkit">Addon: Toolkit</span></td><td>Redirect rules and hits, the 404 log, site reports, Search Console numbers</td></tr>
+</table>
+<p>Which Statamic repositories use the database and which stay flat-file is set per repository in <a class="src" href="../../config/statamic/eloquent-driver.php"><code>config/statamic/eloquent-driver.php</code></a>: blueprints, fieldsets, forms, revisions, taxonomies, terms, tokens and sites stay on <code>file</code>.</p>
+
+<div class="box why">
+<p><strong>Why the Eloquent driver on SQLite, when Statamic's default is flat files?</strong> Production already ran on one SQLite file with tested backups (before every migration, and offsite to Backblaze B2). Keeping content there means one thing to back up and restore, and CP edits never conflict with a deploy's git checkout. The toolkit also recommends <code>addon_settings</code> in the database for the same reason.</p>
+</div>
+
+<h2>Migrations worth knowing</h2>
+<ul>
+<li>The eloquent-driver's migrations (<code>2024_03_07_*</code>, <code>2025_07_07_*</code>) are published copies <span class="prov addon" title="Addon">Addon</span>.</li>
+<li><a class="src" href="../../database/migrations/2026_10_06_143105_statamic_auth_tables.php"><code>database/migrations/2026_10_06_143105_statamic_auth_tables.php</code></a> and <a class="src" href="../../database/migrations/2026_10_06_143033_statamic_webauthn_table.php"><code>database/migrations/2026_10_06_143033_statamic_webauthn_table.php</code></a> <span class="prov statamic" title="Statamic">Statamic</span>. <code>statamic:install</code> and <code>php please auth:migration</code> both publish two-factor and webauthn migrations; the duplicates were deleted so a single <code>migrate</code> works.</li>
+<li>The toolkit's migrations run from <code>vendor/</code> (not published).</li>
+<li><a class="src" href="../../database/migrations/2026_10_06_152703_drop_leads_table.php"><code>database/migrations/2026_10_06_152703_drop_leads_table.php</code></a> <span class="prov custom" title="Custom">Custom</span> drops the contact form's old <code>leads</code> table (empty in production). Its <code>down()</code> recreates the final schema.</li>
+</ul>
+
+<div class="box read">
+<ol>
+<li><a class="src" href="../../config/statamic/eloquent-driver.php"><code>config/statamic/eloquent-driver.php</code></a></li>
+<li><a class="src" href="../../config/database.php"><code>config/database.php</code></a> (SQLite is the default connection)</li>
+<li>The <code>db:backup</code>, <code>db:restore</code> and <code>backup:offsite</code> tasks in <a class="src" href="../../deploy.php"><code>deploy.php</code></a></li>
+</ol>
+</div>
+
+<footer class="pager"><a href="03-content-seo.html">← 3. Content & SEO</a><a href="05-control-panel.html">5. Control panel →</a></footer>
+</main>
+</body>
+</html>

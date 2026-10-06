@@ -1,0 +1,19 @@
+// The test suite and the gates. Fill colour = provenance.
+digraph tests {
+  rankdir=LR;
+  graph [fontname="Helvetica", fontsize=11, nodesep=0.3, ranksep=0.45, bgcolor="transparent"];
+  node  [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled", fillcolor="#ffffff", color="#8a8a8a"];
+  edge  [fontname="Helvetica", fontsize=8, color="#6b6b6b"];
+
+  base   [label="TestCase\nRefreshDatabase + $seed\n(import once, transaction per test)", fillcolor="#fff1c7", URL="../../tests/TestCase.php"];
+  seeder [label="DatabaseSeeder →\npixaproof:import-content", fillcolor="#fff1c7", URL="../../database/seeders/DatabaseSeeder.php"];
+  guard  [label="Guard/UrlSnapshotTest\nevery public URL vs urls.json", fillcolor="#fff1c7", URL="../../tests/Feature/Guard/UrlSnapshotTest.php"];
+  snap   [label="tests/__snapshots__/urls.json", fillcolor="#fff1c7", URL="../../tests/__snapshots__/urls.json"];
+  feat   [label="Feature tests\nhome · routes · security headers · CSP route\nimport command · schema · components · SRI", fillcolor="#fff1c7", URL="../../tests/Feature"];
+  gates  [label="Gates: phpunit · pint · phpstan (1G)\nsheath:lint · npm run build", fillcolor="#e0eefb"];
+
+  seeder -> base [label="runs once"];
+  base -> guard; base -> feat;
+  guard -> snap [label="assert / UPDATE_SNAPSHOTS=1"];
+  feat -> gates [style=dashed]; guard -> gates [style=dashed];
+}

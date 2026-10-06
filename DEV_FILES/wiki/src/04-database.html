@@ -1,0 +1,32 @@
+<h1>4. Database</h1>
+<p class="lede">One SQLite file holds everything that changes at runtime. Locally it is <code>database/database.sqlite</code>; in production it is <code>shared/data/sqlite/database.sqlite</code>, outside the releases so deploys never replace it.</p>
+
+<h2>Tables, by owner</h2>
+<table>
+<tr><th>Tables</th><th class="p">Origin</th><th>Holds</th></tr>
+<tr><td><code>users</code>, <code>password_reset_tokens</code>, <code>sessions</code>, <code>cache</code>, <code>cache_locks</code>, <code>jobs</code>, <code>job_batches</code>, <code>failed_jobs</code></td><td class="p">{{L}}</td><td>Skeleton tables. <code>cache</code> is the production cache store (the toolkit needs a serialising store)</td></tr>
+<tr><td><code>users</code> columns <code>super</code>, <code>avatar</code>, <code>preferences</code>, <code>last_login</code>, two-factor columns; <code>role_user</code>, <code>group_user</code>, <code>password_activation_tokens</code>, <code>webauthn</code></td><td class="p">{{S}}</td><td>Statamic database users (control panel logins)</td></tr>
+<tr><td><code>entries</code>, <code>collections</code>, <code>trees</code>, <code>navigations</code>, <code>global_sets</code>, <code>global_set_variables</code>, <code>asset_containers</code>, <code>assets_meta</code>, <code>addon_settings</code></td><td class="p">{{A:eloquent-driver}}</td><td>Statamic content. <code>trees</code> holds both the collection tree and the navigation trees</td></tr>
+<tr><td><code>seo_redirects</code>, <code>seo_404s</code>, <code>seo_reports</code>, <code>seo_report_pages</code>, <code>seo_search_stats</code></td><td class="p">{{A:Toolkit}}</td><td>Redirect rules and hits, the 404 log, site reports, Search Console numbers</td></tr>
+</table>
+<p>Which Statamic repositories use the database and which stay flat-file is set per repository in [[config/statamic/eloquent-driver.php]]: blueprints, fieldsets, forms, revisions, taxonomies, terms, tokens and sites stay on <code>file</code>.</p>
+
+<div class="box why">
+<p><strong>Why the Eloquent driver on SQLite, when Statamic's default is flat files?</strong> Production already ran on one SQLite file with tested backups (before every migration, and offsite to Backblaze B2). Keeping content there means one thing to back up and restore, and CP edits never conflict with a deploy's git checkout. The toolkit also recommends <code>addon_settings</code> in the database for the same reason.</p>
+</div>
+
+<h2>Migrations worth knowing</h2>
+<ul>
+<li>The eloquent-driver's migrations (<code>2024_03_07_*</code>, <code>2025_07_07_*</code>) are published copies {{A}}.</li>
+<li>[[database/migrations/2026_10_06_143105_statamic_auth_tables.php]] and [[database/migrations/2026_10_06_143033_statamic_webauthn_table.php]] {{S}}. <code>statamic:install</code> and <code>php please auth:migration</code> both publish two-factor and webauthn migrations; the duplicates were deleted so a single <code>migrate</code> works.</li>
+<li>The toolkit's migrations run from <code>vendor/</code> (not published).</li>
+<li>[[database/migrations/2026_10_06_152703_drop_leads_table.php]] {{C}} drops the contact form's old <code>leads</code> table (empty in production). Its <code>down()</code> recreates the final schema.</li>
+</ul>
+
+<div class="box read">
+<ol>
+<li>[[config/statamic/eloquent-driver.php]]</li>
+<li>[[config/database.php]] (SQLite is the default connection)</li>
+<li>The <code>db:backup</code>, <code>db:restore</code> and <code>backup:offsite</code> tasks in [[deploy.php]]</li>
+</ol>
+</div>

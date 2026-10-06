@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5. Control panel · pixaproof.com wiki</title>
+<link rel="stylesheet" href="assets/wiki.css">
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">pixaproof.com<br><small>codebase wiki</small></div>
+  <ol><li><a href="index.html">0. Start here</a></li><li><a href="00-provenance.html">0b. Stock vs custom</a></li><li><a href="01-request-lifecycle.html">1. A request, end to end</a></li><li><a href="02-frontend.html">2. Templates & frontend</a></li><li><a href="03-content-seo.html">3. Content & SEO</a></li><li><a href="04-database.html">4. Database</a></li><li><a href="05-control-panel.html" class="current">5. Control panel</a></li><li><a href="06-security.html">6. Security headers & CSP</a></li><li><a href="07-background-work.html">7. Commands, queue, scheduler</a></li><li><a href="08-infrastructure.html">8. Deployment & infrastructure</a></li><li><a href="09-testing-quality.html">9. Tests & quality gates</a></li><li><a href="10-whiteboard.html">10. Whiteboard defense</a></li></ol>
+  <p class="prov-legend"><span class="prov laravel">Laravel</span> framework default<br>
+  <span class="prov statamic">Statamic</span> Statamic default<br>
+  <span class="prov addon">Addon</span> a package we installed<br>
+  <span class="prov custom">Custom</span> written in this repo<br>
+  Diagram boxes use the same colours. <a href="00-provenance.html">Full map</a></p>
+  <p class="legend">Paths like <code>app/Http/Middleware/SecurityHeaders.php</code> are relative to the repo root.
+  Links open the file in your browser; <kbd>gf</kbd> on the path in your editor works too.</p>
+</nav>
+<main>
+<h1>5. Control panel</h1>
+<p class="lede"><code>/cp</code> is Statamic's control panel <span class="prov statamic" title="Statamic">Statamic</span>, with the Marketing Toolkit's screens <span class="prov addon" title="Addon: Toolkit">Addon: Toolkit</span> added. It is where everything that isn't page copy gets edited.</p>
+
+<h2>What an editor can change</h2>
+<table>
+<tr><th>Screen</th><th>Changes</th><th class="p">Origin</th></tr>
+<tr><td>Collections → Pages</td><td>Each page's title, slug, template, SEO tab (title, description, share image, noindex, canonical…), and the privacy policy's text (markdown)</td><td class="p"><span class="prov statamic" title="Statamic">Statamic</span></td></tr>
+<tr><td>Navigation → Main / Footer</td><td>The header and footer links</td><td class="p"><span class="prov statamic" title="Statamic">Statamic</span></td></tr>
+<tr><td>Assets</td><td>Images in <code>public/media</code> (share image, icon)</td><td class="p"><span class="prov statamic" title="Statamic">Statamic</span></td></tr>
+<tr><td>Globals → SEO &amp; brand</td><td>Default description and share image, icon, publisher, GA4 ID, robots.txt lines, verification codes</td><td class="p"><span class="prov addon" title="Addon: Toolkit">Addon: Toolkit</span></td></tr>
+<tr><td>Tools → SEO</td><td>Redirects (with hits and CSV import/export), the 404 log, site reports</td><td class="p"><span class="prov addon" title="Addon: Toolkit">Addon: Toolkit</span></td></tr>
+<tr><td>Dashboard</td><td>The SEO widget (<code>config/statamic/cp.php</code>)</td><td class="p"><span class="prov addon" title="Addon: Toolkit">Addon: Toolkit</span></td></tr>
+</table>
+<p>The homepage and contact copy are <em>not</em> editable here: they live in <a class="src" href="../../resources/views/home.blade.php"><code>resources/views/home.blade.php</code></a> and <a class="src" href="../../resources/views/contact.blade.php"><code>resources/views/contact.blade.php</code></a>.</p>
+
+<h2>Editions and users</h2>
+<ul>
+<li><strong>Statamic Core</strong> (free): one control panel user, no roles, no revisions. <a class="src" href="../../config/statamic/editions.php"><code>config/statamic/editions.php</code></a> keeps <code>'pro' =&gt; false</code>.</li>
+<li><strong>Marketing Toolkit Pro</strong>: set in the same file. Local and staging need no licence; the live site does.</li>
+<li>Users are Statamic database users <span class="prov statamic" title="Statamic">Statamic</span> on Laravel's <code>users</code> table and <code>App\Models\User</code>. Create one with <code>php please make:user</code> (make it a super user). Each environment has its own.</li>
+</ul>
+
+<div class="box why">
+<p><strong>Why the control panel has no report-only CSP.</strong> Statamic's control panel is a Vue application that doesn't follow the site's policy. Reporting its violations would bury the site's own. <a class="src" href="../../app/Http/Middleware/SecurityHeaders.php"><code>app/Http/Middleware/SecurityHeaders.php</code></a> skips that one header when <code>Statamic::isCpRoute()</code> is true; the enforced headers still apply.</p>
+</div>
+
+<div class="box read">
+<ol>
+<li><a class="src" href="../../config/statamic/cp.php"><code>config/statamic/cp.php</code></a> (the widget)</li>
+<li><a class="src" href="../../config/statamic/editions.php"><code>config/statamic/editions.php</code></a></li>
+<li><code>vendor/jotham-lec/statamic-marketing-toolkit/docs/editors.md</code>: every SEO &amp; brand field</li>
+</ol>
+</div>
+
+<footer class="pager"><a href="04-database.html">← 4. Database</a><a href="06-security.html">6. Security headers & CSP →</a></footer>
+</main>
+</body>
+</html>

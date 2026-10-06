@@ -1,0 +1,30 @@
+// One HTTP request, as configured in bootstrap/app.php.
+// Fill colour = provenance: red Laravel, purple Statamic, blue addon, yellow ours.
+digraph lifecycle {
+  rankdir=TB;
+  graph [fontname="Helvetica", fontsize=11, nodesep=0.3, ranksep=0.4, bgcolor="transparent"];
+  node  [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled", fillcolor="#ffffff", color="#8a8a8a"];
+  edge  [fontname="Helvetica", fontsize=8, color="#6b6b6b"];
+
+  caddy  [label="Caddy: an existing file in public/?\n(build assets, media, videos)", shape=diamond, fillcolor="#ffffff", URL="../../deploy/server/home/deployer/pixaproof-laravel/Caddyfile"];
+  static [label="served directly", shape=ellipse, fillcolor="#ffffff"];
+  index  [label="public/index.php → bootstrap/app.php", fillcolor="#fde2df", URL="../../bootstrap/app.php"];
+  global [label="Global middleware\n+ SecurityHeaders (appended)", fillcolor="#fff1c7", URL="../../app/Http/Middleware/SecurityHeaders.php"];
+  router [label="Router: app routes first,\nthen package routes, Statamic catch-all last", shape=diamond, fillcolor="#fde2df"];
+
+  csp    [label="POST /csp-report\nCspReportController\n(no session, no CSRF, throttled)", fillcolor="#fff1c7", URL="../../app/Http/Controllers/CspReportController.php"];
+  up     [label="/up health check", fillcolor="#fde2df"];
+  tk     [label="Toolkit routes\nsitemap.xml · robots.txt · llms.txt\nfavicons · site.webmanifest", fillcolor="#e0eefb", URL="03-content-seo.html"];
+  cp     [label="/cp (control panel)", fillcolor="#ece4fb", URL="05-control-panel.html"];
+  site   [label="Statamic catch-all {segments?}\nfinds the entry by URI", fillcolor="#ece4fb"];
+  view   [label="entry's template\n(home · contact · default)\n@extends('layout')", fillcolor="#fff1c7", URL="02-frontend.html"];
+  missing [label="404 → HandleMissing:\nredirect rule? → 301\nelse errors/404 + 404 log", fillcolor="#e0eefb", URL="03-content-seo.html"];
+
+  caddy -> static [label="yes"];
+  caddy -> index [label="no"];
+  index -> global -> router;
+  router -> csp; router -> up; router -> tk; router -> cp;
+  router -> site;
+  site -> view [label="found"];
+  site -> missing [label="no entry"];
+}

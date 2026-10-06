@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>8. Deployment & infrastructure · pixaproof.com wiki</title>
+<link rel="stylesheet" href="assets/wiki.css">
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">pixaproof.com<br><small>codebase wiki</small></div>
+  <ol><li><a href="index.html">0. Start here</a></li><li><a href="00-provenance.html">0b. Stock vs custom</a></li><li><a href="01-request-lifecycle.html">1. A request, end to end</a></li><li><a href="02-frontend.html">2. Templates & frontend</a></li><li><a href="03-content-seo.html">3. Content & SEO</a></li><li><a href="04-database.html">4. Database</a></li><li><a href="05-control-panel.html">5. Control panel</a></li><li><a href="06-security.html">6. Security headers & CSP</a></li><li><a href="07-background-work.html">7. Commands, queue, scheduler</a></li><li><a href="08-infrastructure.html" class="current">8. Deployment & infrastructure</a></li><li><a href="09-testing-quality.html">9. Tests & quality gates</a></li><li><a href="10-whiteboard.html">10. Whiteboard defense</a></li></ol>
+  <p class="prov-legend"><span class="prov laravel">Laravel</span> framework default<br>
+  <span class="prov statamic">Statamic</span> Statamic default<br>
+  <span class="prov addon">Addon</span> a package we installed<br>
+  <span class="prov custom">Custom</span> written in this repo<br>
+  Diagram boxes use the same colours. <a href="00-provenance.html">Full map</a></p>
+  <p class="legend">Paths like <code>app/Http/Middleware/SecurityHeaders.php</code> are relative to the repo root.
+  Links open the file in your browser; <kbd>gf</kbd> on the path in your editor works too.</p>
+</nav>
+<main>
+<h1>8. Deployment &amp; infrastructure</h1>
+<p class="lede">One Ubuntu 24.04 VPS on Alibaba Cloud (Singapore), shared with the Innov8tif site. Caddy in front, PHP 8.4-FPM, Supervisor for the queue worker, SQLite on disk. Deploys are pushed from a laptop with Deployer.</p>
+
+<figure class="diagram" id="fig-deploy"><svg style="max-width:min(100%, 323px)"
+ viewBox="0.00 0.00 242.00 516.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 512)">
+<title>deploy</title>
+<!-- prep -->
+<g id="node1" class="node">
+<title>prep</title>
+<path fill="#e0eefb" stroke="#8a8a8a" d="M222.25,-508C222.25,-508 12,-508 12,-508 6,-508 0,-502 0,-496 0,-496 0,-484 0,-484 0,-478 6,-472 12,-472 12,-472 222.25,-472 222.25,-472 228.25,-472 234.25,-478 234.25,-484 234.25,-484 234.25,-496 234.25,-496 234.25,-502 228.25,-508 222.25,-508"/>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-492.5" font-family="Helvetica,sans-Serif" font-size="10.00">deploy:prepare</text>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-480.5" font-family="Helvetica,sans-Serif" font-size="10.00">clone (LFS skipped) → lfs:pull → .env, shared dirs</text>
+</g>
+<!-- vendors -->
+<g id="node2" class="node">
+<title>vendors</title>
+<path fill="#e0eefb" stroke="#8a8a8a" d="M198.25,-450C198.25,-450 36,-450 36,-450 30,-450 24,-444 24,-438 24,-438 24,-418 24,-418 24,-412 30,-406 36,-406 36,-406 198.25,-406 198.25,-406 204.25,-406 210.25,-412 210.25,-418 210.25,-418 210.25,-438 210.25,-438 210.25,-444 204.25,-450 198.25,-450"/>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-436.5" font-family="Helvetica,sans-Serif" font-size="10.00">composer install</text>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-424.5" font-family="Helvetica,sans-Serif" font-size="10.00">→ post&#45;autoload&#45;dump: statamic:install</text>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-412.5" font-family="Helvetica,sans-Serif" font-size="10.00">(publishes CP + toolkit assets)</text>
+</g>
+<!-- prep&#45;&gt;vendors -->
+<g id="edge1" class="edge">
+<title>prep&#45;&gt;vendors</title>
+<path fill="none" stroke="#6b6b6b" d="M117.12,-471.65C117.12,-468.53 117.12,-465.19 117.12,-461.81"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="120.63,-461.88 117.13,-451.88 113.63,-461.88 120.63,-461.88"/>
+</g>
+<!-- npm -->
+<g id="node3" class="node">
+<title>npm</title>
+<g id="a_node3"><a xlink:href="../../deploy.php" xlink:title="npm:install → npm:build">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M165.62,-384C165.62,-384 68.62,-384 68.62,-384 62.62,-384 56.62,-378 56.62,-372 56.62,-372 56.62,-360 56.62,-360 56.62,-354 62.62,-348 68.62,-348 68.62,-348 165.62,-348 165.62,-348 171.62,-348 177.62,-354 177.62,-360 177.62,-360 177.62,-372 177.62,-372 177.62,-378 171.62,-384 165.62,-384"/>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-362.5" font-family="Helvetica,sans-Serif" font-size="10.00">npm:install → npm:build</text>
+</a>
+</g>
+</g>
+<!-- vendors&#45;&gt;npm -->
+<g id="edge2" class="edge">
+<title>vendors&#45;&gt;npm</title>
+<path fill="none" stroke="#6b6b6b" d="M117.12,-405.68C117.12,-402.39 117.12,-398.96 117.12,-395.55"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="120.63,-395.82 117.13,-385.82 113.63,-395.82 120.63,-395.82"/>
+</g>
+<!-- backup -->
+<g id="node4" class="node">
+<title>backup</title>
+<g id="a_node4"><a xlink:href="../../deploy.php" xlink:title="db:ensure&#45;sqlite → db:backup">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M178,-326C178,-326 56.25,-326 56.25,-326 50.25,-326 44.25,-320 44.25,-314 44.25,-314 44.25,-302 44.25,-302 44.25,-296 50.25,-290 56.25,-290 56.25,-290 178,-290 178,-290 184,-290 190,-296 190,-302 190,-302 190,-314 190,-314 190,-320 184,-326 178,-326"/>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-304.5" font-family="Helvetica,sans-Serif" font-size="10.00">db:ensure&#45;sqlite → db:backup</text>
+</a>
+</g>
+</g>
+<!-- npm&#45;&gt;backup -->
+<g id="edge3" class="edge">
+<title>npm&#45;&gt;backup</title>
+<path fill="none" stroke="#6b6b6b" d="M117.12,-347.59C117.12,-344.4 117.12,-340.99 117.12,-337.57"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="120.63,-337.72 117.13,-327.72 113.63,-337.72 120.63,-337.72"/>
+</g>
+<!-- migrate -->
+<g id="node5" class="node">
+<title>migrate</title>
+<g id="a_node5"><a xlink:href="../../deploy.php" xlink:title="migrate:safe\n(backup again if migrations pending)">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M191.5,-268C191.5,-268 42.75,-268 42.75,-268 36.75,-268 30.75,-262 30.75,-256 30.75,-256 30.75,-244 30.75,-244 30.75,-238 36.75,-232 42.75,-232 42.75,-232 191.5,-232 191.5,-232 197.5,-232 203.5,-238 203.5,-244 203.5,-244 203.5,-256 203.5,-256 203.5,-262 197.5,-268 191.5,-268"/>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-252.5" font-family="Helvetica,sans-Serif" font-size="10.00">migrate:safe</text>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-240.5" font-family="Helvetica,sans-Serif" font-size="10.00">(backup again if migrations pending)</text>
+</a>
+</g>
+</g>
+<!-- backup&#45;&gt;migrate -->
+<g id="edge4" class="edge">
+<title>backup&#45;&gt;migrate</title>
+<path fill="none" stroke="#6b6b6b" d="M117.12,-289.59C117.12,-286.4 117.12,-282.99 117.12,-279.57"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="120.63,-279.72 117.13,-269.72 113.63,-279.72 120.63,-279.72"/>
+</g>
+<!-- import -->
+<g id="node6" class="node">
+<title>import</title>
+<g id="a_node6"><a xlink:href="../../app/Console/Commands/ImportStatamicContent.php" xlink:title="content:import\npixaproof:import&#45;content &#45;&#45;once">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M180.62,-210C180.62,-210 53.62,-210 53.62,-210 47.62,-210 41.62,-204 41.62,-198 41.62,-198 41.62,-186 41.62,-186 41.62,-180 47.62,-174 53.62,-174 53.62,-174 180.62,-174 180.62,-174 186.62,-174 192.62,-180 192.62,-186 192.62,-186 192.62,-198 192.62,-198 192.62,-204 186.62,-210 180.62,-210"/>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-194.5" font-family="Helvetica,sans-Serif" font-size="10.00">content:import</text>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-182.5" font-family="Helvetica,sans-Serif" font-size="10.00">pixaproof:import&#45;content &#45;&#45;once</text>
+</a>
+</g>
+</g>
+<!-- migrate&#45;&gt;import -->
+<g id="edge5" class="edge">
+<title>migrate&#45;&gt;import</title>
+<path fill="none" stroke="#6b6b6b" d="M117.12,-231.59C117.12,-228.4 117.12,-224.99 117.12,-221.57"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="120.63,-221.72 117.13,-211.72 113.63,-221.72 120.63,-221.72"/>
+</g>
+<!-- publish -->
+<g id="node7" class="node">
+<title>publish</title>
+<path fill="#fff1c7" stroke="#8a8a8a" d="M206.5,-152C206.5,-152 27.75,-152 27.75,-152 21.75,-152 15.75,-146 15.75,-140 15.75,-140 15.75,-128 15.75,-128 15.75,-122 21.75,-116 27.75,-116 27.75,-116 206.5,-116 206.5,-116 212.5,-116 218.5,-122 218.5,-128 218.5,-128 218.5,-140 218.5,-140 218.5,-146 212.5,-152 206.5,-152"/>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-136.5" font-family="Helvetica,sans-Serif" font-size="10.00">artisan:down → symlink → php&#45;fpm restart</text>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-124.5" font-family="Helvetica,sans-Serif" font-size="10.00">→ artisan:up → queue restart</text>
+</g>
+<!-- import&#45;&gt;publish -->
+<g id="edge6" class="edge">
+<title>import&#45;&gt;publish</title>
+<path fill="none" stroke="#6b6b6b" d="M117.12,-173.59C117.12,-170.4 117.12,-166.99 117.12,-163.57"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="120.63,-163.72 117.13,-153.72 113.63,-163.72 120.63,-163.72"/>
+</g>
+<!-- caches -->
+<g id="node8" class="node">
+<title>caches</title>
+<path fill="#fff1c7" stroke="#8a8a8a" d="M215.12,-94C215.12,-94 19.12,-94 19.12,-94 13.12,-94 7.12,-88 7.12,-82 7.12,-82 7.12,-70 7.12,-70 7.12,-64 13.12,-58 19.12,-58 19.12,-58 215.12,-58 215.12,-58 221.12,-58 227.12,-64 227.12,-70 227.12,-70 227.12,-82 227.12,-82 227.12,-88 221.12,-94 215.12,-94"/>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-72.5" font-family="Helvetica,sans-Serif" font-size="10.00">artisan:cache:refresh → statamic:stache:warm</text>
+</g>
+<!-- publish&#45;&gt;caches -->
+<g id="edge7" class="edge">
+<title>publish&#45;&gt;caches</title>
+<path fill="none" stroke="#6b6b6b" d="M117.12,-115.59C117.12,-112.4 117.12,-108.99 117.12,-105.57"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="120.63,-105.72 117.13,-95.72 113.63,-105.72 120.63,-105.72"/>
+</g>
+<!-- verify -->
+<g id="node9" class="node">
+<title>verify</title>
+<path fill="#fff1c7" stroke="#8a8a8a" d="M187.38,-36C187.38,-36 46.88,-36 46.88,-36 40.88,-36 34.88,-30 34.88,-24 34.88,-24 34.88,-12 34.88,-12 34.88,-6 40.88,0 46.88,0 46.88,0 187.38,0 187.38,0 193.38,0 199.38,-6 199.38,-12 199.38,-12 199.38,-24 199.38,-24 199.38,-30 193.38,-36 187.38,-36"/>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-20.5" font-family="Helvetica,sans-Serif" font-size="10.00">deploy:verify (curl the site, 5 tries)</text>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-8.5" font-family="Helvetica,sans-Serif" font-size="10.00">fails → rollback</text>
+</g>
+<!-- caches&#45;&gt;verify -->
+<g id="edge8" class="edge">
+<title>caches&#45;&gt;verify</title>
+<path fill="none" stroke="#6b6b6b" d="M117.12,-57.59C117.12,-54.4 117.12,-50.99 117.12,-47.57"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="120.63,-47.72 117.13,-37.72 113.63,-47.72 120.63,-47.72"/>
+</g>
+</g>
+</svg>
+<figcaption><a href="diagrams/deploy.svg" target="_blank">open full size</a> · source: <a href="diagrams/deploy.dot">diagrams/deploy.dot</a></figcaption></figure>
+
+<h2>The deploy, in order</h2>
+<p><code>dep deploy prod</code> runs <a class="src" href="../../deploy.php"><code>deploy.php</code></a> <span class="prov custom" title="Custom">Custom</span> on top of Deployer's Laravel recipe <span class="prov addon" title="Addon: Deployer">Addon: Deployer</span>:</p>
+<ol class="steps">
+<li>Clone the branch with Git LFS smudging skipped, then <code>lfs:pull</code> runs <code>git lfs pull</code> for the videos; if that fails it copies them from the live release and refuses to continue if any LFS pointer file is left. Link <code>.env</code> and the shared dirs (<code>data/sqlite</code>, <code>data/media</code>, <code>data/backups</code>).</li>
+<li><code>composer install</code>. Its <code>post-autoload-dump</code> script runs <code>statamic:install</code>, which publishes the control panel's and the toolkit's assets to <code>public/vendor/</code> (git-ignored). Update scripts don't run here: they need the <code>composer.lock.bak</code> that only <code>composer update</code> writes.</li>
+<li><code>npm install</code> and <code>npm run build</code>.</li>
+<li><code>db:ensure-sqlite</code> → <code>db:backup</code> (copy, keep 5) → <code>migrate:safe</code> (backs up again if migrations are pending).</li>
+<li><code>content:import</code>: <code>pixaproof:import-content --once</code>. The first deploy creates the content; every later deploy does nothing, so control panel edits are kept.</li>
+<li>Maintenance mode on → switch the <code>current</code> symlink → restart PHP-FPM → maintenance mode off → restart the queue worker → rebuild caches → <code>stache:warm</code>.</li>
+<li><code>deploy:verify</code> requests the site up to five times; on failure the release is rolled back.</li>
+</ol>
+
+<div class="box why">
+<p><strong>Steps 3–5 run twice per deploy.</strong> Deployer's Laravel recipe runs <code>artisan:config:cache</code> twice, and this repo chains <code>npm:install → … → migrate:safe → content:import</code> after it. The second run is harmless (no pending migrations, <code>--once</code> skips) but doubles the build time. Not changed, because it needs a real deploy to test.</p>
+</div>
+
+<h2>Server pieces</h2>
+<table>
+<tr><th>Piece</th><th>Where</th><th>Notes</th></tr>
+<tr><td>Caddy vhost</td><td><a class="src" href="../../deploy/server/home/deployer/pixaproof-laravel/Caddyfile"><code>deploy/server/home/deployer/pixaproof-laravel/Caddyfile</code></a></td><td>Reference copy; <code>dep server:diff prod</code> reports drift. <code>handle_errors</code> only covers Caddy's own errors, so Statamic's 404 page shows</td></tr>
+<tr><td>Scheduler cron</td><td><a class="src" href="../../deploy/server/etc/cron.d/pixaproof-laravel"><code>deploy/server/etc/cron.d/pixaproof-laravel</code></a></td><td>Reference copy; install by hand</td></tr>
+<tr><td>Backups</td><td><code>db:backup</code>, <code>backup:offsite</code></td><td>SQLite + media + <code>.env</code> to Backblaze B2 with rclone</td></tr>
+<tr><td>PHP extensions</td><td>apt (ondrej/sury)</td><td><code>imagick</code> is not installed; needed only for the toolkit's generated share cards</td></tr>
+<tr><td>Production <code>.env</code></td><td><code>shared/.env</code></td><td><code>APP_ENV=production</code>, <code>DB_CONNECTION=sqlite</code>, <code>CACHE_STORE=database</code>, optional <code>SEO_GTM_ID</code></td></tr>
+</table>
+
+<div class="box read">
+<ol>
+<li><a class="src" href="../../deploy.php"><code>deploy.php</code></a>: the hooks at the bottom first, then each task</li>
+<li><a class="src" href="../../deploy/server/README.md"><code>deploy/server/README.md</code></a></li>
+<li><a class="src" href="../../README.md"><code>README.md</code></a>: the Deployment section</li>
+</ol>
+</div>
+
+<footer class="pager"><a href="07-background-work.html">← 7. Commands, queue, scheduler</a><a href="09-testing-quality.html">9. Tests & quality gates →</a></footer>
+</main>
+</body>
+</html>

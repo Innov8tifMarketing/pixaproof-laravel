@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>9. Tests & quality gates · pixaproof.com wiki</title>
+<link rel="stylesheet" href="assets/wiki.css">
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">pixaproof.com<br><small>codebase wiki</small></div>
+  <ol><li><a href="index.html">0. Start here</a></li><li><a href="00-provenance.html">0b. Stock vs custom</a></li><li><a href="01-request-lifecycle.html">1. A request, end to end</a></li><li><a href="02-frontend.html">2. Templates & frontend</a></li><li><a href="03-content-seo.html">3. Content & SEO</a></li><li><a href="04-database.html">4. Database</a></li><li><a href="05-control-panel.html">5. Control panel</a></li><li><a href="06-security.html">6. Security headers & CSP</a></li><li><a href="07-background-work.html">7. Commands, queue, scheduler</a></li><li><a href="08-infrastructure.html">8. Deployment & infrastructure</a></li><li><a href="09-testing-quality.html" class="current">9. Tests & quality gates</a></li><li><a href="10-whiteboard.html">10. Whiteboard defense</a></li></ol>
+  <p class="prov-legend"><span class="prov laravel">Laravel</span> framework default<br>
+  <span class="prov statamic">Statamic</span> Statamic default<br>
+  <span class="prov addon">Addon</span> a package we installed<br>
+  <span class="prov custom">Custom</span> written in this repo<br>
+  Diagram boxes use the same colours. <a href="00-provenance.html">Full map</a></p>
+  <p class="legend">Paths like <code>app/Http/Middleware/SecurityHeaders.php</code> are relative to the repo root.
+  Links open the file in your browser; <kbd>gf</kbd> on the path in your editor works too.</p>
+</nav>
+<main>
+<h1>9. Tests &amp; quality gates</h1>
+<p class="lede">About 70 PHPUnit tests in roughly 25 seconds. One test guards the whole public URL surface; the rest pin down specific promises (security headers, the import, the homepage's structure).</p>
+
+<figure class="diagram" id="fig-tests"><svg style="max-width:min(100%, 1252px)"
+ viewBox="0.00 0.00 939.00 116.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 112)">
+<title>tests</title>
+<!-- base -->
+<g id="node1" class="node">
+<title>base</title>
+<g id="a_node1"><a xlink:href="../../tests/TestCase.php" xlink:title="TestCase\nRefreshDatabase + $seed\n(import once, transaction per test)">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M339.25,-74C339.25,-74 200.25,-74 200.25,-74 194.25,-74 188.25,-68 188.25,-62 188.25,-62 188.25,-42 188.25,-42 188.25,-36 194.25,-30 200.25,-30 200.25,-30 339.25,-30 339.25,-30 345.25,-30 351.25,-36 351.25,-42 351.25,-42 351.25,-62 351.25,-62 351.25,-68 345.25,-74 339.25,-74"/>
+<text xml:space="preserve" text-anchor="middle" x="269.75" y="-60.5" font-family="Helvetica,sans-Serif" font-size="10.00">TestCase</text>
+<text xml:space="preserve" text-anchor="middle" x="269.75" y="-48.5" font-family="Helvetica,sans-Serif" font-size="10.00">RefreshDatabase + $seed</text>
+<text xml:space="preserve" text-anchor="middle" x="269.75" y="-36.5" font-family="Helvetica,sans-Serif" font-size="10.00">(import once, transaction per test)</text>
+</a>
+</g>
+</g>
+<!-- guard -->
+<g id="node3" class="node">
+<title>guard</title>
+<g id="a_node3"><a xlink:href="../../tests/Feature/Guard/UrlSnapshotTest.php" xlink:title="Guard/UrlSnapshotTest\nevery public URL vs urls.json">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M554.75,-102C554.75,-102 434.5,-102 434.5,-102 428.5,-102 422.5,-96 422.5,-90 422.5,-90 422.5,-78 422.5,-78 422.5,-72 428.5,-66 434.5,-66 434.5,-66 554.75,-66 554.75,-66 560.75,-66 566.75,-72 566.75,-78 566.75,-78 566.75,-90 566.75,-90 566.75,-96 560.75,-102 554.75,-102"/>
+<text xml:space="preserve" text-anchor="middle" x="494.62" y="-86.5" font-family="Helvetica,sans-Serif" font-size="10.00">Guard/UrlSnapshotTest</text>
+<text xml:space="preserve" text-anchor="middle" x="494.62" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">every public URL vs urls.json</text>
+</a>
+</g>
+</g>
+<!-- base&#45;&gt;guard -->
+<g id="edge2" class="edge">
+<title>base&#45;&gt;guard</title>
+<path fill="none" stroke="#6b6b6b" d="M351.53,-63.6C370.9,-66.38 391.61,-69.35 411.06,-72.15"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="410.45,-75.59 420.85,-73.55 411.44,-68.66 410.45,-75.59"/>
+</g>
+<!-- feat -->
+<g id="node5" class="node">
+<title>feat</title>
+<g id="a_node5"><a xlink:href="../../tests/Feature" xlink:title="Feature tests\nhome · routes · security headers · CSP route\nimport command · schema · components · SRI">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M593,-44C593,-44 396.25,-44 396.25,-44 390.25,-44 384.25,-38 384.25,-32 384.25,-32 384.25,-12 384.25,-12 384.25,-6 390.25,0 396.25,0 396.25,0 593,0 593,0 599,0 605,-6 605,-12 605,-12 605,-32 605,-32 605,-38 599,-44 593,-44"/>
+<text xml:space="preserve" text-anchor="middle" x="494.62" y="-30.5" font-family="Helvetica,sans-Serif" font-size="10.00">Feature tests</text>
+<text xml:space="preserve" text-anchor="middle" x="494.62" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">home · routes · security headers · CSP route</text>
+<text xml:space="preserve" text-anchor="middle" x="494.62" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">import command · schema · components · SRI</text>
+</a>
+</g>
+</g>
+<!-- base&#45;&gt;feat -->
+<g id="edge3" class="edge">
+<title>base&#45;&gt;feat</title>
+<path fill="none" stroke="#6b6b6b" d="M351.53,-41.13C358.48,-40.19 365.6,-39.23 372.77,-38.27"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="373.13,-41.75 382.57,-36.95 372.19,-34.81 373.13,-41.75"/>
+</g>
+<!-- seeder -->
+<g id="node2" class="node">
+<title>seeder</title>
+<g id="a_node2"><a xlink:href="../../database/seeders/DatabaseSeeder.php" xlink:title="DatabaseSeeder →\npixaproof:import&#45;content">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M109,-70C109,-70 12,-70 12,-70 6,-70 0,-64 0,-58 0,-58 0,-46 0,-46 0,-40 6,-34 12,-34 12,-34 109,-34 109,-34 115,-34 121,-40 121,-46 121,-46 121,-58 121,-58 121,-64 115,-70 109,-70"/>
+<text xml:space="preserve" text-anchor="middle" x="60.5" y="-54.5" font-family="Helvetica,sans-Serif" font-size="10.00">DatabaseSeeder →</text>
+<text xml:space="preserve" text-anchor="middle" x="60.5" y="-42.5" font-family="Helvetica,sans-Serif" font-size="10.00">pixaproof:import&#45;content</text>
+</a>
+</g>
+</g>
+<!-- seeder&#45;&gt;base -->
+<g id="edge1" class="edge">
+<title>seeder&#45;&gt;base</title>
+<path fill="none" stroke="#6b6b6b" d="M121.45,-52C138.75,-52 158.05,-52 176.83,-52"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="176.6,-55.5 186.6,-52 176.6,-48.5 176.6,-55.5"/>
+<text xml:space="preserve" text-anchor="middle" x="154.62" y="-54.15" font-family="Helvetica,sans-Serif" font-size="8.00">runs once</text>
+</g>
+<!-- snap -->
+<g id="node4" class="node">
+<title>snap</title>
+<g id="a_node4"><a xlink:href="../../tests/__snapshots__/urls.json" xlink:title="tests/__snapshots__/urls.json">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M906.88,-108C906.88,-108 784.38,-108 784.38,-108 778.38,-108 772.38,-102 772.38,-96 772.38,-96 772.38,-84 772.38,-84 772.38,-78 778.38,-72 784.38,-72 784.38,-72 906.88,-72 906.88,-72 912.88,-72 918.88,-78 918.88,-84 918.88,-84 918.88,-96 918.88,-96 918.88,-102 912.88,-108 906.88,-108"/>
+<text xml:space="preserve" text-anchor="middle" x="845.62" y="-86.5" font-family="Helvetica,sans-Serif" font-size="10.00">tests/__snapshots__/urls.json</text>
+</a>
+</g>
+</g>
+<!-- guard&#45;&gt;snap -->
+<g id="edge4" class="edge">
+<title>guard&#45;&gt;snap</title>
+<path fill="none" stroke="#6b6b6b" d="M567.09,-85.23C623.3,-86.19 701.72,-87.54 760.87,-88.56"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="760.48,-92.05 770.54,-88.73 760.6,-85.05 760.48,-92.05"/>
+<text xml:space="preserve" text-anchor="middle" x="682.88" y="-90.38" font-family="Helvetica,sans-Serif" font-size="8.00">assert / UPDATE_SNAPSHOTS=1</text>
+</g>
+<!-- gates -->
+<g id="node6" class="node">
+<title>gates</title>
+<path fill="#e0eefb" stroke="#8a8a8a" d="M918.5,-45C918.5,-45 772.75,-45 772.75,-45 766.75,-45 760.75,-39 760.75,-33 760.75,-33 760.75,-21 760.75,-21 760.75,-15 766.75,-9 772.75,-9 772.75,-9 918.5,-9 918.5,-9 924.5,-9 930.5,-15 930.5,-21 930.5,-21 930.5,-33 930.5,-33 930.5,-39 924.5,-45 918.5,-45"/>
+<text xml:space="preserve" text-anchor="middle" x="845.62" y="-29.5" font-family="Helvetica,sans-Serif" font-size="10.00">Gates: phpunit · pint · phpstan (1G)</text>
+<text xml:space="preserve" text-anchor="middle" x="845.62" y="-17.5" font-family="Helvetica,sans-Serif" font-size="10.00">sheath:lint · npm run build</text>
+</g>
+<!-- guard&#45;&gt;gates -->
+<g id="edge6" class="edge">
+<title>guard&#45;&gt;gates</title>
+<path fill="none" stroke="#6b6b6b" stroke-dasharray="5,2" d="M567.09,-72.33C619.63,-63.75 691.57,-52 749.05,-42.61"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="749.54,-46.08 758.85,-41.01 748.41,-39.17 749.54,-46.08"/>
+</g>
+<!-- feat&#45;&gt;gates -->
+<g id="edge5" class="edge">
+<title>feat&#45;&gt;gates</title>
+<path fill="none" stroke="#6b6b6b" stroke-dasharray="5,2" d="M605.09,-23.57C651.25,-24.23 704.49,-24.99 749.04,-25.63"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="748.9,-29.13 758.95,-25.77 749,-22.13 748.9,-29.13"/>
+</g>
+</g>
+</svg>
+<figcaption><a href="diagrams/tests.svg" target="_blank">open full size</a> · source: <a href="diagrams/tests.dot">diagrams/tests.dot</a></figcaption></figure>
+
+<h2>How tests get their content</h2>
+<p><a class="src" href="../../tests/TestCase.php"><code>tests/TestCase.php</code></a> <span class="prov custom" title="Custom">Custom</span> on <span class="prov laravel" title="Laravel">Laravel</span> uses <code>RefreshDatabase</code> with <code>$seed = true</code>. Laravel 13 migrates the in-memory SQLite database once per run, seeds it with <a class="src" href="../../database/seeders/DatabaseSeeder.php"><code>database/seeders/DatabaseSeeder.php</code></a> (which runs <code>pixaproof:import-content</code>), and wraps each test in a transaction that is rolled back. Before the database is refreshed the <code>media</code> disk is faked, so the import's image copies never touch <code>public/media</code>; the <code>csp</code> log channel is <code>null</code>, so test reports never reach <code>storage/logs</code>.</p>
+<p><a class="src" href="../../tests/Feature/ImportStatamicContentTest.php"><code>tests/Feature/ImportStatamicContentTest.php</code></a> needs an empty site, so its <code>setUp()</code> deletes the seeded content inside the test's transaction.</p>
+
+<h2>The URL snapshot</h2>
+<p><a class="src" href="../../tests/Feature/Guard/UrlSnapshotTest.php"><code>tests/Feature/Guard/UrlSnapshotTest.php</code></a> requests every public URL (the 3 pages, a 404, all 22 legacy redirects, <code>sitemap.xml</code>, <code>robots.txt</code>, <code>llms.txt</code>, <code>POST /csp-report</code>) and records the status, the <code>Location</code>, and the head metadata: title, description, canonical, robots, every <code>og:</code>/<code>twitter:</code> tag and the decoded JSON-LD. It compares the result with <a class="src" href="../../tests/__snapshots__/urls.json"><code>tests/__snapshots__/urls.json</code></a>.</p>
+<ul>
+<li>Per-machine and per-request values are normalised: the app URL (<code>{app_url}</code>), CSP nonces, <code>?v=</code> hashes, Glide <code>s=</code> signatures (derived from <code>APP_KEY</code>) and sitemap dates. The order of llms.txt's list lines is sorted, because the toolkit orders pages saved in the same second arbitrarily.</li>
+<li>Indexing is switched on for the test (<code>noindex_outside_production</code> off), so the snapshot shows production's robots meta.</li>
+<li>For an <em>intended</em> change: <code>UPDATE_SNAPSHOTS=1 php artisan test --filter=UrlSnapshotTest</code>, then review the diff in git like code.</li>
+</ul>
+
+<h2>The other tests</h2>
+<table>
+<tr><th>File</th><th>Promise</th></tr>
+<tr><td><a class="src" href="../../tests/Feature/SecurityHeadersTest.php"><code>tests/Feature/SecurityHeadersTest.php</code></a></td><td>Headers on every page; nonces on every executable inline script (with tracking switched on); fresh nonce per request; no report-only policy on <code>/cp</code></td></tr>
+<tr><td><a class="src" href="../../tests/Feature/CspReportRouteTest.php"><code>tests/Feature/CspReportRouteTest.php</code></a></td><td>The collector works without a session or CSRF token; the site's routes still have them</td></tr>
+<tr><td><a class="src" href="../../tests/Feature/PublicRoutesTest.php"><code>tests/Feature/PublicRoutesTest.php</code></a></td><td>Pages render; legacy paths redirect, only for GET/HEAD; privacy shows its last-edited date</td></tr>
+<tr><td><a class="src" href="../../tests/Feature/HomePageTest.php"><code>tests/Feature/HomePageTest.php</code></a>, <a class="src" href="../../tests/Feature/HomepageComponentsTest.php"><code>tests/Feature/HomepageComponentsTest.php</code></a></td><td>Homepage sections, anchors and components</td></tr>
+<tr><td><a class="src" href="../../tests/Feature/ImportStatamicContentTest.php"><code>tests/Feature/ImportStatamicContentTest.php</code></a></td><td>The import creates, updates in place, honours <code>--once</code> and fails on a bad redirect row</td></tr>
+<tr><td><a class="src" href="../../tests/Feature/DatabaseSchemaTest.php"><code>tests/Feature/DatabaseSchemaTest.php</code></a></td><td><code>leads</code> is gone; the Statamic and toolkit tables exist</td></tr>
+<tr><td><a class="src" href="../../tests/Feature/ViteManifestSriTest.php"><code>tests/Feature/ViteManifestSriTest.php</code></a></td><td>The built manifest carries correct integrity hashes</td></tr>
+</table>
+
+<h2>Gates</h2>
+<pre><code>php artisan test --compact
+vendor/bin/pint --test
+vendor/bin/phpstan --memory-limit=1G     # level 5; 128M crashes a worker
+php artisan sheath:lint                  # Blade lint
+npm run build</code></pre>
+
+<div class="box read">
+<ol>
+<li><a class="src" href="../../tests/TestCase.php"><code>tests/TestCase.php</code></a></li>
+<li><a class="src" href="../../tests/Feature/Guard/UrlSnapshotTest.php"><code>tests/Feature/Guard/UrlSnapshotTest.php</code></a></li>
+<li><a class="src" href="../../phpunit.xml"><code>phpunit.xml</code></a> (the test environment: in-memory SQLite, serialising array cache)</li>
+</ol>
+</div>
+
+<footer class="pager"><a href="08-infrastructure.html">← 8. Deployment & infrastructure</a><a href="10-whiteboard.html">10. Whiteboard defense →</a></footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<h1>6. Security headers &amp; CSP</h1>
+<p class="lede">The most custom part of the site. Every response gets security headers, an enforced Content-Security-Policy that can't break anything, and a strict report-only policy whose violations are collected and logged.</p>
+
+<h2>SecurityHeaders {{C}}</h2>
+<p>[[app/Http/Middleware/SecurityHeaders.php]] is appended to the global middleware in [[bootstrap/app.php]]. On every request it calls <code>Vite::useCspNonce()</code> (so <code>@vite</code> tags and the toolkit's inline scripts get the nonce), and on the way out it sets, unless a header is already present:</p>
+<table>
+<tr><th>Header</th><th>Value</th></tr>
+<tr><td><code>Content-Security-Policy</code> (enforced)</td><td><code>frame-ancestors 'self'; object-src 'none'; base-uri 'self'</code> + reporting</td></tr>
+<tr><td><code>Content-Security-Policy-Report-Only</code></td><td>The full target policy: <code>default-src 'self'</code>, scripts and styles by nonce, Google Tag Manager and Analytics allowed, <code>'unsafe-eval'</code> for Alpine. <strong>Not sent on <code>/cp</code>.</strong></td></tr>
+<tr><td><code>Reporting-Endpoints</code></td><td><code>csp-endpoint</code> → <code>route('csp.report')</code></td></tr>
+<tr><td>Others</td><td><code>X-Frame-Options</code>, <code>X-Content-Type-Options</code>, <code>Referrer-Policy</code>, <code>Permissions-Policy</code>, COOP, CORP; HSTS in production over HTTPS. <code>X-Powered-By</code> removed.</td></tr>
+</table>
+
+<h2>Collecting reports {{C}}</h2>
+<p>Browsers POST violations to <code>/csp-report</code> ([[app/Http/Controllers/CspReportController.php]]). The route ([[routes/web.php]]) strips session and CSRF middleware (a browser report has neither) and is throttled to 300 a minute. The controller accepts both report formats (<code>application/csp-report</code> and the Reporting API's list), drops browser-extension noise (<code>chrome-extension:</code> and friends), de-duplicates identical reports for 10 minutes and writes one JSON line each to the <code>csp</code> log channel (<code>storage/logs/csp-*.log</code>). Every knob is in [[config/csp.php]].</p>
+
+<h2>Subresource integrity {{C}} on {{L}}</h2>
+<p>[[vite-plugin-sri.js]] adds a SHA hash for every built file to the Vite manifest; Laravel's <code>@vite</code> prints it as <code>integrity="…"</code>. A tampered asset on a CDN or disk then fails to load instead of running.</p>
+
+<div class="box why">
+<p><strong>Why two policies?</strong> The enforced policy contains only directives that can't break the page. The strict one is report-only until the logs show it is clean on real traffic. Then it can be promoted. JSON-LD blocks (<code>type="application/ld+json"</code>) have no nonce on purpose: browsers never execute data blocks, so CSP doesn't apply to them.</p>
+</div>
+
+<div class="box why">
+<p><strong>Caddy and these headers.</strong> The server's shared <code>security_headers</code> snippet sets its headers only if absent (<code>?</code>), so the application's CSP wins.</p>
+</div>
+
+<div class="box read">
+<ol>
+<li>[[app/Http/Middleware/SecurityHeaders.php]]</li>
+<li>[[app/Http/Controllers/CspReportController.php]]</li>
+<li>[[tests/Feature/SecurityHeadersTest.php]] (what is promised, as tests)</li>
+</ol>
+</div>

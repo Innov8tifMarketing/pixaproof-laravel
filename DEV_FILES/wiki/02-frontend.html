@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2. Templates & frontend · pixaproof.com wiki</title>
+<link rel="stylesheet" href="assets/wiki.css">
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">pixaproof.com<br><small>codebase wiki</small></div>
+  <ol><li><a href="index.html">0. Start here</a></li><li><a href="00-provenance.html">0b. Stock vs custom</a></li><li><a href="01-request-lifecycle.html">1. A request, end to end</a></li><li><a href="02-frontend.html" class="current">2. Templates & frontend</a></li><li><a href="03-content-seo.html">3. Content & SEO</a></li><li><a href="04-database.html">4. Database</a></li><li><a href="05-control-panel.html">5. Control panel</a></li><li><a href="06-security.html">6. Security headers & CSP</a></li><li><a href="07-background-work.html">7. Commands, queue, scheduler</a></li><li><a href="08-infrastructure.html">8. Deployment & infrastructure</a></li><li><a href="09-testing-quality.html">9. Tests & quality gates</a></li><li><a href="10-whiteboard.html">10. Whiteboard defense</a></li></ol>
+  <p class="prov-legend"><span class="prov laravel">Laravel</span> framework default<br>
+  <span class="prov statamic">Statamic</span> Statamic default<br>
+  <span class="prov addon">Addon</span> a package we installed<br>
+  <span class="prov custom">Custom</span> written in this repo<br>
+  Diagram boxes use the same colours. <a href="00-provenance.html">Full map</a></p>
+  <p class="legend">Paths like <code>app/Http/Middleware/SecurityHeaders.php</code> are relative to the repo root.
+  Links open the file in your browser; <kbd>gf</kbd> on the path in your editor works too.</p>
+</nav>
+<main>
+<h1>2. Templates &amp; frontend</h1>
+<p class="lede">Each page is an entry rendered by a Blade template. The template extends one layout, which pulls in the toolkit's head tags, the navigation and the built assets.</p>
+
+<figure class="diagram" id="fig-page-composition"><svg style="max-width:min(100%, 843px)"
+ viewBox="0.00 0.00 632.00 314.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 309.5)">
+<title>composition</title>
+<!-- entry -->
+<g id="node1" class="node">
+<title>entry</title>
+<g id="a_node1"><a xlink:href="03-content-seo.html" xlink:title="Entry (pages collection)\ntitle · template · content · seo">
+<path fill="#ece4fb" stroke="#8a8a8a" d="M502.75,-305.5C502.75,-305.5 382.5,-305.5 382.5,-305.5 376.5,-305.5 370.5,-299.5 370.5,-293.5 370.5,-293.5 370.5,-281.5 370.5,-281.5 370.5,-275.5 376.5,-269.5 382.5,-269.5 382.5,-269.5 502.75,-269.5 502.75,-269.5 508.75,-269.5 514.75,-275.5 514.75,-281.5 514.75,-281.5 514.75,-293.5 514.75,-293.5 514.75,-299.5 508.75,-305.5 502.75,-305.5"/>
+<text xml:space="preserve" text-anchor="middle" x="442.62" y="-290" font-family="Helvetica,sans-Serif" font-size="10.00">Entry (pages collection)</text>
+<text xml:space="preserve" text-anchor="middle" x="442.62" y="-278" font-family="Helvetica,sans-Serif" font-size="10.00">title · template · content · seo</text>
+</a>
+</g>
+</g>
+<!-- tpl -->
+<g id="node2" class="node">
+<title>tpl</title>
+<g id="a_node2"><a xlink:href="../../resources/views/home.blade.php" xlink:title="Template: home / contact / default">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M513.25,-233.75C513.25,-233.75 372,-233.75 372,-233.75 366,-233.75 360,-227.75 360,-221.75 360,-221.75 360,-209.75 360,-209.75 360,-203.75 366,-197.75 372,-197.75 372,-197.75 513.25,-197.75 513.25,-197.75 519.25,-197.75 525.25,-203.75 525.25,-209.75 525.25,-209.75 525.25,-221.75 525.25,-221.75 525.25,-227.75 519.25,-233.75 513.25,-233.75"/>
+<text xml:space="preserve" text-anchor="middle" x="442.62" y="-212.25" font-family="Helvetica,sans-Serif" font-size="10.00">Template: home / contact / default</text>
+</a>
+</g>
+</g>
+<!-- entry&#45;&gt;tpl -->
+<g id="edge1" class="edge">
+<title>entry&#45;&gt;tpl</title>
+<path fill="none" stroke="#6b6b6b" d="M442.62,-269.26C442.62,-261.99 442.62,-253.35 442.62,-245.18"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="446.13,-245.31 442.63,-235.31 439.13,-245.31 446.13,-245.31"/>
+<text xml:space="preserve" text-anchor="middle" x="466.25" y="-248.9" font-family="Helvetica,sans-Serif" font-size="8.00">template field</text>
+</g>
+<!-- layout -->
+<g id="node3" class="node">
+<title>layout</title>
+<g id="a_node3"><a xlink:href="../../resources/views/layout.blade.php" xlink:title="layout.blade.php">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M394.25,-162C394.25,-162 331,-162 331,-162 325,-162 319,-156 319,-150 319,-150 319,-138 319,-138 319,-132 325,-126 331,-126 331,-126 394.25,-126 394.25,-126 400.25,-126 406.25,-132 406.25,-138 406.25,-138 406.25,-150 406.25,-150 406.25,-156 400.25,-162 394.25,-162"/>
+<text xml:space="preserve" text-anchor="middle" x="362.62" y="-140.5" font-family="Helvetica,sans-Serif" font-size="10.00">layout.blade.php</text>
+</a>
+</g>
+</g>
+<!-- tpl&#45;&gt;layout -->
+<g id="edge2" class="edge">
+<title>tpl&#45;&gt;layout</title>
+<path fill="none" stroke="#6b6b6b" d="M422.85,-197.51C413.23,-189.12 401.5,-178.9 390.96,-169.7"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="393.43,-167.21 383.59,-163.28 388.83,-172.49 393.43,-167.21"/>
+<text xml:space="preserve" text-anchor="middle" x="425.41" y="-177.15" font-family="Helvetica,sans-Serif" font-size="8.00">@extends</text>
+</g>
+<!-- comps -->
+<g id="node9" class="node">
+<title>comps</title>
+<g id="a_node9"><a xlink:href="../../resources/views/components" xlink:title="components: section · button · icon&#45;card\ncheck&#45;list · stat · graphics/*">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M607.38,-162C607.38,-162 439.88,-162 439.88,-162 433.88,-162 427.88,-156 427.88,-150 427.88,-150 427.88,-138 427.88,-138 427.88,-132 433.88,-126 439.88,-126 439.88,-126 607.38,-126 607.38,-126 613.38,-126 619.38,-132 619.38,-138 619.38,-138 619.38,-150 619.38,-150 619.38,-156 613.38,-162 607.38,-162"/>
+<text xml:space="preserve" text-anchor="middle" x="523.62" y="-146.5" font-family="Helvetica,sans-Serif" font-size="10.00">components: section · button · icon&#45;card</text>
+<text xml:space="preserve" text-anchor="middle" x="523.62" y="-134.5" font-family="Helvetica,sans-Serif" font-size="10.00">check&#45;list · stat · graphics/*</text>
+</a>
+</g>
+</g>
+<!-- tpl&#45;&gt;comps -->
+<g id="edge8" class="edge">
+<title>tpl&#45;&gt;comps</title>
+<path fill="none" stroke="#6b6b6b" d="M462.65,-197.51C472.38,-189.12 484.26,-178.9 494.94,-169.7"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="497.11,-172.45 502.41,-163.27 492.54,-167.15 497.11,-172.45"/>
+</g>
+<!-- head -->
+<g id="node4" class="node">
+<title>head</title>
+<path fill="#e0eefb" stroke="#8a8a8a" d="M153.25,-99C153.25,-99 12,-99 12,-99 6,-99 0,-93 0,-87 0,-87 0,-75 0,-75 0,-69 6,-63 12,-63 12,-63 153.25,-63 153.25,-63 159.25,-63 165.25,-69 165.25,-75 165.25,-75 165.25,-87 165.25,-87 165.25,-93 159.25,-99 153.25,-99"/>
+<text xml:space="preserve" text-anchor="middle" x="82.62" y="-83.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt;s:seo:head /&gt;</text>
+<text xml:space="preserve" text-anchor="middle" x="82.62" y="-71.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracking · meta · JSON&#45;LD · icons</text>
+</g>
+<!-- layout&#45;&gt;head -->
+<g id="edge3" class="edge">
+<title>layout&#45;&gt;head</title>
+<path fill="none" stroke="#6b6b6b" d="M318.57,-133.4C279.92,-124.98 222.47,-112.47 173.94,-101.89"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="174.77,-98.49 164.26,-99.78 173.28,-105.33 174.77,-98.49"/>
+</g>
+<!-- body -->
+<g id="node5" class="node">
+<title>body</title>
+<path fill="#e0eefb" stroke="#8a8a8a" d="M267.88,-99C267.88,-99 199.38,-99 199.38,-99 193.38,-99 187.38,-93 187.38,-87 187.38,-87 187.38,-75 187.38,-75 187.38,-69 193.38,-63 199.38,-63 199.38,-63 267.88,-63 267.88,-63 273.88,-63 279.88,-69 279.88,-75 279.88,-75 279.88,-87 279.88,-87 279.88,-93 273.88,-99 267.88,-99"/>
+<text xml:space="preserve" text-anchor="middle" x="233.62" y="-83.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt;s:seo:body /&gt;</text>
+<text xml:space="preserve" text-anchor="middle" x="233.62" y="-71.5" font-family="Helvetica,sans-Serif" font-size="10.00">noscript fallbacks</text>
+</g>
+<!-- layout&#45;&gt;body -->
+<g id="edge4" class="edge">
+<title>layout&#45;&gt;body</title>
+<path fill="none" stroke="#6b6b6b" d="M325.66,-125.52C311.62,-118.88 295.45,-111.23 280.61,-104.22"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="282.5,-101.24 271.96,-100.13 279.51,-107.57 282.5,-101.24"/>
+</g>
+<!-- vite -->
+<g id="node6" class="node">
+<title>vite</title>
+<g id="a_node6"><a xlink:href="../../vite.config.js" xlink:title="@vite: app.css + app.js\n(nonce + SRI)">
+<path fill="#fde2df" stroke="#8a8a8a" d="M411.12,-99C411.12,-99 314.12,-99 314.12,-99 308.12,-99 302.12,-93 302.12,-87 302.12,-87 302.12,-75 302.12,-75 302.12,-69 308.12,-63 314.12,-63 314.12,-63 411.12,-63 411.12,-63 417.12,-63 423.12,-69 423.12,-75 423.12,-75 423.12,-87 423.12,-87 423.12,-93 417.12,-99 411.12,-99"/>
+<text xml:space="preserve" text-anchor="middle" x="362.62" y="-83.5" font-family="Helvetica,sans-Serif" font-size="10.00">@vite: app.css + app.js</text>
+<text xml:space="preserve" text-anchor="middle" x="362.62" y="-71.5" font-family="Helvetica,sans-Serif" font-size="10.00">(nonce + SRI)</text>
+</a>
+</g>
+</g>
+<!-- layout&#45;&gt;vite -->
+<g id="edge5" class="edge">
+<title>layout&#45;&gt;vite</title>
+<path fill="none" stroke="#6b6b6b" d="M362.62,-125.68C362.62,-120.88 362.62,-115.53 362.62,-110.27"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="366.13,-110.66 362.63,-100.66 359.13,-110.66 366.13,-110.66"/>
+</g>
+<!-- navbar -->
+<g id="node7" class="node">
+<title>navbar</title>
+<g id="a_node7"><a xlink:href="../../resources/views/components/navbar.blade.php" xlink:title="&lt;x&#45;navbar&gt;\n&lt;s:nav:main&gt;">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M509.62,-99C509.62,-99 457.62,-99 457.62,-99 451.62,-99 445.62,-93 445.62,-87 445.62,-87 445.62,-75 445.62,-75 445.62,-69 451.62,-63 457.62,-63 457.62,-63 509.62,-63 509.62,-63 515.62,-63 521.62,-69 521.62,-75 521.62,-75 521.62,-87 521.62,-87 521.62,-93 515.62,-99 509.62,-99"/>
+<text xml:space="preserve" text-anchor="middle" x="483.62" y="-83.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt;x&#45;navbar&gt;</text>
+<text xml:space="preserve" text-anchor="middle" x="483.62" y="-71.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt;s:nav:main&gt;</text>
+</a>
+</g>
+</g>
+<!-- layout&#45;&gt;navbar -->
+<g id="edge6" class="edge">
+<title>layout&#45;&gt;navbar</title>
+<path fill="none" stroke="#6b6b6b" d="M397.3,-125.52C410.21,-119.01 425.05,-111.53 438.75,-104.62"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="440.24,-107.79 447.59,-100.16 437.09,-101.54 440.24,-107.79"/>
+</g>
+<!-- footer -->
+<g id="node8" class="node">
+<title>footer</title>
+<g id="a_node8"><a xlink:href="../../resources/views/components/footer.blade.php" xlink:title="&lt;x&#45;footer&gt;\n&lt;s:nav:footer&gt;">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M611.5,-99C611.5,-99 555.75,-99 555.75,-99 549.75,-99 543.75,-93 543.75,-87 543.75,-87 543.75,-75 543.75,-75 543.75,-69 549.75,-63 555.75,-63 555.75,-63 611.5,-63 611.5,-63 617.5,-63 623.5,-69 623.5,-75 623.5,-75 623.5,-87 623.5,-87 623.5,-93 617.5,-99 611.5,-99"/>
+<text xml:space="preserve" text-anchor="middle" x="583.62" y="-83.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt;x&#45;footer&gt;</text>
+<text xml:space="preserve" text-anchor="middle" x="583.62" y="-71.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt;s:nav:footer&gt;</text>
+</a>
+</g>
+</g>
+<!-- layout&#45;&gt;footer -->
+<g id="edge7" class="edge">
+<title>layout&#45;&gt;footer</title>
+<path fill="none" stroke="#6b6b6b" d="M406.75,-128.81C410.08,-127.83 413.4,-126.88 416.62,-126 464.49,-112.91 479.79,-113.28 532.34,-98.89"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="533.22,-102.28 541.91,-96.21 531.34,-95.53 533.22,-102.28"/>
+</g>
+<!-- js -->
+<g id="node10" class="node">
+<title>js</title>
+<g id="a_node10"><a xlink:href="../../resources/js/app.js" xlink:title="app.js: Alpine (+collapse, +intersect)\n+ window.Motion">
+<path fill="#fff1c7" stroke="#8a8a8a" d="M438.12,-36C438.12,-36 287.12,-36 287.12,-36 281.12,-36 275.12,-30 275.12,-24 275.12,-24 275.12,-12 275.12,-12 275.12,-6 281.12,0 287.12,0 287.12,0 438.12,0 438.12,0 444.12,0 450.12,-6 450.12,-12 450.12,-12 450.12,-24 450.12,-24 450.12,-30 444.12,-36 438.12,-36"/>
+<text xml:space="preserve" text-anchor="middle" x="362.62" y="-20.5" font-family="Helvetica,sans-Serif" font-size="10.00">app.js: Alpine (+collapse, +intersect)</text>
+<text xml:space="preserve" text-anchor="middle" x="362.62" y="-8.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ window.Motion</text>
+</a>
+</g>
+</g>
+<!-- vite&#45;&gt;js -->
+<g id="edge9" class="edge">
+<title>vite&#45;&gt;js</title>
+<path fill="none" stroke="#6b6b6b" d="M362.62,-62.68C362.62,-57.88 362.62,-52.53 362.62,-47.27"/>
+<polygon fill="#6b6b6b" stroke="#6b6b6b" points="366.13,-47.66 362.63,-37.66 359.13,-47.66 366.13,-47.66"/>
+</g>
+</g>
+</svg>
+<figcaption><a href="diagrams/page-composition.svg" target="_blank">open full size</a> · source: <a href="diagrams/page-composition.dot">diagrams/page-composition.dot</a></figcaption></figure>
+
+<h2>Templates</h2>
+<table>
+<tr><th>Template</th><th>Used by</th><th>What it does</th></tr>
+<tr><td><a class="src" href="../../resources/views/layout.blade.php"><code>resources/views/layout.blade.php</code></a></td><td>every page</td><td>Charset and viewport, then <code>&lt;s:seo:head /&gt;</code> in an overridable <code>seo</code> section, <code>@vite</code>, <code>&lt;s:seo:body /&gt;</code>, navbar, <code>@yield('content')</code>, footer.</td></tr>
+<tr><td><a class="src" href="../../resources/views/home.blade.php"><code>resources/views/home.blade.php</code></a></td><td>the <code>home</code> entry</td><td>The mega landing. Copy lives here in <code>@php</code> arrays (<code>$industries</code>, <code>$faqs</code>, …) rendered with <code>&lt;x-section&gt;</code> and friends.</td></tr>
+<tr><td><a class="src" href="../../resources/views/contact.blade.php"><code>resources/views/contact.blade.php</code></a></td><td>the <code>contact</code> entry</td><td>Offices and the sales <code>mailto:</code>. No form.</td></tr>
+<tr><td><a class="src" href="../../resources/views/default.blade.php"><code>resources/views/default.blade.php</code></a></td><td>the <code>privacy</code> entry</td><td><code>{{ $title }}</code>, "Last updated" from the entry's last edit, and the markdown <code>content</code> in a <code>prose</code> block.</td></tr>
+<tr><td><a class="src" href="../../resources/views/errors/404.blade.php"><code>resources/views/errors/404.blade.php</code></a></td><td>any 404</td><td>Overrides the <code>seo</code> section with <code>&lt;s:seo:head title="Page not found" :canonical="false" status="404" /&gt;</code> (noindex, no JSON-LD).</td></tr>
+</table>
+
+<div class="box statamic">
+<p><strong>Blade templates don't get Statamic's layout automatically.</strong> Statamic wraps an <em>Antlers</em> template in <code>layout</code> for you; a Blade template is rendered as-is, so each one says <code>@extends('layout')</code>, exactly as in plain Laravel. The entry's fields are available as variables (<code>$title</code>, <code>$content</code>) and the entry itself as <code>$page</code>.</p>
+</div>
+
+<h2>Navigation</h2>
+<p>The navbar (desktop and mobile) and the footer's "Navigation" column loop over Statamic navigations <span class="prov statamic" title="Statamic">Statamic</span> with the Blade tag syntax:</p>
+<pre><code>&lt;s:nav:main&gt;
+    &lt;a href="{{ $url }}"&gt;{{ $title }}&lt;/a&gt;
+&lt;/s:nav:main&gt;</code></pre>
+<p>The "Request Demo" button and the footer's contact and legal links stay in Blade. Links to the entries are plain paths (<code>/contact</code>, <code>/privacy</code>); Statamic entries have no Laravel route names.</p>
+
+<h2>Components</h2>
+<p>Anonymous Blade components <span class="prov custom" title="Custom">Custom</span> in <a class="src" href="../../resources/views/components"><code>resources/views/components</code></a>: <code>section</code> (the reveal-on-scroll shell and centred header), <code>button</code>, <code>icon-card</code>, <code>check-list</code>, <code>stat</code>, <code>rotating-text</code>, <code>navbar</code>, <code>footer</code> and four <code>graphics/*</code>. Icons are blade-heroicons <span class="prov addon" title="Addon">Addon</span>.</p>
+
+<h2>JavaScript and CSS</h2>
+<ul>
+<li><a class="src" href="../../resources/js/app.js"><code>resources/js/app.js</code></a> <span class="prov custom" title="Custom">Custom</span> imports Alpine <span class="prov addon" title="Addon">Addon</span> with the <code>collapse</code> plugin (mobile menu, accordions) and <code>intersect</code> (reveal on scroll), defines <code>window.Motion</code> (animation helpers used inside Alpine expressions) and starts Alpine last so those helpers exist first.</li>
+<li><a class="src" href="../../resources/css/app.css"><code>resources/css/app.css</code></a> <span class="prov custom" title="Custom">Custom</span>: Tailwind 4 <span class="prov addon" title="Addon">Addon</span> with <code>@theme</code> brand colours (primary sky, neutral slate, accent amber), the forms and typography plugins, and the <code>[x-cloak]</code> rule.</li>
+<li><a class="src" href="../../vite.config.js"><code>vite.config.js</code></a> with <a class="src" href="../../vite-plugin-sri.js"><code>vite-plugin-sri.js</code></a> <span class="prov custom" title="Custom">Custom</span>: integrity hashes are written into the Vite manifest so <code>@vite</code> prints <code>integrity="…"</code>, and Laravel adds the CSP nonce to the tags.</li>
+</ul>
+
+<div class="box why">
+<p><strong>Why Alpine from npm and not Livewire?</strong> The site had no Livewire components; Livewire was loaded only because it bundles Alpine. Loading Alpine directly removes a whole framework (and its session-expiry 419 handler) for the same behaviour. Livewire also bundled <code>persist</code> and <code>focus</code>; nothing used them, so only <code>collapse</code> and <code>intersect</code> were added.</p>
+</div>
+
+<div class="box read">
+<ol>
+<li><a class="src" href="../../resources/views/layout.blade.php"><code>resources/views/layout.blade.php</code></a></li>
+<li><a class="src" href="../../resources/views/components/navbar.blade.php"><code>resources/views/components/navbar.blade.php</code></a></li>
+<li><a class="src" href="../../resources/views/default.blade.php"><code>resources/views/default.blade.php</code></a></li>
+<li><a class="src" href="../../resources/js/app.js"><code>resources/js/app.js</code></a> (the top and the bottom; the middle is animation code)</li>
+</ol>
+</div>
+
+<footer class="pager"><a href="01-request-lifecycle.html">← 1. A request, end to end</a><a href="03-content-seo.html">3. Content & SEO →</a></footer>
+</main>
+</body>
+</html>

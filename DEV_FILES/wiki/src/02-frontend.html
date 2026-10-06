@@ -1,0 +1,48 @@
+<h1>2. Templates &amp; frontend</h1>
+<p class="lede">Each page is an entry rendered by a Blade template. The template extends one layout, which pulls in the toolkit's head tags, the navigation and the built assets.</p>
+
+{{diagram:page-composition}}
+
+<h2>Templates</h2>
+<table>
+<tr><th>Template</th><th>Used by</th><th>What it does</th></tr>
+<tr><td>[[resources/views/layout.blade.php]]</td><td>every page</td><td>Charset and viewport, then <code>&lt;s:seo:head /&gt;</code> in an overridable <code>seo</code> section, <code>@vite</code>, <code>&lt;s:seo:body /&gt;</code>, navbar, <code>@yield('content')</code>, footer.</td></tr>
+<tr><td>[[resources/views/home.blade.php]]</td><td>the <code>home</code> entry</td><td>The mega landing. Copy lives here in <code>@php</code> arrays (<code>$industries</code>, <code>$faqs</code>, …) rendered with <code>&lt;x-section&gt;</code> and friends.</td></tr>
+<tr><td>[[resources/views/contact.blade.php]]</td><td>the <code>contact</code> entry</td><td>Offices and the sales <code>mailto:</code>. No form.</td></tr>
+<tr><td>[[resources/views/default.blade.php]]</td><td>the <code>privacy</code> entry</td><td><code>{{ $title }}</code>, "Last updated" from the entry's last edit, and the markdown <code>content</code> in a <code>prose</code> block.</td></tr>
+<tr><td>[[resources/views/errors/404.blade.php]]</td><td>any 404</td><td>Overrides the <code>seo</code> section with <code>&lt;s:seo:head title="Page not found" :canonical="false" status="404" /&gt;</code> (noindex, no JSON-LD).</td></tr>
+</table>
+
+<div class="box statamic">
+<p><strong>Blade templates don't get Statamic's layout automatically.</strong> Statamic wraps an <em>Antlers</em> template in <code>layout</code> for you; a Blade template is rendered as-is, so each one says <code>@extends('layout')</code>, exactly as in plain Laravel. The entry's fields are available as variables (<code>$title</code>, <code>$content</code>) and the entry itself as <code>$page</code>.</p>
+</div>
+
+<h2>Navigation</h2>
+<p>The navbar (desktop and mobile) and the footer's "Navigation" column loop over Statamic navigations {{S}} with the Blade tag syntax:</p>
+<pre><code>&lt;s:nav:main&gt;
+    &lt;a href="{{ $url }}"&gt;{{ $title }}&lt;/a&gt;
+&lt;/s:nav:main&gt;</code></pre>
+<p>The "Request Demo" button and the footer's contact and legal links stay in Blade. Links to the entries are plain paths (<code>/contact</code>, <code>/privacy</code>); Statamic entries have no Laravel route names.</p>
+
+<h2>Components</h2>
+<p>Anonymous Blade components {{C}} in [[resources/views/components]]: <code>section</code> (the reveal-on-scroll shell and centred header), <code>button</code>, <code>icon-card</code>, <code>check-list</code>, <code>stat</code>, <code>rotating-text</code>, <code>navbar</code>, <code>footer</code> and four <code>graphics/*</code>. Icons are blade-heroicons {{A}}.</p>
+
+<h2>JavaScript and CSS</h2>
+<ul>
+<li>[[resources/js/app.js]] {{C}} imports Alpine {{A}} with the <code>collapse</code> plugin (mobile menu, accordions) and <code>intersect</code> (reveal on scroll), defines <code>window.Motion</code> (animation helpers used inside Alpine expressions) and starts Alpine last so those helpers exist first.</li>
+<li>[[resources/css/app.css]] {{C}}: Tailwind 4 {{A}} with <code>@theme</code> brand colours (primary sky, neutral slate, accent amber), the forms and typography plugins, and the <code>[x-cloak]</code> rule.</li>
+<li>[[vite.config.js]] with [[vite-plugin-sri.js]] {{C}}: integrity hashes are written into the Vite manifest so <code>@vite</code> prints <code>integrity="…"</code>, and Laravel adds the CSP nonce to the tags.</li>
+</ul>
+
+<div class="box why">
+<p><strong>Why Alpine from npm and not Livewire?</strong> The site had no Livewire components; Livewire was loaded only because it bundles Alpine. Loading Alpine directly removes a whole framework (and its session-expiry 419 handler) for the same behaviour. Livewire also bundled <code>persist</code> and <code>focus</code>; nothing used them, so only <code>collapse</code> and <code>intersect</code> were added.</p>
+</div>
+
+<div class="box read">
+<ol>
+<li>[[resources/views/layout.blade.php]]</li>
+<li>[[resources/views/components/navbar.blade.php]]</li>
+<li>[[resources/views/default.blade.php]]</li>
+<li>[[resources/js/app.js]] (the top and the bottom; the middle is animation code)</li>
+</ol>
+</div>

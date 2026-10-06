@@ -269,6 +269,22 @@ Done on 2026-10-06.
   `route:list --except-vendor` shows only `POST csp-report` (`/up` is the framework's).
 - **Stale, not touched:** `nixpacks.toml` (Coolify, no longer the deploy path).
 
+## Phase 7 results
+
+- **Wiki** in `DEV_FILES/wiki`, built the same way as moojing-global.com's: `src/*.html` page bodies,
+  `diagrams/*.dot` rendered with Graphviz and inlined as clickable SVG, `[[path]]` source links that fail
+  the build when a file is missing, and `{{L}}`/`{{S}}`/`{{A}}`/`{{C}}` provenance badges. 12 pages
+  (start here, stock vs custom, request lifecycle, templates, content &amp; SEO, database, control panel,
+  security headers &amp; CSP, commands/queue/scheduler, deployment, tests, whiteboard) and 6 diagrams.
+  Build: `python3 DEV_FILES/wiki/build.py`.
+- **`provenance.py`** classifies every tracked file (305) against a fresh `laravel/laravel` and
+  `statamic/statamic` install and the installed packages: stock, edited, published (matched by hash
+  inside a package, or by name when Pint reformatted it), generated (named generators: `statamic:install`,
+  `seo:install`, `boost:update`) or custom. It writes `provenance.json`, which page 0b renders.
+  - **Known limit:** "edited" includes published configs that Pint only reformatted.
+- **Found while writing it:** `config/csp.php` refers to a `php artisan csp:summary` command that doesn't
+  exist (noted on wiki page 7; not changed).
+
 ## Audit findings that shape the plan
 
 - **Storage: production uses SQLite.** `deploy.php` sets
@@ -344,7 +360,7 @@ Done on 2026-10-06.
 | A (1+2) | **Done** (see Phase A results). Rehearsed script above; `pages` blueprint (flat-file YAML), collection, navs, asset container, entries, SEO & brand values and redirects via the import command (with tests); `RefreshDatabase` in HTTP tests; serialising test cache. App routes still answer `/`, `/contact`, `/privacy` and the 22 redirects. Expected snapshot changes: `/sitemap.xml` (lists the 3 entries) and `/llms.txt` start answering 200 | — | 92% |
 | B (3+5) | **Done** (see Phase B results). Pages become entries with templates and the layout; toolkit head/body; SEO & brand filled; redirects move to the toolkit; robots, sitemap, llms; CSP recheck | `routes/web.php` view and redirect routes, `layouts/*`, GA/GTM partials, `@fingerprintedAsset`, public favicons, manifest, robots.txt, `FaviconCacheBustingTest`, related `PublicRoutesTest` cases (line counts in the report) | 85% |
 | C (4+6) | **Done** (see Phase C results). Drop `leads`; Livewire → Alpine; remove `User` factory leftovers; update `deploy.php`, README, AGENTS.md; `route:list --except-vendor` shows only `/csp-report` and `/up` | `Lead.php`, Livewire, `vendor/livewire`, stale docs | 82% |
-| 7 | Wiki in `DEV_FILES/wiki` (moojing structure), `provenance.py`, badges | — | 75% |
+| 7 | **Done** (see Phase 7 results). Wiki in `DEV_FILES/wiki` (moojing structure), `provenance.py`, badges | — | 75% |
 
 ## Intended behaviour changes (the snapshot may change only for these)
 

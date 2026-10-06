@@ -1,0 +1,38 @@
+<h1>8. Deployment &amp; infrastructure</h1>
+<p class="lede">One Ubuntu 24.04 VPS on Alibaba Cloud (Singapore), shared with the Innov8tif site. Caddy in front, PHP 8.4-FPM, Supervisor for the queue worker, SQLite on disk. Deploys are pushed from a laptop with Deployer.</p>
+
+{{diagram:deploy}}
+
+<h2>The deploy, in order</h2>
+<p><code>dep deploy prod</code> runs [[deploy.php]] {{C}} on top of Deployer's Laravel recipe {{A:Deployer}}:</p>
+<ol class="steps">
+<li>Clone the branch with Git LFS smudging skipped, then <code>lfs:pull</code> runs <code>git lfs pull</code> for the videos; if that fails it copies them from the live release and refuses to continue if any LFS pointer file is left. Link <code>.env</code> and the shared dirs (<code>data/sqlite</code>, <code>data/media</code>, <code>data/backups</code>).</li>
+<li><code>composer install</code>. Its <code>post-autoload-dump</code> script runs <code>statamic:install</code>, which publishes the control panel's and the toolkit's assets to <code>public/vendor/</code> (git-ignored). Update scripts don't run here: they need the <code>composer.lock.bak</code> that only <code>composer update</code> writes.</li>
+<li><code>npm install</code> and <code>npm run build</code>.</li>
+<li><code>db:ensure-sqlite</code> → <code>db:backup</code> (copy, keep 5) → <code>migrate:safe</code> (backs up again if migrations are pending).</li>
+<li><code>content:import</code>: <code>pixaproof:import-content --once</code>. The first deploy creates the content; every later deploy does nothing, so control panel edits are kept.</li>
+<li>Maintenance mode on → switch the <code>current</code> symlink → restart PHP-FPM → maintenance mode off → restart the queue worker → rebuild caches → <code>stache:warm</code>.</li>
+<li><code>deploy:verify</code> requests the site up to five times; on failure the release is rolled back.</li>
+</ol>
+
+<div class="box why">
+<p><strong>Steps 3–5 run twice per deploy.</strong> Deployer's Laravel recipe runs <code>artisan:config:cache</code> twice, and this repo chains <code>npm:install → … → migrate:safe → content:import</code> after it. The second run is harmless (no pending migrations, <code>--once</code> skips) but doubles the build time. Not changed, because it needs a real deploy to test.</p>
+</div>
+
+<h2>Server pieces</h2>
+<table>
+<tr><th>Piece</th><th>Where</th><th>Notes</th></tr>
+<tr><td>Caddy vhost</td><td>[[deploy/server/home/deployer/pixaproof-laravel/Caddyfile]]</td><td>Reference copy; <code>dep server:diff prod</code> reports drift. <code>handle_errors</code> only covers Caddy's own errors, so Statamic's 404 page shows</td></tr>
+<tr><td>Scheduler cron</td><td>[[deploy/server/etc/cron.d/pixaproof-laravel]]</td><td>Reference copy; install by hand</td></tr>
+<tr><td>Backups</td><td><code>db:backup</code>, <code>backup:offsite</code></td><td>SQLite + media + <code>.env</code> to Backblaze B2 with rclone</td></tr>
+<tr><td>PHP extensions</td><td>apt (ondrej/sury)</td><td><code>imagick</code> is not installed; needed only for the toolkit's generated share cards</td></tr>
+<tr><td>Production <code>.env</code></td><td><code>shared/.env</code></td><td><code>APP_ENV=production</code>, <code>DB_CONNECTION=sqlite</code>, <code>CACHE_STORE=database</code>, optional <code>SEO_GTM_ID</code></td></tr>
+</table>
+
+<div class="box read">
+<ol>
+<li>[[deploy.php]]: the hooks at the bottom first, then each task</li>
+<li>[[deploy/server/README.md]]</li>
+<li>[[README.md]]: the Deployment section</li>
+</ol>
+</div>
