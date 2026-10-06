@@ -7,13 +7,17 @@
 <p><code>dep deploy prod</code> runs [[deploy.php]] {{C}} on top of Deployer's Laravel recipe {{A:Deployer}}:</p>
 <ol class="steps">
 <li>Clone the branch with Git LFS smudging skipped, then <code>lfs:pull</code> runs <code>git lfs pull</code> for the videos; if that fails it copies them from the live release and refuses to continue if any LFS pointer file is left. Link <code>.env</code> and the shared dirs (<code>data/sqlite</code>, <code>data/media</code>, <code>data/backups</code>).</li>
-<li><code>composer install</code>. Its <code>post-autoload-dump</code> script runs <code>statamic:install</code>, which publishes the control panel's and the toolkit's assets to <code>public/vendor/</code> (git-ignored). Update scripts don't run here: they need the <code>composer.lock.bak</code> that only <code>composer update</code> writes.</li>
+<li><code>composer install</code>, then <code>storage:acl</code> (see below). Its <code>post-autoload-dump</code> script runs <code>statamic:install</code>, which publishes the control panel's and the toolkit's assets to <code>public/vendor/</code> (git-ignored). Update scripts don't run here: they need the <code>composer.lock.bak</code> that only <code>composer update</code> writes.</li>
 <li><code>npm install</code> and <code>npm run build</code>.</li>
 <li><code>db:ensure-sqlite</code> → <code>db:backup</code> (copy, keep 5) → <code>migrate:safe</code> (backs up again if migrations are pending).</li>
-<li><code>content:import</code>: <code>pixaproof:import-content --once</code>. The first deploy creates the content; every later deploy does nothing, so control panel edits are kept.</li>
+<li>Storage links (<code>public/media</code> → <code>shared/data/media</code>), then <code>content:import</code>: <code>pixaproof:import-content --once</code>. The first deploy creates the content; every later deploy does nothing, so control panel edits are kept. The import must come after the links: <code>storage:link-custom</code> replaces <code>public/media</code>, which deleted the images the first production deploy had copied there.</li>
 <li>Maintenance mode on → switch the <code>current</code> symlink → restart PHP-FPM → maintenance mode off → restart the queue worker → rebuild caches → <code>stache:warm</code>.</li>
 <li><code>deploy:verify</code> requests the site up to five times; on failure the release is rolled back.</li>
 </ol>
+
+<div class="box why">
+<p><strong><code>storage:acl</code> exists because of the first production deploy (2026-10-07), which returned 500 on every request.</strong> <code>shared/storage</code> carries default ACLs for <code>www-data</code>, but Statamic creates <code>storage/statamic/*</code> with <code>mkdir(…, 0755)</code>, which sets the ACL <em>mask</em> to <code>r-x</code> and caps <code>www-data</code> at read-only ("FlockStore directory … is not writable"). The task restores the mask on everything <code>deployer</code> owns, after <code>composer install</code> and again after the Stache warm. The same deploy also exposed that the automatic rollback had never worked: a second <code>fail('deploy', …)</code> replaced the first handler. Both tasks now hook the recipe's <code>deploy:failed</code>.</p>
+</div>
 
 <div class="box why">
 <p><strong>Steps 3–5 run twice per deploy.</strong> Deployer's Laravel recipe runs <code>artisan:config:cache</code> twice, and this repo chains <code>npm:install → … → migrate:safe → content:import</code> after it. The second run is harmless (no pending migrations, <code>--once</code> skips) but doubles the build time. Not changed, because it needs a real deploy to test.</p>

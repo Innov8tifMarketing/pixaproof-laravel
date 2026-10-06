@@ -676,7 +676,7 @@ after('npm:build', 'db:ensure-sqlite');
 
 after('db:ensure-sqlite', 'db:backup');
 after('db:backup', 'migrate:safe');
-after('migrate:safe', 'content:import');
+
 
 before('deploy:symlink', 'artisan:down');
 
@@ -688,6 +688,9 @@ after('artisan:cache:refresh', 'statamic:stache:warm');
 after('statamic:stache:warm', 'storage:acl');
 
 after('artisan:storage:link', 'storage:link-custom');
+// After the media symlink: storage:link-custom replaces public/media with a link to shared/data/media,
+// deleting anything the import copied there first (the first deploy lost og-image.webp that way).
+after('storage:link-custom', 'content:import');
 
 task('artisan:migrate', function () {})->hidden();
 

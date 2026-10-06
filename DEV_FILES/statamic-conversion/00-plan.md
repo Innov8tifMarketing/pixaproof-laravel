@@ -285,6 +285,39 @@ Done on 2026-10-06.
 - **Found while writing it:** `config/csp.php` refers to a `php artisan csp:summary` command that doesn't
   exist (noted on wiki page 7; not changed).
 
+## Production deploy (2026-10-07)
+
+No staging exists (`dep ssh staging`: host not found; `deploy.php` defines only `prod`), so `main` was
+fast-forwarded to the branch and deployed to production.
+
+- **Before:** Imagick installed by the owner (php8.4-imagick, ImageMagick 6.9.12). Scheduler cron
+  installed in `/etc/cron.d/pixaproof-laravel`. `SEO_GTM_ID` added to `shared/.env` (backed up first).
+- **Release 40 failed: HTTP 500 on every request**, about 2 minutes, rolled back by hand to 39.
+  `shared/storage/statamic/*`, created by the deploy user, had ACL mask `r-x` (Statamic's
+  `mkdir(…, 0755)`), so PHP-FPM (`www-data`) couldn't write `stache-locks`. Fix: the `storage:acl` task.
+  - The **automatic rollback never ran**: a second `fail('deploy', …)` replaced the first handler
+    (pre-existing). Both tasks now hook `deploy:failed`.
+- Release 40 was then verified offline (rendered as `www-data` on the server) before the redeploy.
+- **Release 41 deployed cleanly.** Health check passed first try.
+- **Fixed after deploy: home share image 404.** The first deploy's import copied the images into the
+  release's `public/media`, which `storage:link-custom` then deleted to create the symlink. The two files
+  were restored into `shared/data/media`, and `content:import` now runs after `storage:link-custom`.
+- **`GOOGLE_TAG_MANAGER_ID` removed** from production `.env` (backed up), config recached.
+- **Live validation:**
+  - All 3 pages have the right titles, `https` canonicals, indexable robots meta and JSON-LD.
+  - Share images work: the home artwork 200, the contact/privacy cards 200.
+  - GTM-MQ4C9XRM and GA4 load (browser: `google_tag_manager`, `gtag`). No CSP violations, no broken
+    images.
+  - All 22 redirects return 301 to their targets.
+  - sitemap.xml (3 URLs), robots.txt (`/cp/` disallow + `Sitemap:`), llms.txt, favicons and the
+    manifest are served.
+  - The 404 page, `/cp` login, enforced CSP + HSTS, and no report-only CSP on `/cp` are all correct.
+- **Open:**
+  - No queue worker exists for pixaproof (17 Statamic jobs pending).
+  - The production CP user (`php please make:user`) still needs to be created.
+  - `POST /technology` now answers 419 (CSRF), not a redirect, consistent with the intended GET-only
+    redirects.
+
 ## Audit findings that shape the plan
 
 - **Storage: production uses SQLite.** `deploy.php` sets

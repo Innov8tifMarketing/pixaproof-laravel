@@ -18,10 +18,10 @@
 <!-- vendors -->
 <g id="node2" class="node">
 <title>vendors</title>
-<path fill="#e0eefb" stroke="#8a8a8a" d="M198.25,-450C198.25,-450 36,-450 36,-450 30,-450 24,-444 24,-438 24,-438 24,-418 24,-418 24,-412 30,-406 36,-406 36,-406 198.25,-406 198.25,-406 204.25,-406 210.25,-412 210.25,-418 210.25,-418 210.25,-438 210.25,-438 210.25,-444 204.25,-450 198.25,-450"/>
+<path fill="#e0eefb" stroke="#8a8a8a" d="M212.5,-450C212.5,-450 21.75,-450 21.75,-450 15.75,-450 9.75,-444 9.75,-438 9.75,-438 9.75,-418 9.75,-418 9.75,-412 15.75,-406 21.75,-406 21.75,-406 212.5,-406 212.5,-406 218.5,-406 224.5,-412 224.5,-418 224.5,-418 224.5,-438 224.5,-438 224.5,-444 218.5,-450 212.5,-450"/>
 <text xml:space="preserve" text-anchor="middle" x="117.12" y="-436.5" font-family="Helvetica,sans-Serif" font-size="10.00">composer install</text>
 <text xml:space="preserve" text-anchor="middle" x="117.12" y="-424.5" font-family="Helvetica,sans-Serif" font-size="10.00">→ post&#45;autoload&#45;dump: statamic:install</text>
-<text xml:space="preserve" text-anchor="middle" x="117.12" y="-412.5" font-family="Helvetica,sans-Serif" font-size="10.00">(publishes CP + toolkit assets)</text>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-412.5" font-family="Helvetica,sans-Serif" font-size="10.00">(publishes CP + toolkit assets) → storage:acl</text>
 </g>
 <!-- prep&#45;&gt;vendors -->
 <g id="edge1" class="edge">
@@ -78,9 +78,9 @@
 <!-- import -->
 <g id="node6" class="node">
 <title>import</title>
-<g id="a_node6"><a xlink:href="../../../app/Console/Commands/ImportStatamicContent.php" xlink:title="content:import\npixaproof:import&#45;content &#45;&#45;once">
+<g id="a_node6"><a xlink:href="../../../app/Console/Commands/ImportStatamicContent.php" xlink:title="storage links → content:import\npixaproof:import&#45;content &#45;&#45;once">
 <path fill="#fff1c7" stroke="#8a8a8a" d="M180.62,-210C180.62,-210 53.62,-210 53.62,-210 47.62,-210 41.62,-204 41.62,-198 41.62,-198 41.62,-186 41.62,-186 41.62,-180 47.62,-174 53.62,-174 53.62,-174 180.62,-174 180.62,-174 186.62,-174 192.62,-180 192.62,-186 192.62,-186 192.62,-198 192.62,-198 192.62,-204 186.62,-210 180.62,-210"/>
-<text xml:space="preserve" text-anchor="middle" x="117.12" y="-194.5" font-family="Helvetica,sans-Serif" font-size="10.00">content:import</text>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-194.5" font-family="Helvetica,sans-Serif" font-size="10.00">storage links → content:import</text>
 <text xml:space="preserve" text-anchor="middle" x="117.12" y="-182.5" font-family="Helvetica,sans-Serif" font-size="10.00">pixaproof:import&#45;content &#45;&#45;once</text>
 </a>
 </g>
@@ -108,7 +108,8 @@
 <g id="node8" class="node">
 <title>caches</title>
 <path fill="#fff1c7" stroke="#8a8a8a" d="M215.12,-94C215.12,-94 19.12,-94 19.12,-94 13.12,-94 7.12,-88 7.12,-82 7.12,-82 7.12,-70 7.12,-70 7.12,-64 13.12,-58 19.12,-58 19.12,-58 215.12,-58 215.12,-58 221.12,-58 227.12,-64 227.12,-70 227.12,-70 227.12,-82 227.12,-82 227.12,-88 221.12,-94 215.12,-94"/>
-<text xml:space="preserve" text-anchor="middle" x="117.12" y="-72.5" font-family="Helvetica,sans-Serif" font-size="10.00">artisan:cache:refresh → statamic:stache:warm</text>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">artisan:cache:refresh → statamic:stache:warm</text>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-66.5" font-family="Helvetica,sans-Serif" font-size="10.00">→ storage:acl</text>
 </g>
 <!-- publish&#45;&gt;caches -->
 <g id="edge7" class="edge">
@@ -121,7 +122,7 @@
 <title>verify</title>
 <path fill="#fff1c7" stroke="#8a8a8a" d="M187.38,-36C187.38,-36 46.88,-36 46.88,-36 40.88,-36 34.88,-30 34.88,-24 34.88,-24 34.88,-12 34.88,-12 34.88,-6 40.88,0 46.88,0 46.88,0 187.38,0 187.38,0 193.38,0 199.38,-6 199.38,-12 199.38,-12 199.38,-24 199.38,-24 199.38,-30 193.38,-36 187.38,-36"/>
 <text xml:space="preserve" text-anchor="middle" x="117.12" y="-20.5" font-family="Helvetica,sans-Serif" font-size="10.00">deploy:verify (curl the site, 5 tries)</text>
-<text xml:space="preserve" text-anchor="middle" x="117.12" y="-8.5" font-family="Helvetica,sans-Serif" font-size="10.00">fails → rollback</text>
+<text xml:space="preserve" text-anchor="middle" x="117.12" y="-8.5" font-family="Helvetica,sans-Serif" font-size="10.00">fails → deploy:failed → rollback</text>
 </g>
 <!-- caches&#45;&gt;verify -->
 <g id="edge8" class="edge">

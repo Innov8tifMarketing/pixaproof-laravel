@@ -6,14 +6,14 @@ digraph deploy {
   edge  [fontname="Helvetica", fontsize=8, color="#6b6b6b"];
 
   prep   [label="deploy:prepare\nclone (LFS skipped) → lfs:pull → .env, shared dirs", fillcolor="#e0eefb"];
-  vendors [label="composer install\n→ post-autoload-dump: statamic:install\n(publishes CP + toolkit assets)", fillcolor="#e0eefb"];
+  vendors [label="composer install\n→ post-autoload-dump: statamic:install\n(publishes CP + toolkit assets) → storage:acl", fillcolor="#e0eefb"];
   npm    [label="npm:install → npm:build", fillcolor="#fff1c7", URL="../../deploy.php"];
   backup [label="db:ensure-sqlite → db:backup", fillcolor="#fff1c7", URL="../../deploy.php"];
   migrate [label="migrate:safe\n(backup again if migrations pending)", fillcolor="#fff1c7", URL="../../deploy.php"];
-  import [label="content:import\npixaproof:import-content --once", fillcolor="#fff1c7", URL="../../app/Console/Commands/ImportStatamicContent.php"];
+  import [label="storage links → content:import\npixaproof:import-content --once", fillcolor="#fff1c7", URL="../../app/Console/Commands/ImportStatamicContent.php"];
   publish [label="artisan:down → symlink → php-fpm restart\n→ artisan:up → queue restart", fillcolor="#fff1c7"];
-  caches [label="artisan:cache:refresh → statamic:stache:warm", fillcolor="#fff1c7"];
-  verify [label="deploy:verify (curl the site, 5 tries)\nfails → rollback", fillcolor="#fff1c7"];
+  caches [label="artisan:cache:refresh → statamic:stache:warm\n→ storage:acl", fillcolor="#fff1c7"];
+  verify [label="deploy:verify (curl the site, 5 tries)\nfails → deploy:failed → rollback", fillcolor="#fff1c7"];
 
   prep -> vendors -> npm -> backup -> migrate -> import -> publish -> caches -> verify;
 }
