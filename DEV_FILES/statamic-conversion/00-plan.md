@@ -53,9 +53,10 @@ References:
    Collections, navigations and the asset container come from the import command (PHP API) instead.
 6. **`seo:install` needs an asset container first** ("Create an asset container first, or pass
    --container"). With the `assets` container on the `media` disk it creates `globals.seo` and the `seo`
-   set, filling only `robots_disallow: [/cp/]`. **It did not store a `·` separator**, so the "seo:install
-   sets `·`" premise below needs rechecking in Phase A. Setting `title_site_name: false` explicitly is
-   still right.
+   set, filling only `robots_disallow: [/cp/]`. It stores no separator. **Resolved:** in toolkit 0.18.2
+   `Settings::titleSiteName()` defaults to off and only turns on when a separator is saved, so titles are
+   the title alone by default. The import command still sets `title_site_name: false` explicitly so a
+   separator typed in the CP later doesn't change every title.
 7. **Toolkit CP assets weren't published.** `/cp/auth/login` returned 500 (`Vite manifest not found at
    public/vendor/statamic-marketing-toolkit/build/manifest.json`) until
    `php artisan vendor:publish --tag=marketing-toolkit --force`. Phase A adds that publish to the
@@ -135,10 +136,10 @@ vendor/bin/pint
 | `partials/google-analytics`, GTM partials, `services.google_tag_manager` | Toolkit Tracking: GA4 ID in the global (or `SEO_GA4_ID`), GTM via `SEO_GTM_ID` | Toolkit |
 | `public/robots.txt` | Toolkit robots.txt (delete the file) | Toolkit |
 | none | Toolkit sitemap.xml, llms.txt | Toolkit |
-| 22 `Route::redirect`s | Toolkit `Redirect` rows via the Pro CSV import of `database/seo/redirects.csv` (falls back to the `Redirect` model API if the import has no CLI) | Toolkit |
-| Navbar/footer anchor links | `main` and `footer` navigations (URL items), rendered with the `nav` tag | Statamic default |
+| 22 `Route::redirect`s | Toolkit `Redirect` rows from the committed `database/seo/redirects.csv`, loaded with the Pro CSV importer's PHP class `JothamLec\MarketingToolkit\Redirects\Csv::import()` (the CSV import has no CLI; over HTTP it is CP-only) | Toolkit |
+| Navbar/footer anchor links | `main` navigation (Home, Solutions, Technology, About, FAQ) and `footer` navigation (Solutions, Technology, About), URL items, rendered with the `nav` tag. "Technology" keeps its label and points at `/#how-it-works`. The "Request Demo" button and the footer's contact/legal links stay in Blade, linking to the entries | Statamic default |
 | Homepage copy, industries/videos arrays, components | Stay in Blade | Custom (kept, view code) |
-| `privacy.blade.php` prose | `content` markdown field on the entry | Statamic default |
+| `privacy.blade.php` prose | `content` markdown field on the entry. "Last updated" today prints `date('F j, Y')` (always today); Phase B prints the entry's `updated_at` instead (intended change) | Statamic default |
 | `contact.blade.php` | Template `contact`; offices and email stay in Blade | Statamic default |
 | `Lead` model, 2 `leads` migrations | Dropped by a new migration, no export | deleted |
 | `User` model, `users` table | Statamic database users (`users.repository = eloquent`, `auth:migration`) | Statamic default |
@@ -170,13 +171,14 @@ vendor/bin/pint
 | Phase | Scope | Deletes | Confidence |
 |---|---|---|---|
 | 0 | This file, snapshot test, baselines, dry run | — | done |
-| A (1+2) | Rehearsed script above; collections, navs, blueprints, asset container via the import command (with tests); `RefreshDatabase` in HTTP tests; serialising test cache | — | 92% |
+| A (1+2) | Rehearsed script above; `pages` blueprint (flat-file YAML), collection, navs, asset container, entries, SEO & brand values and redirects via the import command (with tests); `RefreshDatabase` in HTTP tests; serialising test cache. App routes still answer `/`, `/contact`, `/privacy` and the 22 redirects. Expected snapshot changes: `/sitemap.xml` (lists the 3 entries) and `/llms.txt` start answering 200 | — | 92% |
 | B (3+5) | Pages become entries with templates and the layout; toolkit head/body; SEO & brand filled; redirects move to the toolkit; robots, sitemap, llms; CSP recheck | `routes/web.php` view and redirect routes, `layouts/*`, GA/GTM partials, `@fingerprintedAsset`, public favicons, manifest, robots.txt, `FaviconCacheBustingTest`, related `PublicRoutesTest` cases (line counts in the report) | 85% |
 | C (4+6) | Drop `leads`; Livewire → Alpine; remove `User` factory leftovers; update `deploy.php`, README, AGENTS.md; `route:list --except-vendor` shows only `/csp-report` and `/up` | `Lead.php`, Livewire, `vendor/livewire`, stale docs | 82% |
 | 7 | Wiki in `DEV_FILES/wiki` (moojing structure), `provenance.py`, badges | — | 75% |
 
 ## Intended behaviour changes (the snapshot may change only for these)
 
+- Privacy "Last updated" shows the entry's last edit date, not today's date.
 - Titles are the title alone (no ` - Pixaproof`). Home stays "Verify Every Image. Eliminate Fraud."
   (set as the home entry's `seo.title`); "Contact - Pixaproof" becomes "Contact".
 - `/#technology` targets (redirects `/technology`, `/how-it-works`, `/product`, nav links) become
