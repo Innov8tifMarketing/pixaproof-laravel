@@ -1,0 +1,262 @@
+{
+    "fixtures": {
+        "GET /": {
+            "status": 200,
+            "head": {
+                "title": "Verify Every Image. Eliminate Fraud. - Pixaproof",
+                "description": "PixaProof AI-powered verification detects image tampering in seconds—protecting your business from fraudulent claims, fake documents, and compliance failures.",
+                "canonical": "{app_url}",
+                "robots": null,
+                "meta": {
+                    "og:description": [
+                        "PixaProof AI-powered verification detects image tampering in seconds—protecting your business from fraudulent claims, fake documents, and compliance failures."
+                    ],
+                    "og:image": [
+                        "{app_url}/images/og-image.webp"
+                    ],
+                    "og:image:height": [
+                        "630"
+                    ],
+                    "og:image:width": [
+                        "1200"
+                    ],
+                    "og:site_name": [
+                        "Pixaproof"
+                    ],
+                    "og:title": [
+                        "Verify Every Image. Eliminate Fraud. - Pixaproof"
+                    ],
+                    "og:type": [
+                        "website"
+                    ],
+                    "og:url": [
+                        "{app_url}"
+                    ],
+                    "twitter:card": [
+                        "summary_large_image"
+                    ],
+                    "twitter:description": [
+                        "PixaProof AI-powered verification detects image tampering in seconds—protecting your business from fraudulent claims, fake documents, and compliance failures."
+                    ],
+                    "twitter:image": [
+                        "{app_url}/images/og-image.webp"
+                    ],
+                    "twitter:title": [
+                        "Verify Every Image. Eliminate Fraud. - Pixaproof"
+                    ]
+                },
+                "json_ld": []
+            }
+        },
+        "GET /contact": {
+            "status": 200,
+            "head": {
+                "title": "Contact - Pixaproof",
+                "description": "Get in touch with the PixaProof team. Email our sales team to book a demo, discuss your use case, or explore integration options.",
+                "canonical": "{app_url}/contact",
+                "robots": null,
+                "meta": {
+                    "og:description": [
+                        "Get in touch with the PixaProof team. Email our sales team to book a demo, discuss your use case, or explore integration options."
+                    ],
+                    "og:image": [
+                        "{app_url}/images/og-image.webp"
+                    ],
+                    "og:image:height": [
+                        "630"
+                    ],
+                    "og:image:width": [
+                        "1200"
+                    ],
+                    "og:site_name": [
+                        "Pixaproof"
+                    ],
+                    "og:title": [
+                        "Contact - Pixaproof"
+                    ],
+                    "og:type": [
+                        "website"
+                    ],
+                    "og:url": [
+                        "{app_url}/contact"
+                    ],
+                    "twitter:card": [
+                        "summary_large_image"
+                    ],
+                    "twitter:description": [
+                        "Get in touch with the PixaProof team. Email our sales team to book a demo, discuss your use case, or explore integration options."
+                    ],
+                    "twitter:image": [
+                        "{app_url}/images/og-image.webp"
+                    ],
+                    "twitter:title": [
+                        "Contact - Pixaproof"
+                    ]
+                },
+                "json_ld": []
+            }
+        },
+        "GET /privacy": {
+            "status": 200,
+            "head": {
+                "title": "Privacy Policy - Pixaproof",
+                "description": "PixaProof privacy policy — how we collect, use, and protect your data when using our image verification platform.",
+                "canonical": "{app_url}/privacy",
+                "robots": null,
+                "meta": {
+                    "og:description": [
+                        "PixaProof privacy policy — how we collect, use, and protect your data when using our image verification platform."
+                    ],
+                    "og:image": [
+                        "{app_url}/images/og-image.webp"
+                    ],
+                    "og:image:height": [
+                        "630"
+                    ],
+                    "og:image:width": [
+                        "1200"
+                    ],
+                    "og:site_name": [
+                        "Pixaproof"
+                    ],
+                    "og:title": [
+                        "Privacy Policy - Pixaproof"
+                    ],
+                    "og:type": [
+                        "website"
+                    ],
+                    "og:url": [
+                        "{app_url}/privacy"
+                    ],
+                    "twitter:card": [
+                        "summary_large_image"
+                    ],
+                    "twitter:description": [
+                        "PixaProof privacy policy — how we collect, use, and protect your data when using our image verification platform."
+                    ],
+                    "twitter:image": [
+                        "{app_url}/images/og-image.webp"
+                    ],
+                    "twitter:title": [
+                        "Privacy Policy - Pixaproof"
+                    ]
+                },
+                "json_ld": []
+            }
+        },
+        "GET /this-does-not-exist": {
+            "status": 404,
+            "head": {
+                "title": "Not Found",
+                "description": null,
+                "canonical": null,
+                "robots": null,
+                "meta": [],
+                "json_ld": []
+            }
+        },
+        "GET /technology": {
+            "status": 301,
+            "location": "/#technology"
+        },
+        "GET /about": {
+            "status": 301,
+            "location": "/#about"
+        },
+        "GET /company/about": {
+            "status": 301,
+            "location": "/#about"
+        },
+        "GET /company/contact": {
+            "status": 301,
+            "location": "/contact"
+        },
+        "GET /solutions/loan-draw-inspections": {
+            "status": 301,
+            "location": "/#solutions"
+        },
+        "GET /solutions/insurance-claims": {
+            "status": 301,
+            "location": "/#solutions"
+        },
+        "GET /solutions/kyc-onboarding": {
+            "status": 301,
+            "location": "/#solutions"
+        },
+        "GET /solutions/asset-verification": {
+            "status": 301,
+            "location": "/#solutions"
+        },
+        "GET /solutions/banking": {
+            "status": 301,
+            "location": "/#solutions"
+        },
+        "GET /solutions/insurance": {
+            "status": 301,
+            "location": "/#solutions"
+        },
+        "GET /solutions/real-estate": {
+            "status": 301,
+            "location": "/#solutions"
+        },
+        "GET /solutions/government": {
+            "status": 301,
+            "location": "/"
+        },
+        "GET /solutions/ecommerce": {
+            "status": 301,
+            "location": "/"
+        },
+        "GET /solutions/healthcare": {
+            "status": 301,
+            "location": "/"
+        },
+        "GET /resources/injection-attacks": {
+            "status": 301,
+            "location": "/"
+        },
+        "GET /resources/fraud-statistics": {
+            "status": 301,
+            "location": "/"
+        },
+        "GET /resources/compliance": {
+            "status": 301,
+            "location": "/"
+        },
+        "GET /resources/case-studies": {
+            "status": 301,
+            "location": "/"
+        },
+        "GET /pricing": {
+            "status": 301,
+            "location": "/contact"
+        },
+        "GET /how-it-works": {
+            "status": 301,
+            "location": "/#technology"
+        },
+        "GET /enterprise": {
+            "status": 301,
+            "location": "/#solutions"
+        },
+        "GET /product": {
+            "status": 301,
+            "location": "/#technology"
+        },
+        "GET /sitemap.xml": {
+            "status": 404
+        },
+        "GET /robots.txt": {
+            "status": 404
+        },
+        "GET /llms.txt": {
+            "status": 404
+        },
+        "POST /csp-report": {
+            "status": 204
+        }
+    },
+    "static_files": {
+        "robots.txt": "User-agent: *\nDisallow:\n"
+    }
+}
