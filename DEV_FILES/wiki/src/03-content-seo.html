@@ -33,7 +33,7 @@
 <tr><td><code>&lt;title&gt;</code></td><td>The entry's <code>seo.title</code>, else its title. No site name: <code>title_site_name</code> is false. Home's <code>seo.title</code> is "Verify Every Image. Eliminate Fraud."</td></tr>
 <tr><td>Description</td><td>The entry's <code>seo.description</code>, else SEO &amp; brand's default (cut at 160 characters)</td></tr>
 <tr><td>Canonical, <code>og:url</code></td><td>The entry's URL (query strings dropped)</td></tr>
-<tr><td>Share image</td><td>SEO &amp; brand's default image, as a 1200×630 Glide crop</td></tr>
+<tr><td>Share image</td><td>The entry's SEO image (home: <code>og-image.webp</code>), else a generated card at <code>/og/{uri}.png</code>, else SEO &amp; brand's default image as a 1200×630 Glide crop</td></tr>
 <tr><td>Robots meta</td><td><code>max-snippet:-1, max-image-preview:large, …</code> in production; <code>noindex</code> everywhere else; <code>noindex, follow</code> on 404s</td></tr>
 <tr><td>JSON-LD</td><td>WebSite, Organization, WebPage and (inner pages) BreadcrumbList</td></tr>
 <tr><td>sitemap.xml, llms.txt</td><td>Every published entry in a routed collection</td></tr>
@@ -44,7 +44,7 @@
 <h3>Our two changes to the toolkit's defaults ([[config/seo.php]])</h3>
 <ul>
 <li><code>description.length</code> 155 → 160, matching SEO &amp; brand's field limit, so hand-written descriptions aren't cut.</li>
-<li><code>og.enabled</code> → false. Generated share cards need PHP's <code>imagick</code>, which production doesn't have yet. Install it and flip this to get a card per page.</li>
+<li><code>og.enabled</code> → <code>extension_loaded('imagick')</code>. Generated share cards need PHP's <code>imagick</code> (installed on production); a machine without it falls back to the default image. Home overrides its card with the designed <code>og-image.webp</code> (its entry's <code>seo.image</code>); Contact and Privacy get cards in the SEO &amp; brand colours (<code>og_accent</code>, <code>og_text</code>, <code>og_background</code>).</li>
 </ul>
 
 <div class="box read">

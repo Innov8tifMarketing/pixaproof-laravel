@@ -26,7 +26,7 @@
 <h2>Operations</h2>
 <details><summary>Scheduled entries stopped going live. What do you check first?</summary>
 <p>The scheduler cron (<code>deploy/server/etc/cron.d/pixaproof-laravel</code>, installed by hand). Statamic's <code>HandleEntrySchedule</code> only runs from <code>schedule:run</code>.</p></details>
-<details><summary>You want a generated share card per page. What two things change?</summary>
-<p>Install PHP's <code>imagick</code> on the server (<code>apt install php8.4-imagick</code>, reload PHP-FPM), then set <code>og.enabled</code> to true in <code>config/seo.php</code> and update the URL snapshot (share images become <code>/og.png</code> and <code>/og/{uri}.png</code>).</p></details>
+<details><summary>A new server shows the default share image on every page instead of cards. Why?</summary>
+<p><code>config/seo.php</code> enables cards only when PHP's <code>imagick</code> extension is loaded. Install <code>php8.4-imagick</code> and reload PHP-FPM; nothing else changes. (Home is unaffected either way: it uses the designed <code>og-image.webp</code>.)</p></details>
 <details><summary>A test passes alone but fails in the full suite. Where do you look?</summary>
 <p>State that outlives the transaction: files written outside the faked <code>media</code> disk, the Blueprint YAML written by <code>seo:install</code>, or a cache store that isn't per-test. The database itself is rolled back after every test.</p></details>

@@ -144,9 +144,10 @@ install it by hand as root (`/etc/cron.d/pixaproof-laravel`).
 
 ### Share images and Imagick
 
-The Marketing Toolkit's generated share cards need PHP's `imagick` extension
-(`apt install php8.4-imagick`, then reload PHP-FPM). They are off in `config/seo.php` (`og.enabled`);
-pages use the default share image from SEO & brand instead.
+Contact and Privacy share a generated card (the Marketing Toolkit, in the SEO & brand card colours); the
+homepage shares the designed `og-image.webp` (its entry's SEO image). Cards need PHP's `imagick`
+extension, installed on the server (`php8.4-imagick`). `config/seo.php` turns them on only when the
+extension is loaded, so a machine without it falls back to the default share image.
 
 ### Git LFS Note
 

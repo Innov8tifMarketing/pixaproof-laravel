@@ -50,6 +50,7 @@ class ImportStatamicContent extends Command
             'template' => 'home',
             'seo' => [
                 'title' => 'Verify Every Image. Eliminate Fraud.',
+                'image' => 'og-image.webp',
                 'description' => 'PixaProof AI-powered verification detects image tampering in seconds—protecting your business from fraudulent claims, fake documents, and compliance failures.',
             ],
         ],
@@ -137,6 +138,9 @@ class ImportStatamicContent extends Command
         'default_image' => 'og-image.webp',
         'favicon' => 'pixaproof-icon.png',
         'ga4_id' => 'G-VKS70BYBWN',
+        'og_accent' => '#0284c7',
+        'og_text' => '#0f172a',
+        'og_background' => '#ffffff',
     ];
 
     public function handle(): int

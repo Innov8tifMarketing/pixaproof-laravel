@@ -23,7 +23,7 @@ app/
 └── Providers/AppServiceProvider.php
 
 config/
-├── seo.php                             # Marketing Toolkit (description length 160, share cards off)
+├── seo.php                             # Marketing Toolkit (description length 160; share cards on when imagick is loaded)
 └── statamic/                           # Statamic config; eloquent-driver.php lists which repositories use the DB
 
 database/

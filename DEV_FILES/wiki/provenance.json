@@ -1752,12 +1752,6 @@
   "reason": ""
  },
  {
-  "path": "tests/Feature/ExampleTest.php",
-  "origin": "L",
-  "status": "edited",
-  "reason": "changed from baseline-laravel"
- },
- {
   "path": "tests/Feature/Guard/UrlSnapshotTest.php",
   "origin": "C",
   "status": "custom",
@@ -1801,12 +1795,6 @@
  },
  {
   "path": "tests/TestCase.php",
-  "origin": "L",
-  "status": "edited",
-  "reason": "changed from baseline-laravel"
- },
- {
-  "path": "tests/Unit/ExampleTest.php",
   "origin": "L",
   "status": "edited",
   "reason": "changed from baseline-laravel"

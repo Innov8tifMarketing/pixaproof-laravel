@@ -173,7 +173,7 @@
 <tr><td>Caddy vhost</td><td><a class="src" href="../../deploy/server/home/deployer/pixaproof-laravel/Caddyfile"><code>deploy/server/home/deployer/pixaproof-laravel/Caddyfile</code></a></td><td>Reference copy; <code>dep server:diff prod</code> reports drift. <code>handle_errors</code> only covers Caddy's own errors, so Statamic's 404 page shows</td></tr>
 <tr><td>Scheduler cron</td><td><a class="src" href="../../deploy/server/etc/cron.d/pixaproof-laravel"><code>deploy/server/etc/cron.d/pixaproof-laravel</code></a></td><td>Reference copy; install by hand</td></tr>
 <tr><td>Backups</td><td><code>db:backup</code>, <code>backup:offsite</code></td><td>SQLite + media + <code>.env</code> to Backblaze B2 with rclone</td></tr>
-<tr><td>PHP extensions</td><td>apt (ondrej/sury)</td><td><code>imagick</code> is not installed; needed only for the toolkit's generated share cards</td></tr>
+<tr><td>PHP extensions</td><td>apt (ondrej/sury)</td><td><code>php8.4-imagick</code> (ImageMagick 6.9) for the toolkit's generated share cards; installed 2026-10-06</td></tr>
 <tr><td>Production <code>.env</code></td><td><code>shared/.env</code></td><td><code>APP_ENV=production</code>, <code>DB_CONNECTION=sqlite</code>, <code>CACHE_STORE=database</code>, optional <code>SEO_GTM_ID</code></td></tr>
 </table>
 

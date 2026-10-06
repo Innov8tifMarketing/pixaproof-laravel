@@ -314,9 +314,9 @@ return [
     */
 
     'og' => [
-        // Off: the cards need Imagick, which production lacks. Pages use the
-        // SEO & brand default image (og-image.webp) instead.
-        'enabled' => false,
+        // The cards need PHP's imagick extension; without it (a server missing
+        // the extension) pages fall back to the SEO & brand default image.
+        'enabled' => extension_loaded('imagick'),
 
         'templates' => [
             'default' => DefaultTemplate::class,

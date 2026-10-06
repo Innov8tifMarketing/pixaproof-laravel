@@ -101,7 +101,10 @@
                         "Get in touch with the PixaProof team. Email our sales team to book a demo, discuss your use case, or explore integration options."
                     ],
                     "og:image": [
-                        "{app_url}/img/asset/YXNzZXRzL29nLWltYWdlLndlYnA/og-image.webp?w=1200&h=630&fit=crop&fm=jpg&q=85&s={signature}"
+                        "{app_url}/og/contact.png?v={hash}"
+                    ],
+                    "og:image:alt": [
+                        "Contact"
                     ],
                     "og:image:height": [
                         "630"
@@ -131,7 +134,10 @@
                         "Get in touch with the PixaProof team. Email our sales team to book a demo, discuss your use case, or explore integration options."
                     ],
                     "twitter:image": [
-                        "{app_url}/img/asset/YXNzZXRzL29nLWltYWdlLndlYnA/og-image.webp?w=1200&h=630&fit=crop&fm=jpg&q=85&s={signature}"
+                        "{app_url}/og/contact.png?v={hash}"
+                    ],
+                    "twitter:image:alt": [
+                        "Contact"
                     ],
                     "twitter:title": [
                         "Contact"
@@ -168,7 +174,7 @@
                                 "inLanguage": "en",
                                 "primaryImageOfPage": {
                                     "@type": "ImageObject",
-                                    "url": "{app_url}/img/asset/YXNzZXRzL29nLWltYWdlLndlYnA/og-image.webp?w=1200&h=630&fit=crop&fm=jpg&q=85&s={signature}",
+                                    "url": "{app_url}/og/contact.png?v={hash}",
                                     "width": 1200,
                                     "height": 630
                                 }
@@ -208,7 +214,10 @@
                         "PixaProof privacy policy — how we collect, use, and protect your data when using our image verification platform."
                     ],
                     "og:image": [
-                        "{app_url}/img/asset/YXNzZXRzL29nLWltYWdlLndlYnA/og-image.webp?w=1200&h=630&fit=crop&fm=jpg&q=85&s={signature}"
+                        "{app_url}/og/privacy.png?v={hash}"
+                    ],
+                    "og:image:alt": [
+                        "Privacy Policy"
                     ],
                     "og:image:height": [
                         "630"
@@ -238,7 +247,10 @@
                         "PixaProof privacy policy — how we collect, use, and protect your data when using our image verification platform."
                     ],
                     "twitter:image": [
-                        "{app_url}/img/asset/YXNzZXRzL29nLWltYWdlLndlYnA/og-image.webp?w=1200&h=630&fit=crop&fm=jpg&q=85&s={signature}"
+                        "{app_url}/og/privacy.png?v={hash}"
+                    ],
+                    "twitter:image:alt": [
+                        "Privacy Policy"
                     ],
                     "twitter:title": [
                         "Privacy Policy"
@@ -275,7 +287,7 @@
                                 "inLanguage": "en",
                                 "primaryImageOfPage": {
                                     "@type": "ImageObject",
-                                    "url": "{app_url}/img/asset/YXNzZXRzL29nLWltYWdlLndlYnA/og-image.webp?w=1200&h=630&fit=crop&fm=jpg&q=85&s={signature}",
+                                    "url": "{app_url}/og/privacy.png?v={hash}",
                                     "width": 1200,
                                     "height": 630
                                 }

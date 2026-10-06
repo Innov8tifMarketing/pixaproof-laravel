@@ -43,6 +43,7 @@ class ImportStatamicContentTest extends TestCase
         $this->assertSame('default', $pages['privacy']->get('template'));
 
         $this->assertSame('Verify Every Image. Eliminate Fraud.', $pages['home']->get('seo')['title']);
+        $this->assertSame('og-image.webp', $pages['home']->get('seo')['image']);
         $this->assertArrayNotHasKey('title', $pages['contact']->get('seo'));
         $this->assertStringContainsString('## Data Security', $pages['privacy']->get('content'));
         $this->assertStringContainsString('[contact us](/contact)', $pages['privacy']->get('content'));
@@ -79,6 +80,7 @@ class ImportStatamicContentTest extends TestCase
         $this->assertSame('og-image.webp', $variables->get('default_image'));
         $this->assertSame('pixaproof-icon.png', $variables->get('favicon'));
         $this->assertSame('G-VKS70BYBWN', $variables->get('ga4_id'));
+        $this->assertSame(['#0284c7', '#0f172a', '#ffffff'], [$variables->get('og_accent'), $variables->get('og_text'), $variables->get('og_background')]);
         $this->assertSame(['/cp/'], $variables->get('robots_disallow'));
 
         Storage::disk('media')->assertExists(['og-image.webp', 'pixaproof-icon.png']);

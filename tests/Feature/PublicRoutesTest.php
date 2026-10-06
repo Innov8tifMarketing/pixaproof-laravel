@@ -75,6 +75,27 @@ class PublicRoutesTest extends TestCase
             ->assertSee('<h2>Data Security</h2>', false);
     }
 
+    /**
+     * @return list<array{string}>
+     */
+    public static function shareCardProvider(): array
+    {
+        return [['/og.png'], ['/og/contact.png'], ['/og/privacy.png']];
+    }
+
+    #[DataProvider('shareCardProvider')]
+    public function test_each_page_gets_a_generated_share_card(string $path): void
+    {
+        if (! extension_loaded('imagick')) {
+            $this->markTestSkipped('Share cards need the imagick extension.');
+        }
+
+        $response = $this->get($path)->assertOk();
+
+        $this->assertSame('image/png', $response->headers->get('Content-Type'));
+        $this->assertSame([1200, 630], array_slice((array) getimagesizefromstring((string) $response->getContent()), 0, 2));
+    }
+
     public function test_vite_build_produces_the_app_entrypoints(): void
     {
         $manifestPath = public_path('build/manifest.json');
