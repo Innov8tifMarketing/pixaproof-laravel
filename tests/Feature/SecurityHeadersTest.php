@@ -3,13 +3,10 @@
 namespace Tests\Feature;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use Tests\Concerns\ImportsSiteContent;
 use Tests\TestCase;
 
 class SecurityHeadersTest extends TestCase
 {
-    use ImportsSiteContent;
-
     /**
      * @return list<array{string}>
      */

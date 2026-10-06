@@ -2,20 +2,19 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
+use RuntimeException;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
+    /**
+     * Seeds the site's Statamic content: pages, navigations, SEO & brand values and redirects.
+     */
     public function run(): void
     {
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        if (Artisan::call('pixaproof:import-content') !== 0) {
+            throw new RuntimeException('pixaproof:import-content failed: '.Artisan::output());
+        }
     }
 }

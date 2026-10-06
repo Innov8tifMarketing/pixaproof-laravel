@@ -4,7 +4,6 @@ namespace Tests\Feature\Guard;
 
 use Dom\HTMLDocument;
 use Illuminate\Testing\TestResponse;
-use Tests\Concerns\ImportsSiteContent;
 use Tests\TestCase;
 
 /**
@@ -16,8 +15,6 @@ use Tests\TestCase;
  */
 class UrlSnapshotTest extends TestCase
 {
-    use ImportsSiteContent;
-
     private const string SNAPSHOT_PATH = 'tests/__snapshots__/urls.json';
 
     private const string APP_URL_PLACEHOLDER = '{app_url}';

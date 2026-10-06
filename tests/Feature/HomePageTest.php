@@ -3,13 +3,10 @@
 namespace Tests\Feature;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use Tests\Concerns\ImportsSiteContent;
 use Tests\TestCase;
 
 class HomePageTest extends TestCase
 {
-    use ImportsSiteContent;
-
     public function test_industry_solutions_render_without_kyc(): void
     {
         $this->get('/')

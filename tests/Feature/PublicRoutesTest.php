@@ -3,13 +3,11 @@
 namespace Tests\Feature;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use Tests\Concerns\ImportsSiteContent;
+use Statamic\Facades\Entry;
 use Tests\TestCase;
 
 class PublicRoutesTest extends TestCase
 {
-    use ImportsSiteContent;
-
     /**
      * @return list<array{string, string}>
      */
@@ -59,6 +57,22 @@ class PublicRoutesTest extends TestCase
     public function test_legacy_paths_redirect(string $from, string $to): void
     {
         $this->get($from)->assertRedirect($to);
+    }
+
+    public function test_legacy_paths_redirect_only_for_get_and_head(): void
+    {
+        $this->head('/technology')->assertRedirect('/#how-it-works');
+        $this->post('/technology')->assertNotFound();
+    }
+
+    public function test_privacy_page_shows_when_the_policy_was_last_edited(): void
+    {
+        $privacy = Entry::whereCollection('pages')->first(fn ($entry) => $entry->slug() === 'privacy');
+
+        $this->get('/privacy')
+            ->assertOk()
+            ->assertSee('Last updated: '.$privacy->lastModified()->format('F j, Y'))
+            ->assertSee('<h2>Data Security</h2>', false);
     }
 
     public function test_vite_build_produces_the_app_entrypoints(): void

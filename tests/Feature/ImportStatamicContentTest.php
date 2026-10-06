@@ -11,11 +11,20 @@ use Tests\TestCase;
 
 class ImportStatamicContentTest extends TestCase
 {
+    /**
+     * Starts each test without the seeded content (inside the test's transaction), so the command runs as on a new install.
+     */
     protected function setUp(): void
     {
         parent::setUp();
 
-        Storage::fake('media');
+        $contentRepositories = ['entries', 'collections', 'collection_trees', 'navigations', 'global_sets', 'global_set_variables', 'asset_containers', 'assets'];
+
+        foreach ($contentRepositories as $repository) {
+            config("statamic.eloquent-driver.{$repository}.model")::query()->delete();
+        }
+
+        Redirect::query()->delete();
     }
 
     public function test_it_creates_the_pages_with_their_routes_templates_and_seo(): void

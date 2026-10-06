@@ -2,13 +2,10 @@
 
 namespace Tests\Feature;
 
-use Tests\Concerns\ImportsSiteContent;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
-    use ImportsSiteContent;
-
     /**
      * @return void
      */
