@@ -399,6 +399,15 @@ task('content:import', function () {
     writeln($output);
 });
 
+desc('Let PHP-FPM (www-data) write what the deploy user created under shared/storage');
+task('storage:acl', function () {
+    // The directories carry default ACLs for www-data, but PHP's mkdir(..., 0755) (Statamic's
+    // stache-locks, tmp, …) sets the ACL mask to r-x, capping www-data at read-only: every request
+    // then fails with "FlockStore directory … is not writable". Restore the mask on what deployer owns.
+    run('find {{deploy_path}}/shared/storage -user deployer -type d -exec setfacl -m m::rwx -m d:m::rwx {} +');
+    run('find {{deploy_path}}/shared/storage -user deployer -type f -exec setfacl -m m::rw {} +');
+});
+
 desc('Warm the Stache (Statamic\'s flat-file index: blueprints, fieldsets)');
 task('statamic:stache:warm', function () {
     run('cd {{release_path}} && {{bin/php}} please stache:warm');
@@ -658,6 +667,7 @@ task('lfs:pull', function () {
 after('deploy:update_code', 'lfs:pull');
 
 after('deploy:vendors', 'artisan:config:cache');
+after('deploy:vendors', 'storage:acl');
 
 after('artisan:config:cache', 'npm:install');
 after('npm:install', 'npm:build');
@@ -675,6 +685,7 @@ after('deploy:symlink', 'artisan:up');
 after('deploy:symlink', 'queue:restart');
 after('deploy:symlink', 'artisan:cache:refresh');
 after('artisan:cache:refresh', 'statamic:stache:warm');
+after('statamic:stache:warm', 'storage:acl');
 
 after('artisan:storage:link', 'storage:link-custom');
 
@@ -682,5 +693,7 @@ task('artisan:migrate', function () {})->hidden();
 
 after('deploy:symlink', 'deploy:verify');
 
-fail('deploy', 'deploy:rollback-on-failure');
-fail('deploy', 'deploy:unlock');
+// Deployer keeps one failure handler per task (fail() replaces it), so two fail('deploy', …) lines
+// left only the unlock and the automatic rollback never ran. Hook the recipe's deploy:failed instead.
+after('deploy:failed', 'deploy:rollback-on-failure');
+after('deploy:failed', 'deploy:unlock');
