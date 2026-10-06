@@ -8,23 +8,28 @@ Single-page mega landing with anchor navigation. All content consolidated into t
 ```
 Home                    → / (scroll to top)
 Solutions               → /#solutions (anchor)
-Technology              → /#technology (anchor)
+Technology              → /#how-it-works (anchor; the #technology section is hidden)
 About                   → /#about (anchor)
+FAQ                     → /#faq (anchor)
 Request Demo            → /contact (separate page, primary CTA)
 ```
 
-The navbar uses anchor links that scroll to sections on the homepage. On the contact/privacy pages, these links navigate back to `/#section`.
+The navbar links come from the Statamic navigation `main` (edited in the control panel → Navigation);
+"Request Demo" is a button in `components/navbar.blade.php`. On the contact/privacy pages the anchor links
+navigate back to `/#section`.
 
 ---
 
 ## Page Hierarchy
 
 ### Active Pages
-| Route | Template | Description |
-|-------|----------|-------------|
-| `/` | pages.home | Enterprise mega landing (9 sections) |
-| `/contact` | pages.contact | Demo request / contact form (Livewire) |
-| `/privacy` | pages.privacy | Privacy policy |
+Statamic entries in the `pages` collection:
+
+| Route | Entry / Template | Description |
+|-------|------------------|-------------|
+| `/` | `home` / `home` | Enterprise mega landing (9 sections) |
+| `/contact` | `contact` / `contact` | Contact: email the sales team (mailto), offices |
+| `/privacy` | `privacy` / `default` | Privacy policy (markdown in the entry, editable in the CP) |
 
 ### Homepage Sections (Anchor Navigation)
 | Section | Anchor | Key Content |
@@ -33,14 +38,16 @@ The navbar uses anchor links that scroll to sections on the homepage. On the con
 | The Challenge | `#challenge` | Verification Gap, Cost of Compensating Controls |
 | Solution | `#solution` | PixaProof introduction |
 | How It Works | `#how-it-works` | Capture → Analyze → Deliver (3-step flow) |
-| Use Cases | `#solutions` | Tabbed: Loan Draw, Insurance, KYC, Asset Verification |
-| Technology | `#technology` | PIEA capabilities bento grid |
+| Use Cases | `#solutions` | Tabbed: Loan Draw Inspections, Insurance Claims, Field Operations & Assets, Property Inspections |
+| Technology | `#technology` | PIEA capabilities bento grid — hidden (`@if (false)`) |
 | Company | `#about` | Innov8tif background, certifications, stats |
 | FAQ | `#faq` | Accordion Q&A |
 | Final CTA | (bottom) | "Ready to Eliminate Image Fraud?" |
 
 ### Archived Pages (301 Redirects)
-All legacy multi-page routes redirect to homepage anchors or the contact page. See `architecture.md` for the full redirect map.
+All legacy multi-page URLs redirect to homepage anchors or the contact page through the Marketing
+Toolkit's redirects (control panel → Tools → SEO → Redirects; source list in `database/seo/redirects.csv`).
+See `architecture.md` for the full map.
 
 ---
 
@@ -56,10 +63,9 @@ All legacy multi-page routes redirect to homepage anchors or the contact page. S
 
 ## Footer Sections
 
-### Navigation Links
-- Home
+### Navigation Links (Statamic navigation `footer`)
 - Solutions
-- Technology
+- Technology (→ `/#how-it-works`)
 - About
 
 ### Company
@@ -92,3 +98,4 @@ All legacy multi-page routes redirect to homepage anchors or the contact page. S
 ---
 
 *Updated: 2026-02-09 - Rewritten for single-page mega landing architecture*
+*Updated: 2026-10-06 - Statamic conversion: pages are entries, navs from Statamic, redirects from the Marketing Toolkit; contact is mailto; Technology links go to #how-it-works*

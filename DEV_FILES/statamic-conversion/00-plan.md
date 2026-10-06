@@ -212,6 +212,63 @@ Done on 2026-10-06.
 - **Deploy order (for Phase C):** this branch must not deploy without `migrate` followed by
   `pixaproof:import-content`. Without the entries every page would 404.
 
+## Between B and C (2026-10-06)
+
+- **Imagick on production: not installed.** `apt-get install php8.4-imagick` over `ssh innov8tif` was
+  blocked by the session's permission policy (a root write on the live server), and so was the follow-up
+  local change that would have turned the share cards on whenever the extension is loaded. Both are left
+  to the owner; `config/seo.php` still has `og.enabled => false`. To do it by hand:
+  `sudo apt-get install -y php8.4-imagick && sudo systemctl reload php8.4-fpm`, then set
+  `og.enabled` to true (or `extension_loaded('imagick')`) and regenerate the snapshot (share images
+  become `/og.png` and `/og/{uri}.png`).
+- **Default description rewritten** to 156 characters (was about 170 and cut on the 404 page): "PixaProof
+  verifies images at the point of capture, stopping fraudulent photos, AI-generated documents and
+  tampered evidence before they enter your workflow."
+- **Test suite refactor:**
+  - `DatabaseSeeder` runs the import, and the base `TestCase` seeds once per run
+    (`$seed = true`; Laravel 13 keeps the in-memory DB and wraps each test in a transaction). The
+    per-test `ImportsSiteContent` trait is gone. 72s → about 24s.
+  - The import command's tests clear the seeded content first.
+  - The `csp` log channel is `null` in tests, so fake reports no longer land in `storage/logs`.
+  - New tests: GET/HEAD-only redirects; privacy "Last updated" date.
+  - Left for approval (rule: don't remove tests without approval): the skeleton
+    `tests/Feature/ExampleTest.php` (duplicates the home check) and `tests/Unit/ExampleTest.php`
+    (asserts true).
+
+## Phase C results
+
+- **Livewire → Alpine.** Removed `livewire/livewire`, `resources/views/vendor/livewire`, the 419 hook
+  and `@livewireStyles`/`@livewireScripts`. Added `alpinejs`, `@alpinejs/intersect` **and
+  `@alpinejs/collapse`** (`x-collapse` is used three times; Livewire used to bundle it). `x-cloak` CSS was
+  already in `app.css`.
+  - Browser check: Alpine 3.17.4, no Livewire, the mobile menu opens, all 12 `x-intersect.once` sections
+    reveal.
+  - `SecurityHeadersTest`'s nonce test had become assertion-free (no inline scripts left in tests). It
+    now turns tracking on and requires the toolkit's GA4/GTM inline scripts to carry the nonce.
+- **`leads` dropped** by `2026_10_06_152703_drop_leads_table` (`down()` recreates the final schema;
+  tested up/down/up). `app/Models/Lead.php` deleted. `DatabaseSchemaTest` covers it.
+- **`pixaproof:import-content --once`** does nothing when the `pages` collection exists. Deploys and
+  `composer setup` use it, so the first deploy imports and later deploys keep CP edits. Tested.
+- **`deploy.php`:** `content:import` after `migrate:safe`; `statamic:stache:warm` after
+  `artisan:cache:refresh`. The CP assets publish through the `post-autoload-dump` → `statamic:install`
+  hook. Update scripts can't run on deploy: `composer install` leaves no `composer.lock.bak`, so
+  Statamic skips them.
+  - **Pre-existing issue, not changed:** Laravel's recipe runs `artisan:config:cache` twice, and the
+    repo hangs `npm:install → npm:build → db:ensure-sqlite → db:backup → migrate:safe` off it, so the
+    whole chain (now plus `content:import`) runs twice per deploy.
+- **Scheduler cron** reference copy: `deploy/server/etc/cron.d/pixaproof-laravel` (Statamic's
+  `HandleEntrySchedule`, the toolkit's Search Console import and reports). Install by hand.
+- **Docs:** README and AGENTS.md rewritten for Statamic, the toolkit, Alpine and the deploy flow.
+  `.claude/docs` `tech-stack`, `architecture`, `site-structure` and `index` were updated with the
+  project's auto-documenter skill.
+- **Boost:** the `livewire-development` skill was dropped and guidelines regenerated with
+  `boost:update`. The upgraded Boost also added its default skills (`infer-conventions`,
+  `laravel-best-practices`, `testing-best-practices`) and enabled Laravel Cloud; Cloud was turned off
+  (the site deploys with Deployer).
+- **Gates:** 71 tests pass (no risky), Pint, PHPStan level 5, Sheath, `npm run build`.
+  `route:list --except-vendor` shows only `POST csp-report` (`/up` is the framework's).
+- **Stale, not touched:** `nixpacks.toml` (Coolify, no longer the deploy path).
+
 ## Audit findings that shape the plan
 
 - **Storage: production uses SQLite.** `deploy.php` sets
@@ -286,7 +343,7 @@ Done on 2026-10-06.
 | 0 | This file, snapshot test, baselines, dry run | — | done |
 | A (1+2) | **Done** (see Phase A results). Rehearsed script above; `pages` blueprint (flat-file YAML), collection, navs, asset container, entries, SEO & brand values and redirects via the import command (with tests); `RefreshDatabase` in HTTP tests; serialising test cache. App routes still answer `/`, `/contact`, `/privacy` and the 22 redirects. Expected snapshot changes: `/sitemap.xml` (lists the 3 entries) and `/llms.txt` start answering 200 | — | 92% |
 | B (3+5) | **Done** (see Phase B results). Pages become entries with templates and the layout; toolkit head/body; SEO & brand filled; redirects move to the toolkit; robots, sitemap, llms; CSP recheck | `routes/web.php` view and redirect routes, `layouts/*`, GA/GTM partials, `@fingerprintedAsset`, public favicons, manifest, robots.txt, `FaviconCacheBustingTest`, related `PublicRoutesTest` cases (line counts in the report) | 85% |
-| C (4+6) | Drop `leads`; Livewire → Alpine; remove `User` factory leftovers; update `deploy.php`, README, AGENTS.md; `route:list --except-vendor` shows only `/csp-report` and `/up` | `Lead.php`, Livewire, `vendor/livewire`, stale docs | 82% |
+| C (4+6) | **Done** (see Phase C results). Drop `leads`; Livewire → Alpine; remove `User` factory leftovers; update `deploy.php`, README, AGENTS.md; `route:list --except-vendor` shows only `/csp-report` and `/up` | `Lead.php`, Livewire, `vendor/livewire`, stale docs | 82% |
 | 7 | Wiki in `DEV_FILES/wiki` (moojing structure), `provenance.py`, badges | — | 75% |
 
 ## Intended behaviour changes (the snapshot may change only for these)

@@ -5,8 +5,10 @@
 |-----------|---------|-------|
 | Laravel | 13.x | PHP framework |
 | PHP | 8.4+ | Runtime version |
-| Livewire | 3.x | Reactive components |
-| Alpine.js | 3.x | Lightweight JS framework (bundled with Livewire) |
+| Statamic | 6.x (Core) | CMS: pages, navigation, globals, assets, control panel at `/cp` |
+| statamic/eloquent-driver | 5.x | Stores Statamic content in the SQLite database |
+| Marketing Toolkit (`jotham-lec/statamic-marketing-toolkit`) | 0.18 (Pro) | SEO meta, JSON-LD, sitemap, robots.txt, llms.txt, favicons, GA4/GTM, redirects, 404 log, reports |
+| Alpine.js | 3.x | From npm, with the `@alpinejs/collapse` and `@alpinejs/intersect` plugins |
 
 ## Frontend
 | Component | Version | Notes |
@@ -21,7 +23,7 @@
 ## Database
 | Component | Status | Notes |
 |-----------|--------|-------|
-| SQLite | Active | Development and production |
+| SQLite | Active | Development and production; holds Statamic content (Eloquent driver), users, redirects, the 404 log and reports |
 
 ## Development Tools
 | Tool | Purpose |
@@ -34,15 +36,29 @@
 ## Deployment
 | Platform | Config |
 |----------|--------|
-| Coolify | `nixpacks.toml` |
+| Deployer | `deploy.php`: SQLite backup, migrations, `pixaproof:import-content --once`, Stache warm, health check |
+| Scheduler | `deploy/server/etc/cron.d/pixaproof-laravel` (installed by hand) |
 
 ## Key Dependencies
 ```json
 {
   "laravel/framework": "^13.0",
   "laravel/tinker": "^3.0",
-  "livewire/livewire": "^3.7",
+  "statamic/cms": "^6.35",
+  "statamic/eloquent-driver": "^5.12",
+  "jotham-lec/statamic-marketing-toolkit": "^0.18.2",
   "blade-ui-kit/blade-heroicons": "^2.6"
+}
+```
+
+Guzzle is held at 7.x because Statamic doesn't allow Guzzle 8 yet.
+
+```json
+{
+  "alpinejs": "^3.17",
+  "@alpinejs/collapse": "^3.17",
+  "@alpinejs/intersect": "^3.17",
+  "motion": "^12.23"
 }
 ```
 
@@ -57,3 +73,4 @@ npm run build     # Production build
 
 ---
 *Updated: 2026-08-20 - Upgraded to Laravel 13 / PHPUnit 12 / Tinker 3; dropped the laravel-frontend-presets/tall scaffolding preset (no Laravel 13 release, unused at runtime)*
+*Updated: 2026-10-06 - Statamic 6 + Eloquent driver + Marketing Toolkit Pro; Livewire replaced by Alpine.js from npm; deployment is Deployer (Coolify notes removed)*

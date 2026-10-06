@@ -6,8 +6,8 @@
 
 | Topic | Document | Description |
 |-------|----------|-------------|
-| Tech Stack | [tech-stack.md](./tech-stack.md) | Laravel 13, Livewire 3, Tailwind 4, devices.css |
-| Architecture | [architecture.md](./architecture.md) | Directory structure, patterns, routes, schema |
+| Tech Stack | [tech-stack.md](./tech-stack.md) | Laravel 13, Statamic 6, Marketing Toolkit, Alpine.js, Tailwind 4, devices.css |
+| Architecture | [architecture.md](./architecture.md) | Directory structure, Statamic content model, templates, routes, database |
 | **Stylesheet** | [stylesheet-guidelines.md](./stylesheet-guidelines.md) | Colors (primary/neutral/accent), typography, components |
 | Company | [pixaproof-company.md](./pixaproof-company.md) | Innov8tif, brand, certifications |
 | Product | [pixaproof-product.md](./pixaproof-product.md) | Enterprise SDK, API, PIEA technology |
@@ -15,7 +15,10 @@
 
 ## Current Architecture
 
-The site uses a **single-page mega landing** (`home.blade.php`, ~724 lines) with anchor navigation. Only Contact and Privacy are separate pages. All former multi-page routes are 301 redirects.
+The site runs on **Statamic 6** (Eloquent driver, SQLite) with the **Marketing Toolkit** for SEO, tracking
+and redirects. It is a **single-page mega landing** (the `home` entry, template `home.blade.php`) with
+anchor navigation; Contact and Privacy are the other two entries. All former multi-page URLs are 301
+redirects managed by the toolkit.
 
 ## Website Content (pages/)
 
@@ -46,13 +49,13 @@ These docs describe content that was planned as separate pages but has been cons
 - **Accent Color**: Amber (`accent-*` tokens)
 - **Styling**: `tech-stack.md` → Tailwind CSS v4 (CSS-first config via `@theme`)
 - **Components**: `stylesheet-guidelines.md` → Button, Card, Badge, Bento Grid, Vertical Tabs, Patterns, Graphics
-- **Layouts**: `architecture.md` → Base → App → Page hierarchy
+- **Templates**: `architecture.md` → `layout` + `home` / `contact` / `default` / `errors/404`
 
 ### Backend Development
-- **Forms**: `architecture.md` → Actions pattern, rate limiting
-- **Database**: `architecture.md` → Lead model, schema
-- **Email**: `architecture.md` → ContactFormSubmission mailable
-- **Routes**: `architecture.md` → Active pages, 301 redirects
+- **Content model**: `architecture.md` → Content Model (Statamic), `pixaproof:import-content`
+- **SEO & tracking**: `architecture.md` → Patterns (Marketing Toolkit; never hand-written)
+- **Database**: `architecture.md` → Database
+- **Routes**: `architecture.md` → Routes, 301 redirects
 
 ### Content & Copywriting
 - **Brand Voice**: `pixaproof-company.md` → Tone, pillars
@@ -61,7 +64,7 @@ These docs describe content that was planned as separate pages but has been cons
 - **Industry Content**: `pages/solutions-*.md` → Reference for industry-specific messaging
 
 ### Deployment
-- **Config**: `tech-stack.md` → nixpacks.toml, Coolify
+- **Config**: `tech-stack.md` → Deployment (Deployer, `deploy.php`, scheduler cron)
 - **Environment**: See `AGENTS.md` in project root
 
 ## Keyword Index
@@ -79,9 +82,10 @@ These docs describe content that was planned as separate pages but has been cons
 | Card | stylesheet-guidelines.md | Components |
 | Certifications | pixaproof-company.md | Certifications |
 | Company Section | pages/homepage.md | Section 7 |
-| Contact Form | architecture.md | Data Flow |
+| Content Model | architecture.md | Content Model (Statamic) |
+| Control Panel | architecture.md | Routes |
 | CTA | site-structure.md | Key CTAs |
-| Database | architecture.md | Database Schema |
+| Database | architecture.md | Database |
 | devices.css | tech-stack.md | Frontend |
 | FAQ | pages/homepage.md | Section 8 |
 | Footer | stylesheet-guidelines.md | Files Reference |
@@ -91,22 +95,23 @@ These docs describe content that was planned as separate pages but has been cons
 | Icon Card | architecture.md | Homepage Section Components |
 | Industry Use Cases | pages/homepage.md | Section 5 |
 | Innov8tif | pixaproof-company.md | Parent Organization |
-| Layouts | architecture.md | Layout Hierarchy |
-| Leads | architecture.md | Database Schema |
-| Livewire | tech-stack.md | Core Framework |
+| Import Command | architecture.md | Content Model (Statamic) |
+| Layout | architecture.md | Templates and layout |
+| Marketing Toolkit | tech-stack.md | Core Framework |
 | Mega Landing | architecture.md | Architecture |
 | Navbar | stylesheet-guidelines.md | Navbar |
 | Navigation | site-structure.md | Primary Navigation |
 | Neutral Colors | stylesheet-guidelines.md | Color Palette |
 | PIEA | pixaproof-product.md | Core Technology |
 | Primary Colors | stylesheet-guidelines.md | Color Palette |
-| Rate Limiting | architecture.md | Livewire Concerns |
 | Redirects | architecture.md | 301 Redirects |
 | Routes | architecture.md | Routes |
 | SDK | pixaproof-product.md | Enterprise Solutions |
+| SEO | architecture.md | SEO and tracking |
 | Section Component | architecture.md | Homepage Section Components |
 | Section Pattern | stylesheet-guidelines.md | Structural Conventions |
 | Spacing | stylesheet-guidelines.md | Spacing |
+| Statamic | tech-stack.md | Core Framework |
 | Tailwind | tech-stack.md | Frontend |
 | Stat Component | architecture.md | Homepage Section Components |
 | Technology Section | pages/homepage.md | Section 6 |
@@ -117,3 +122,4 @@ These docs describe content that was planned as separate pages but has been cons
 
 ---
 *Updated: 2026-02-09 - Rewritten for single-page mega landing architecture*
+*Updated: 2026-10-06 - Statamic + Marketing Toolkit conversion; removed Livewire, Leads, forms and Coolify entries*

@@ -13,12 +13,14 @@ A public-facing marketing site that presents PixaProof's two product editions:
 | **Community Edition** | Individuals, small teams | App Store / Google Play |
 | **Enterprise Solutions** | Organizations | SDK / API integration |
 
-The site is a single-page enterprise landing experience (homepage with anchor navigation to Challenge → Solution → How It Works → Demos → Solutions → Technology → About → FAQ), plus `/contact` (Livewire demo request form) and `/privacy`. Legacy routes 301-redirect to homepage anchors. See [`.claude/docs/site-structure.md`](.claude/docs/site-structure.md) for the full map.
+The site is a single-page enterprise landing experience (homepage with anchor navigation to Challenge → Solution → How It Works → Demos → Solutions → Technology → About → FAQ), plus `/contact` (email the sales team) and `/privacy`. Legacy URLs 301-redirect to homepage anchors. See [`.claude/docs/site-structure.md`](.claude/docs/site-structure.md) for the full map.
 
 ## Tech Stack
 
-- **PHP 8.4** / **Laravel 12** (streamlined `bootstrap/app.php` structure)
-- **Livewire 3** for interactive components (contact form, etc.)
+- **PHP 8.4** / **Laravel 13** (streamlined `bootstrap/app.php` structure)
+- **Statamic 6** (Core) for content, with the **Eloquent driver** (content in the database) and the control panel at `/cp`
+- **Marketing Toolkit** (Pro) for SEO meta, JSON-LD, sitemap, robots.txt, llms.txt, favicons, GA4/GTM and redirects
+- **Alpine.js** (with the `collapse` and `intersect` plugins) and **Motion** for interactions
 - **Tailwind CSS v4** (CSS-first config via `@theme`)
 - **SQLite** for persistence (lightweight, file-based)
 - **Vite** for asset bundling
@@ -30,9 +32,24 @@ Project-specific documentation lives in `.claude/docs/` — see [`.claude/docs/i
 ## Quick Start
 
 ```bash
-composer setup     # Install dependencies, run migrations, build assets
+composer setup     # Install dependencies, migrate, import the Statamic content, build assets
 composer dev       # Run dev server, queue, logs, and vite concurrently
+php please make:user   # Create a control panel login for /cp
 ```
+
+## Content
+
+Pages, navigation, SEO settings and redirects are edited in the control panel (`/cp`):
+
+- **Collections → Pages:** Home, Contact and Privacy Policy. The homepage and contact copy live in their
+  Blade templates (`resources/views/home.blade.php`, `contact.blade.php`); the privacy policy is the
+  entry's markdown. Each page has an SEO tab.
+- **Navigation:** `Main` (header) and `Footer`.
+- **Globals → SEO & brand:** default description and share image, icon, GA4 ID, robots.txt lines.
+- **Tools → SEO:** redirects, the 404 log and site reports.
+
+`php artisan pixaproof:import-content` creates all of this from the code (used for new installs and
+tests). With `--once` it does nothing if the content already exists, which is how deploys run it.
 
 Tests:
 
@@ -115,9 +132,21 @@ dep list
 1. Clone repo (LFS smudge skipped) → `lfs:pull` pulls video assets from GitHub
 2. `composer install` → cache config
 3. `npm ci` + `npm run build`
-4. Ensure SQLite file exists → backup current DB → run pending migrations safely
-5. Maintenance mode ON → swap symlink → restart PHP-FPM → maintenance OFF → restart queue → refresh caches
+4. Ensure SQLite file exists → backup current DB → run pending migrations safely → import the Statamic content if the site has none (`pixaproof:import-content --once`)
+5. Maintenance mode ON → swap symlink → restart PHP-FPM → maintenance OFF → restart queue → refresh caches → warm Statamic's Stache
 6. HTTP health check (5 retries) → auto-rollback if it fails
+
+### Scheduler
+
+Statamic's scheduled entries and the Marketing Toolkit's reports and Search Console import need Laravel's
+scheduler. The cron line is in [`deploy/server/etc/cron.d/pixaproof-laravel`](deploy/server/etc/cron.d/pixaproof-laravel);
+install it by hand as root (`/etc/cron.d/pixaproof-laravel`).
+
+### Share images and Imagick
+
+The Marketing Toolkit's generated share cards need PHP's `imagick` extension
+(`apt install php8.4-imagick`, then reload PHP-FPM). They are off in `config/seo.php` (`og.enabled`);
+pages use the default share image from SEO & brand instead.
 
 ### Git LFS Note
 
@@ -136,10 +165,15 @@ APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://pixaproof.com
 
+CACHE_STORE=database   # the Marketing Toolkit needs a serialising cache (not array)
+SEO_GTM_ID=            # optional Google Tag Manager container; the GA4 ID is set in SEO & brand
+
 MAIL_MAILER=smtp
 MAIL_HOST=smtp.example.com
 MAIL_FROM_ADDRESS=noreply@pixaproof.com
 ```
+
+Tracking tags print only when `APP_ENV=production`; every other environment is `noindex`.
 
 The `.env` file lives on the server under `/home/deployer/pixaproof-laravel/shared/.env` and is symlinked into each release.
 
