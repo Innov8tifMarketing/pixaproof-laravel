@@ -34,7 +34,7 @@ class CspReportRouteTest extends TestCase
 
     public function test_the_web_group_still_applies_the_excluded_middleware(): void
     {
-        $gathered = $this->gatheredMiddleware('home');
+        $gathered = $this->gatheredMiddleware('statamic.site');
 
         foreach ([PreventRequestForgery::class, StartSession::class, ShareErrorsFromSession::class] as $middleware) {
             $this->assertContains($middleware, $gathered);

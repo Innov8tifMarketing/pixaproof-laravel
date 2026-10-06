@@ -29,13 +29,13 @@ class ImportStatamicContent extends Command
     private const string REDIRECTS_CSV = 'database/seo/redirects.csv';
 
     /**
-     * Public files copied into the asset container, keyed by their asset path.
+     * Files copied into the asset container, keyed by their asset path; sources are relative to the project root.
      *
      * @var array<string, string>
      */
     private const array ASSETS = [
-        'og-image.webp' => 'images/og-image.webp',
-        'pixaproof-icon.png' => 'web-app-manifest-512x512.png',
+        'og-image.webp' => 'public/images/og-image.webp',
+        'pixaproof-icon.png' => 'database/seo/pixaproof-icon.png',
     ];
 
     /**
@@ -177,9 +177,9 @@ class ImportStatamicContent extends Command
 
         $disk = Storage::disk($container->diskHandle());
 
-        foreach (self::ASSETS as $assetPath => $publicPath) {
+        foreach (self::ASSETS as $assetPath => $sourcePath) {
             if (! $disk->exists($assetPath)) {
-                $disk->put($assetPath, (string) file_get_contents(public_path($publicPath)));
+                $disk->put($assetPath, (string) file_get_contents(base_path($sourcePath)));
             }
 
             $container->makeAsset($assetPath)->save();

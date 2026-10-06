@@ -3,10 +3,13 @@
 namespace Tests\Feature;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\Concerns\ImportsSiteContent;
 use Tests\TestCase;
 
 class PublicRoutesTest extends TestCase
 {
+    use ImportsSiteContent;
+
     /**
      * @return list<array{string, string}>
      */
@@ -29,7 +32,7 @@ class PublicRoutesTest extends TestCase
 
     public function test_no_cookie_notice_is_rendered(): void
     {
-        config(['services.google_tag_manager.id' => 'GTM-TEST123']);
+        config(['seo.tracking.gtm' => 'GTM-TEST123', 'seo.tracking.environments' => ['testing']]);
 
         $this->get('/')
             ->assertOk()
@@ -44,7 +47,8 @@ class PublicRoutesTest extends TestCase
     public static function redirectProvider(): array
     {
         return [
-            ['/technology', '/#technology'],
+            ['/technology', '/#how-it-works'],
+            ['/product', '/#how-it-works'],
             ['/about', '/#about'],
             ['/company/contact', '/contact'],
             ['/solutions/insurance-claims', '/#solutions'],

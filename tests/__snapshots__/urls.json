@@ -3,16 +3,16 @@
         "GET /": {
             "status": 200,
             "head": {
-                "title": "Verify Every Image. Eliminate Fraud. - Pixaproof",
+                "title": "Verify Every Image. Eliminate Fraud.",
                 "description": "PixaProof AI-powered verification detects image tampering in seconds—protecting your business from fraudulent claims, fake documents, and compliance failures.",
                 "canonical": "{app_url}",
-                "robots": null,
+                "robots": "max-snippet:-1, max-image-preview:large, max-video-preview:-1",
                 "meta": {
                     "og:description": [
                         "PixaProof AI-powered verification detects image tampering in seconds—protecting your business from fraudulent claims, fake documents, and compliance failures."
                     ],
                     "og:image": [
-                        "{app_url}/images/og-image.webp"
+                        "{app_url}/img/asset/YXNzZXRzL29nLWltYWdlLndlYnA/og-image.webp?w=1200&h=630&fit=crop&fm=jpg&q=85&s={signature}"
                     ],
                     "og:image:height": [
                         "630"
@@ -20,11 +20,14 @@
                     "og:image:width": [
                         "1200"
                     ],
+                    "og:locale": [
+                        "en"
+                    ],
                     "og:site_name": [
                         "Pixaproof"
                     ],
                     "og:title": [
-                        "Verify Every Image. Eliminate Fraud. - Pixaproof"
+                        "Verify Every Image. Eliminate Fraud."
                     ],
                     "og:type": [
                         "website"
@@ -39,28 +42,66 @@
                         "PixaProof AI-powered verification detects image tampering in seconds—protecting your business from fraudulent claims, fake documents, and compliance failures."
                     ],
                     "twitter:image": [
-                        "{app_url}/images/og-image.webp"
+                        "{app_url}/img/asset/YXNzZXRzL29nLWltYWdlLndlYnA/og-image.webp?w=1200&h=630&fit=crop&fm=jpg&q=85&s={signature}"
                     ],
                     "twitter:title": [
-                        "Verify Every Image. Eliminate Fraud. - Pixaproof"
+                        "Verify Every Image. Eliminate Fraud."
                     ]
                 },
-                "json_ld": []
+                "json_ld": [
+                    {
+                        "@context": "https://schema.org",
+                        "@graph": [
+                            {
+                                "@type": "WebSite",
+                                "@id": "{app_url}/#website",
+                                "url": "{app_url}/",
+                                "name": "Pixaproof",
+                                "publisher": {
+                                    "@id": "{app_url}/#publisher"
+                                }
+                            },
+                            {
+                                "@type": "Organization",
+                                "@id": "{app_url}/#publisher",
+                                "name": "Pixaproof",
+                                "url": "{app_url}/"
+                            },
+                            {
+                                "@type": "WebPage",
+                                "@id": "{app_url}#webpage",
+                                "url": "{app_url}",
+                                "name": "Verify Every Image. Eliminate Fraud.",
+                                "description": "PixaProof AI-powered verification detects image tampering in seconds—protecting your business from fraudulent claims, fake documents, and compliance failures.",
+                                "isPartOf": {
+                                    "@id": "{app_url}/#website"
+                                },
+                                "inLanguage": "en",
+                                "primaryImageOfPage": {
+                                    "@type": "ImageObject",
+                                    "url": "{app_url}/img/asset/YXNzZXRzL29nLWltYWdlLndlYnA/og-image.webp?w=1200&h=630&fit=crop&fm=jpg&q=85&s={signature}",
+                                    "width": 1200,
+                                    "height": 630
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         },
         "GET /contact": {
             "status": 200,
             "head": {
-                "title": "Contact - Pixaproof",
+                "title": "Contact",
                 "description": "Get in touch with the PixaProof team. Email our sales team to book a demo, discuss your use case, or explore integration options.",
                 "canonical": "{app_url}/contact",
-                "robots": null,
+                "robots": "max-snippet:-1, max-image-preview:large, max-video-preview:-1",
                 "meta": {
                     "og:description": [
                         "Get in touch with the PixaProof team. Email our sales team to book a demo, discuss your use case, or explore integration options."
                     ],
                     "og:image": [
-                        "{app_url}/images/og-image.webp"
+                        "{app_url}/img/asset/YXNzZXRzL29nLWltYWdlLndlYnA/og-image.webp?w=1200&h=630&fit=crop&fm=jpg&q=85&s={signature}"
                     ],
                     "og:image:height": [
                         "630"
@@ -68,11 +109,14 @@
                     "og:image:width": [
                         "1200"
                     ],
+                    "og:locale": [
+                        "en"
+                    ],
                     "og:site_name": [
                         "Pixaproof"
                     ],
                     "og:title": [
-                        "Contact - Pixaproof"
+                        "Contact"
                     ],
                     "og:type": [
                         "website"
@@ -87,28 +131,84 @@
                         "Get in touch with the PixaProof team. Email our sales team to book a demo, discuss your use case, or explore integration options."
                     ],
                     "twitter:image": [
-                        "{app_url}/images/og-image.webp"
+                        "{app_url}/img/asset/YXNzZXRzL29nLWltYWdlLndlYnA/og-image.webp?w=1200&h=630&fit=crop&fm=jpg&q=85&s={signature}"
                     ],
                     "twitter:title": [
-                        "Contact - Pixaproof"
+                        "Contact"
                     ]
                 },
-                "json_ld": []
+                "json_ld": [
+                    {
+                        "@context": "https://schema.org",
+                        "@graph": [
+                            {
+                                "@type": "WebSite",
+                                "@id": "{app_url}/#website",
+                                "url": "{app_url}/",
+                                "name": "Pixaproof",
+                                "publisher": {
+                                    "@id": "{app_url}/#publisher"
+                                }
+                            },
+                            {
+                                "@type": "Organization",
+                                "@id": "{app_url}/#publisher",
+                                "name": "Pixaproof",
+                                "url": "{app_url}/"
+                            },
+                            {
+                                "@type": "WebPage",
+                                "@id": "{app_url}/contact#webpage",
+                                "url": "{app_url}/contact",
+                                "name": "Contact",
+                                "description": "Get in touch with the PixaProof team. Email our sales team to book a demo, discuss your use case, or explore integration options.",
+                                "isPartOf": {
+                                    "@id": "{app_url}/#website"
+                                },
+                                "inLanguage": "en",
+                                "primaryImageOfPage": {
+                                    "@type": "ImageObject",
+                                    "url": "{app_url}/img/asset/YXNzZXRzL29nLWltYWdlLndlYnA/og-image.webp?w=1200&h=630&fit=crop&fm=jpg&q=85&s={signature}",
+                                    "width": 1200,
+                                    "height": 630
+                                }
+                            },
+                            {
+                                "@type": "BreadcrumbList",
+                                "@id": "{app_url}/contact#breadcrumb",
+                                "itemListElement": [
+                                    {
+                                        "@type": "ListItem",
+                                        "position": 1,
+                                        "name": "Pixaproof",
+                                        "item": "{app_url}/"
+                                    },
+                                    {
+                                        "@type": "ListItem",
+                                        "position": 2,
+                                        "name": "Contact",
+                                        "item": "{app_url}/contact"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
             }
         },
         "GET /privacy": {
             "status": 200,
             "head": {
-                "title": "Privacy Policy - Pixaproof",
+                "title": "Privacy Policy",
                 "description": "PixaProof privacy policy — how we collect, use, and protect your data when using our image verification platform.",
                 "canonical": "{app_url}/privacy",
-                "robots": null,
+                "robots": "max-snippet:-1, max-image-preview:large, max-video-preview:-1",
                 "meta": {
                     "og:description": [
                         "PixaProof privacy policy — how we collect, use, and protect your data when using our image verification platform."
                     ],
                     "og:image": [
-                        "{app_url}/images/og-image.webp"
+                        "{app_url}/img/asset/YXNzZXRzL29nLWltYWdlLndlYnA/og-image.webp?w=1200&h=630&fit=crop&fm=jpg&q=85&s={signature}"
                     ],
                     "og:image:height": [
                         "630"
@@ -116,11 +216,14 @@
                     "og:image:width": [
                         "1200"
                     ],
+                    "og:locale": [
+                        "en"
+                    ],
                     "og:site_name": [
                         "Pixaproof"
                     ],
                     "og:title": [
-                        "Privacy Policy - Pixaproof"
+                        "Privacy Policy"
                     ],
                     "og:type": [
                         "website"
@@ -135,29 +238,125 @@
                         "PixaProof privacy policy — how we collect, use, and protect your data when using our image verification platform."
                     ],
                     "twitter:image": [
-                        "{app_url}/images/og-image.webp"
+                        "{app_url}/img/asset/YXNzZXRzL29nLWltYWdlLndlYnA/og-image.webp?w=1200&h=630&fit=crop&fm=jpg&q=85&s={signature}"
                     ],
                     "twitter:title": [
-                        "Privacy Policy - Pixaproof"
+                        "Privacy Policy"
                     ]
                 },
-                "json_ld": []
+                "json_ld": [
+                    {
+                        "@context": "https://schema.org",
+                        "@graph": [
+                            {
+                                "@type": "WebSite",
+                                "@id": "{app_url}/#website",
+                                "url": "{app_url}/",
+                                "name": "Pixaproof",
+                                "publisher": {
+                                    "@id": "{app_url}/#publisher"
+                                }
+                            },
+                            {
+                                "@type": "Organization",
+                                "@id": "{app_url}/#publisher",
+                                "name": "Pixaproof",
+                                "url": "{app_url}/"
+                            },
+                            {
+                                "@type": "WebPage",
+                                "@id": "{app_url}/privacy#webpage",
+                                "url": "{app_url}/privacy",
+                                "name": "Privacy Policy",
+                                "description": "PixaProof privacy policy — how we collect, use, and protect your data when using our image verification platform.",
+                                "isPartOf": {
+                                    "@id": "{app_url}/#website"
+                                },
+                                "inLanguage": "en",
+                                "primaryImageOfPage": {
+                                    "@type": "ImageObject",
+                                    "url": "{app_url}/img/asset/YXNzZXRzL29nLWltYWdlLndlYnA/og-image.webp?w=1200&h=630&fit=crop&fm=jpg&q=85&s={signature}",
+                                    "width": 1200,
+                                    "height": 630
+                                }
+                            },
+                            {
+                                "@type": "BreadcrumbList",
+                                "@id": "{app_url}/privacy#breadcrumb",
+                                "itemListElement": [
+                                    {
+                                        "@type": "ListItem",
+                                        "position": 1,
+                                        "name": "Pixaproof",
+                                        "item": "{app_url}/"
+                                    },
+                                    {
+                                        "@type": "ListItem",
+                                        "position": 2,
+                                        "name": "Privacy Policy",
+                                        "item": "{app_url}/privacy"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
             }
         },
         "GET /this-does-not-exist": {
             "status": 404,
             "head": {
-                "title": "Not Found",
-                "description": null,
+                "title": "Page not found",
+                "description": "PixaProof verifies image authenticity at the point of capture — stopping fraudulent photos, AI-generated documents, and tampered evidence before they enter…",
                 "canonical": null,
-                "robots": null,
-                "meta": [],
+                "robots": "noindex, follow",
+                "meta": {
+                    "og:description": [
+                        "PixaProof verifies image authenticity at the point of capture — stopping fraudulent photos, AI-generated documents, and tampered evidence before they enter…"
+                    ],
+                    "og:image": [
+                        "{app_url}/img/asset/YXNzZXRzL29nLWltYWdlLndlYnA/og-image.webp?w=1200&h=630&fit=crop&fm=jpg&q=85&s={signature}"
+                    ],
+                    "og:image:height": [
+                        "630"
+                    ],
+                    "og:image:width": [
+                        "1200"
+                    ],
+                    "og:locale": [
+                        "en"
+                    ],
+                    "og:site_name": [
+                        "Pixaproof"
+                    ],
+                    "og:title": [
+                        "Page not found"
+                    ],
+                    "og:type": [
+                        "website"
+                    ],
+                    "og:url": [
+                        "{app_url}/this-does-not-exist"
+                    ],
+                    "twitter:card": [
+                        "summary_large_image"
+                    ],
+                    "twitter:description": [
+                        "PixaProof verifies image authenticity at the point of capture — stopping fraudulent photos, AI-generated documents, and tampered evidence before they enter…"
+                    ],
+                    "twitter:image": [
+                        "{app_url}/img/asset/YXNzZXRzL29nLWltYWdlLndlYnA/og-image.webp?w=1200&h=630&fit=crop&fm=jpg&q=85&s={signature}"
+                    ],
+                    "twitter:title": [
+                        "Page not found"
+                    ]
+                },
                 "json_ld": []
             }
         },
         "GET /technology": {
             "status": 301,
-            "location": "/#technology"
+            "location": "/#how-it-works"
         },
         "GET /about": {
             "status": 301,
@@ -233,7 +432,7 @@
         },
         "GET /how-it-works": {
             "status": 301,
-            "location": "/#technology"
+            "location": "/#how-it-works"
         },
         "GET /enterprise": {
             "status": 301,
@@ -241,26 +440,28 @@
         },
         "GET /product": {
             "status": 301,
-            "location": "/#technology"
+            "location": "/#how-it-works"
         },
         "GET /sitemap.xml": {
             "status": 200,
             "content_type": "text/xml; charset=UTF-8",
-            "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">\n</urlset>\n"
+            "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">\n  <url>\n    <loc>{app_url}</loc>\n    <lastmod>{date}</lastmod>\n  </url>\n  <url>\n    <loc>{app_url}/contact</loc>\n    <lastmod>{date}</lastmod>\n  </url>\n  <url>\n    <loc>{app_url}/privacy</loc>\n    <lastmod>{date}</lastmod>\n  </url>\n</urlset>\n"
         },
         "GET /robots.txt": {
-            "status": 404
+            "status": 200,
+            "content_type": "text/plain; charset=UTF-8",
+            "body": "User-agent: *\nDisallow: /cp/\n\nSitemap: {app_url}/sitemap.xml\n"
         },
         "GET /llms.txt": {
             "status": 200,
             "content_type": "text/plain; charset=UTF-8",
-            "body": "# Pixaproof\n"
+            "body": "# Pixaproof\n\n> PixaProof verifies image authenticity at the point of capture — stopping fraudulent photos, AI-generated documents, and tampered evidence before they enter your workflow.\n\n## Pages\n\n- [Contact]({app_url}/contact): Get in touch with the PixaProof team. Email our sales team to book a demo, discuss your use case, or explore integration options.\n- [Home]({app_url}): PixaProof AI-powered verification detects image tampering in seconds—protecting your business from fraudulent claims, fake documents, and compliance failures.\n- [Privacy Policy]({app_url}/privacy): PixaProof privacy policy — how we collect, use, and protect your data when using our image verification platform.\n"
         },
         "POST /csp-report": {
             "status": 204
         }
     },
     "static_files": {
-        "robots.txt": "User-agent: *\nDisallow:\n"
+        "robots.txt": null
     }
 }

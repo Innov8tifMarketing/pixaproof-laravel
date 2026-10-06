@@ -4,6 +4,7 @@ namespace Tests\Feature\Guard;
 
 use Dom\HTMLDocument;
 use Illuminate\Testing\TestResponse;
+use Tests\Concerns\ImportsSiteContent;
 use Tests\TestCase;
 
 /**
@@ -15,6 +16,8 @@ use Tests\TestCase;
  */
 class UrlSnapshotTest extends TestCase
 {
+    use ImportsSiteContent;
+
     private const string SNAPSHOT_PATH = 'tests/__snapshots__/urls.json';
 
     private const string APP_URL_PLACEHOLDER = '{app_url}';
@@ -74,6 +77,13 @@ class UrlSnapshotTest extends TestCase
     private const array STATIC_FILES = [
         'robots.txt',
     ];
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        config(['seo.robots.noindex_outside_production' => false]);
+    }
 
     public function test_public_url_surface_matches_the_snapshot(): void
     {
@@ -163,9 +173,9 @@ class UrlSnapshotTest extends TestCase
 
         if ($response->isOk()) {
             $description['content_type'] = $response->headers->get('Content-Type');
-            $description['body'] = $this->normalise(
+            $description['body'] = $this->sortListItems($this->normalise(
                 (string) preg_replace('#<lastmod>[^<]*</lastmod>#', '<lastmod>{date}</lastmod>', (string) $response->getContent()),
-            );
+            ));
         }
 
         return $description;
@@ -206,7 +216,15 @@ class UrlSnapshotTest extends TestCase
         $jsonLd = [];
 
         foreach ($document->querySelectorAll('script[type="application/ld+json"]') as $element) {
-            $jsonLd[] = json_decode($this->normalise((string) $element->textContent), true);
+            $decoded = json_decode((string) $element->textContent, true);
+
+            if (is_array($decoded)) {
+                array_walk_recursive($decoded, function (mixed &$value): void {
+                    $value = is_string($value) ? $this->normalise($value) : $value;
+                });
+            }
+
+            $jsonLd[] = $decoded;
         }
 
         return [
@@ -247,7 +265,7 @@ class UrlSnapshotTest extends TestCase
     }
 
     /**
-     * Strips per-request and per-machine values: app URL, CSP nonces and cache-busting hashes.
+     * Strips per-request and per-machine values: app URL, CSP nonces, cache-busting hashes and Glide signatures (from APP_KEY).
      */
     private function normalise(string $value): string
     {
@@ -259,7 +277,23 @@ class UrlSnapshotTest extends TestCase
 
         $value = (string) preg_replace('/nonce="[^"]*"/', 'nonce="{nonce}"', $value);
 
+        $value = (string) preg_replace('/([?&])s=[a-f0-9]{32}/', '$1s={signature}', $value);
+
         return (string) preg_replace('/([?&])v=[A-Za-z0-9]+/', '$1v={hash}', $value);
+    }
+
+    /**
+     * Sorts each run of markdown list lines (llms.txt): the toolkit orders pages by
+     * last-modified time without a tie-break, so pages saved in the same second swap places.
+     */
+    private function sortListItems(string $body): string
+    {
+        return (string) preg_replace_callback('/(?:^- .*\n)+/m', function (array $match): string {
+            $lines = explode("\n", rtrim($match[0], "\n"));
+            sort($lines);
+
+            return implode("\n", $lines)."\n";
+        }, $body);
     }
 
     private function collapseWhitespace(string $value): string

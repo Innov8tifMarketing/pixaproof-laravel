@@ -149,6 +149,69 @@ jotham-lec/statamic-marketing-toolkit 0.18.2 (Pro). Guzzle went down to 7.15.5.
   (still the app route); `/nope` 404.
 - **Not done (needs you):** a CP super user (`php please make:user`, interactive, your password).
 
+## Phase B results
+
+Done on 2026-10-06.
+
+- **Templates (Statamic's names, Blade):** `resources/views/layout.blade.php` merges `layouts/base` and
+  `layouts/app`, with `<s:seo:head />` in an overridable `seo` section and `<s:seo:body />`.
+  `home.blade.php` and `contact.blade.php` were moved with `git mv` (history kept) and now `@extends('layout')`.
+  `default.blade.php` renders the privacy entry's markdown (`prose` styling, "Last updated" from
+  `lastModified()`). `errors/404.blade.php` uses `<s:seo:head title="Page not found" :canonical="false" status="404" />`.
+  Blade templates don't get Statamic's automatic layout (Antlers only), so they extend it as in normal Blade.
+- **Navigation:** the navbar (desktop and mobile) and footer link lists render `<s:nav:main>` and
+  `<s:nav:footer>`. Sheath's `a11y-list-semantics` is disabled around the footer loop (the tag renders no
+  element). Named-route links became paths (`/`, `/contact`, `/privacy`), as the anchor links already were.
+- **Routes:** `routes/web.php` keeps only `POST /csp-report`. Statamic's `statamic.site` route serves the
+  pages, and the toolkit's `HandleMissing` serves the 22 redirects. `route:list --except-vendor`
+  shows only `csp.report`.
+- **Toolkit config published** (`config/seo.php`), with two changes:
+  - `description.length` 155 → 160, matching the SEO & brand field's limit, so the 157-character home
+    description isn't cut.
+  - `og.enabled` → false. The Pro generated share cards need Imagick, which production lacks, so pages
+    use the SEO & brand default image (served through Glide).
+- **`SecurityHeaders`:** no report-only CSP on CP routes (`Statamic::isCpRoute()`); the enforced CSP stays.
+  Tested.
+- **Tests:** `Tests\Concerns\ImportsSiteContent` (Laravel's `setUp{Trait}` hook) runs the import before
+  page tests. `SecurityHeadersTest` exempts `application/ld+json` data blocks from the nonce rule (CSP
+  doesn't apply to non-executable scripts). `CspReportRouteTest` checks `statamic.site` instead of `home`.
+  The snapshot test turns `noindex_outside_production` off, and normalises Glide `s=` signatures (from
+  `APP_KEY`) and the order of llms.txt list lines.
+  - **Toolkit issue to fix upstream:** `SiteSeo::llmsTxt()` sorts by `lastModified()` with no tie-break,
+    so pages saved in the same second swap places.
+  - The suite is 65 tests in about 87s (the import costs about 0.9s per page test).
+- **Snapshot diff, all mapped to intended changes:**
+  - Titles are the title alone.
+  - Robots meta (`max-snippet:-1, …`).
+  - JSON-LD (WebSite, Organization, WebPage, BreadcrumbList on inner pages).
+  - Share image is now a Glide crop of `og-image.webp`.
+  - New `og:locale` and `og:image:alt` / `twitter:image:alt` tags (toolkit additions).
+  - The three `/#technology` targets are now `/#how-it-works`.
+  - The sitemap lists the 3 pages.
+  - robots.txt is served by the toolkit (`Disallow: /cp/`, `Sitemap:`).
+  - llms.txt lists the pages.
+  - The 404 page has a title, the default description, `noindex, follow` and no canonical.
+- **Copy note:** the SEO & brand default description (the old layout's fallback, about 170 characters) is
+  over the field's 160-character limit. It now only shows on the 404 page (cut at 160); shorten it in the CP.
+- **Deleted:**
+  - `routes/web.php` −32 lines (view and redirect routes), `AppServiceProvider` −28
+    (`@fingerprintedAsset`), `config/services.php` −4 (GTM).
+  - `layouts/app` 17, `pages/privacy` 50, GA/GTM partials 45, `FaviconCacheBustingTest` 81.
+  - Navbar −77/+20, footer −25/+16.
+  - Public files: `favicon.ico`, `favicon.svg`, `favicon-96x96.png`, `apple-touch-icon.png`,
+    `site.webmanifest` (21), `robots.txt` (2), `web-app-manifest-192x192.png`.
+  - `web-app-manifest-512x512.png` moved to `database/seo/pixaproof-icon.png` (the import's icon source).
+  - `GOOGLE_TAG_MANAGER_ID` → `SEO_GTM_ID` in `.env.tmpl`.
+- **Browser check (agent-browser, local):** `/`, `/contact`, `/privacy` and `/nope` render with no console
+  errors and no CSP reports from the page loads. Navs come from Statamic, and `/#how-it-works` exists.
+  The toolkit serves `favicon.ico`, `apple-touch-icon.png`, `icon-192/512.png`, `site.webmanifest` and
+  `robots.txt`. `/technology` → 301 `/#how-it-works`. Locally GA4 is absent and pages are
+  `noindex, follow`, as intended outside production.
+- **`seo:report`:** 97/100 over 3 pages. Two title-length warnings ("Contact", "Privacy Policy"), which
+  follow from the title-only decision.
+- **Deploy order (for Phase C):** this branch must not deploy without `migrate` followed by
+  `pixaproof:import-content`. Without the entries every page would 404.
+
 ## Audit findings that shape the plan
 
 - **Storage: production uses SQLite.** `deploy.php` sets
@@ -222,7 +285,7 @@ jotham-lec/statamic-marketing-toolkit 0.18.2 (Pro). Guzzle went down to 7.15.5.
 |---|---|---|---|
 | 0 | This file, snapshot test, baselines, dry run | — | done |
 | A (1+2) | **Done** (see Phase A results). Rehearsed script above; `pages` blueprint (flat-file YAML), collection, navs, asset container, entries, SEO & brand values and redirects via the import command (with tests); `RefreshDatabase` in HTTP tests; serialising test cache. App routes still answer `/`, `/contact`, `/privacy` and the 22 redirects. Expected snapshot changes: `/sitemap.xml` (lists the 3 entries) and `/llms.txt` start answering 200 | — | 92% |
-| B (3+5) | Pages become entries with templates and the layout; toolkit head/body; SEO & brand filled; redirects move to the toolkit; robots, sitemap, llms; CSP recheck | `routes/web.php` view and redirect routes, `layouts/*`, GA/GTM partials, `@fingerprintedAsset`, public favicons, manifest, robots.txt, `FaviconCacheBustingTest`, related `PublicRoutesTest` cases (line counts in the report) | 85% |
+| B (3+5) | **Done** (see Phase B results). Pages become entries with templates and the layout; toolkit head/body; SEO & brand filled; redirects move to the toolkit; robots, sitemap, llms; CSP recheck | `routes/web.php` view and redirect routes, `layouts/*`, GA/GTM partials, `@fingerprintedAsset`, public favicons, manifest, robots.txt, `FaviconCacheBustingTest`, related `PublicRoutesTest` cases (line counts in the report) | 85% |
 | C (4+6) | Drop `leads`; Livewire → Alpine; remove `User` factory leftovers; update `deploy.php`, README, AGENTS.md; `route:list --except-vendor` shows only `/csp-report` and `/up` | `Lead.php`, Livewire, `vendor/livewire`, stale docs | 82% |
 | 7 | Wiki in `DEV_FILES/wiki` (moojing structure), `provenance.py`, badges | — | 75% |
 

@@ -3,10 +3,13 @@
 namespace Tests\Feature;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\Concerns\ImportsSiteContent;
 use Tests\TestCase;
 
 class SecurityHeadersTest extends TestCase
 {
+    use ImportsSiteContent;
+
     /**
      * @return list<array{string}>
      */
@@ -111,6 +114,10 @@ class SecurityHeadersTest extends TestCase
         preg_match_all('/<(script|style)(?![^>]*\ssrc=)([^>]*)>/i', $html, $tags, PREG_SET_ORDER);
 
         foreach ($tags as [$tag, $element, $attributes]) {
+            if (str_contains($attributes, 'type="application/ld+json"')) {
+                continue;
+            }
+
             $this->assertStringContainsString(
                 'nonce="'.$nonce.'"',
                 $attributes,
@@ -133,6 +140,14 @@ class SecurityHeadersTest extends TestCase
             'csp-endpoint=',
             (string) $response->headers->get('Reporting-Endpoints'),
         );
+    }
+
+    public function test_the_control_panel_keeps_the_enforced_policy_without_the_report_only_one(): void
+    {
+        $response = $this->get('/cp/auth/login')->assertOk();
+
+        $this->assertStringContainsString("frame-ancestors 'self'", (string) $response->headers->get('Content-Security-Policy'));
+        $this->assertFalse($response->headers->has('Content-Security-Policy-Report-Only'));
     }
 
     public function test_powered_by_banner_is_stripped(): void

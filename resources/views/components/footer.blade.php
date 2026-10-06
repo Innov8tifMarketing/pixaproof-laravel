@@ -30,17 +30,16 @@
             <div>
                 <h3 class="text-sm font-semibold tracking-wider text-neutral-500 uppercase">Navigation</h3>
                 <ul class="mt-4 space-y-2">
-                    <li>
-                        <a href="/#solutions" class="hover:text-primary-600 text-sm text-neutral-600 transition"
-                            >Solutions</a>
-                    </li>
-                    <li>
-                        <a href="/#technology" class="hover:text-primary-600 text-sm text-neutral-600 transition"
-                            >Technology</a>
-                    </li>
-                    <li>
-                        <a href="/#about" class="hover:text-primary-600 text-sm text-neutral-600 transition">About</a>
-                    </li>
+                    {{-- sheath-disable a11y-list-semantics -- the nav tag renders no element, so each <li> lands directly in the <ul> --}}
+                    <s:nav:footer>
+                        <li>
+                            <a
+                                href="{{ $url }}"
+                                class="hover:text-primary-600 text-sm text-neutral-600 transition"
+                            >{{ $title }}</a>
+                        </li>
+                    </s:nav:footer>
+                    {{-- sheath-enable a11y-list-semantics --}}
                 </ul>
             </div>
 
@@ -49,10 +48,8 @@
                 <h3 class="text-sm font-semibold tracking-wider text-neutral-500 uppercase">Contact</h3>
                 <ul class="mt-4 space-y-2">
                     <li>
-                        <a
-                            href="{{ route('contact') }}"
-                            class="hover:text-primary-600 text-sm text-neutral-600 transition"
-                        >Request Demo</a>
+                        <a href="/contact" class="hover:text-primary-600 text-sm text-neutral-600 transition"
+                            >Request Demo</a>
                     </li>
                     <li>
                         <a
@@ -76,10 +73,8 @@
                 <h3 class="text-sm font-semibold tracking-wider text-neutral-500 uppercase">Legal</h3>
                 <ul class="mt-4 space-y-2">
                     <li>
-                        <a
-                            href="{{ route('privacy') }}"
-                            class="hover:text-primary-600 text-sm text-neutral-600 transition"
-                        >Privacy Policy</a>
+                        <a href="/privacy" class="hover:text-primary-600 text-sm text-neutral-600 transition"
+                            >Privacy Policy</a>
                     </li>
                 </ul>
             </div>
@@ -91,12 +86,8 @@
                 &copy; {{ date('Y') }} Innov8tif Solutions Pte. Ltd. All rights reserved.
             </div>
             <div class="flex gap-6">
-                <a href="{{ route('privacy') }}" class="hover:text-primary-600 text-sm text-neutral-500 transition">
-                    Privacy
-                </a>
-                <a href="{{ route('contact') }}" class="hover:text-primary-600 text-sm text-neutral-500 transition">
-                    Contact
-                </a>
+                <a href="/privacy" class="hover:text-primary-600 text-sm text-neutral-500 transition"> Privacy </a>
+                <a href="/contact" class="hover:text-primary-600 text-sm text-neutral-500 transition"> Contact </a>
             </div>
         </div>
     </div>

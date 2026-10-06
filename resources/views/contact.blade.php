@@ -1,7 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Contact')
-@section('description', 'Get in touch with the PixaProof team. Email our sales team to book a demo, discuss your use case, or explore integration options.')
+@extends('layout')
 
 @section('content')
     {{-- Hero Section --}}

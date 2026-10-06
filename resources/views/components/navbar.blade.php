@@ -18,7 +18,7 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
             <!-- Logo -->
-            <a href="{{ route('home') }}" class="flex items-center">
+            <a href="/" class="flex items-center">
                 <img
                     src="{{ asset('images/pixaproof-wordmark.svg') }}"
                     alt="PixaProof"
@@ -30,50 +30,19 @@
 
             <!-- Desktop Navigation -->
             <div class="hidden items-center gap-1 lg:flex">
-                <!-- Home -->
-                <a
-                    href="{{ route('home') }}"
-                    class="hover:text-primary-600 rounded px-3 py-2 text-sm font-medium text-neutral-700 transition-colors duration-300 hover:bg-neutral-50"
-                >
-                    Home
-                </a>
-
-                <!-- Solutions (anchor link) -->
-                <a
-                    href="/#solutions"
-                    class="hover:text-primary-600 rounded px-3 py-2 text-sm font-medium text-neutral-700 transition-colors duration-300 hover:bg-neutral-50"
-                >
-                    Solutions
-                </a>
-
-                <!-- Technology (anchor link) -->
-                <a
-                    href="/#technology"
-                    class="hover:text-primary-600 rounded px-3 py-2 text-sm font-medium text-neutral-700 transition-colors duration-300 hover:bg-neutral-50"
-                >
-                    Technology
-                </a>
-
-                <!-- About (anchor link) -->
-                <a
-                    href="/#about"
-                    class="hover:text-primary-600 rounded px-3 py-2 text-sm font-medium text-neutral-700 transition-colors duration-300 hover:bg-neutral-50"
-                >
-                    About
-                </a>
-
-                <!-- FAQ (anchor link) -->
-                <a
-                    href="/#faq"
-                    class="hover:text-primary-600 rounded px-3 py-2 text-sm font-medium text-neutral-700 transition-colors duration-300 hover:bg-neutral-50"
-                >
-                    FAQ
-                </a>
+                <s:nav:main>
+                    <a
+                        href="{{ $url }}"
+                        class="hover:text-primary-600 rounded px-3 py-2 text-sm font-medium text-neutral-700 transition-colors duration-300 hover:bg-neutral-50"
+                    >
+                        {{ $title }}
+                    </a>
+                </s:nav:main>
 
                 <!-- Request Demo CTA Button -->
                 <div class="ml-4 flex items-center gap-3">
                     <a
-                        href="{{ route('contact') }}"
+                        href="/contact"
                         class="bg-accent-500 hover:bg-accent-600 inline-flex items-center gap-2 rounded px-4 py-2 text-sm font-semibold text-white transition"
                     >
                         Request Demo
@@ -120,45 +89,19 @@
         <!-- Mobile Navigation -->
         <div x-show="mobileMenuOpen" x-collapse x-cloak class="border-t border-neutral-200 py-4 lg:hidden">
             <div class="transition-colors duration-300">
-                <a
-                    href="{{ route('home') }}"
-                    @click="mobileMenuOpen = false"
-                    class="hover:text-primary-600 block px-2 py-2 text-sm font-medium text-neutral-700 transition-colors duration-300"
-                >
-                    Home
-                </a>
-                <a
-                    href="/#solutions"
-                    @click="mobileMenuOpen = false"
-                    class="hover:text-primary-600 block px-2 py-2 text-sm font-medium text-neutral-700 transition-colors duration-300"
-                >
-                    Solutions
-                </a>
-                <a
-                    href="/#technology"
-                    @click="mobileMenuOpen = false"
-                    class="hover:text-primary-600 block px-2 py-2 text-sm font-medium text-neutral-700 transition-colors duration-300"
-                >
-                    Technology
-                </a>
-                <a
-                    href="/#about"
-                    @click="mobileMenuOpen = false"
-                    class="hover:text-primary-600 block px-2 py-2 text-sm font-medium text-neutral-700 transition-colors duration-300"
-                >
-                    About
-                </a>
-                <a
-                    href="/#faq"
-                    @click="mobileMenuOpen = false"
-                    class="hover:text-primary-600 block px-2 py-2 text-sm font-medium text-neutral-700 transition-colors duration-300"
-                >
-                    FAQ
-                </a>
+                <s:nav:main>
+                    <a
+                        href="{{ $url }}"
+                        @click="mobileMenuOpen = false"
+                        class="hover:text-primary-600 block px-2 py-2 text-sm font-medium text-neutral-700 transition-colors duration-300"
+                    >
+                        {{ $title }}
+                    </a>
+                </s:nav:main>
 
                 <div class="mt-4 border-t border-neutral-200 pt-4 transition-colors duration-300">
                     <a
-                        href="{{ route('contact') }}"
+                        href="/contact"
                         class="bg-accent-500 hover:bg-accent-600 inline-flex items-center gap-2 rounded px-4 py-2 text-sm font-semibold text-white transition"
                     >
                         Request Demo

@@ -1,9 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Verify Every Image. Eliminate Fraud.')
-@section('description',
-    'PixaProof AI-powered verification detects image tampering in seconds—protecting your business
-    from fraudulent claims, fake documents, and compliance failures.')
+@extends('layout')
 
 @section('content')
     {{-- Section 1: Hero --}}
@@ -56,7 +51,7 @@
                         class="flex flex-col gap-4 transition-all delay-300 duration-500 sm:flex-row"
                         :class="show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
                     >
-                        <x-button href="{{ route('contact') }}" size="lg"> Book a Demo </x-button>
+                        <x-button href="/contact" size="lg"> Book a Demo </x-button>
                         <x-button
                             href="#how-it-works"
                             variant="outline"
@@ -1083,7 +1078,7 @@
             </p>
 
             <div class="flex flex-col justify-center gap-4 sm:flex-row">
-                <x-button href="{{ route('contact') }}" size="lg"> Book a Demo </x-button>
+                <x-button href="/contact" size="lg"> Book a Demo </x-button>
                 <x-button
                     href="mailto:sales@innov8tif.com"
                     variant="outline"

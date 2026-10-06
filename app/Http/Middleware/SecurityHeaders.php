@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Vite;
+use Statamic\Statamic;
 use Symfony\Component\HttpFoundation\Response;
 
 class SecurityHeaders
@@ -55,11 +56,18 @@ class SecurityHeaders
             'Permissions-Policy' => 'geolocation=(), microphone=(), camera=()',
             'X-Permitted-Cross-Domain-Policies' => 'none',
             'Content-Security-Policy' => implode('; ', [...self::ENFORCED_CSP, ...$reporting]),
-            'Content-Security-Policy-Report-Only' => implode('; ', [...$this->reportOnlyCsp($nonce), ...$reporting]),
             'Reporting-Endpoints' => self::REPORT_GROUP.'="'.route('csp.report').'"',
             'Cross-Origin-Opener-Policy' => 'same-origin',
             'Cross-Origin-Resource-Policy' => 'same-origin',
         ];
+
+        /*
+         * The control panel's Vue bundle doesn't follow the site's policy; reporting it would
+         * only bury the site's own violations.
+         */
+        if (! Statamic::isCpRoute()) {
+            $headers['Content-Security-Policy-Report-Only'] = implode('; ', [...$this->reportOnlyCsp($nonce), ...$reporting]);
+        }
 
         if ($request->secure() && app()->isProduction()) {
             $headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains';
