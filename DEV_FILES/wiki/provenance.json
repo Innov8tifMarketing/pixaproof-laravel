@@ -1140,12 +1140,6 @@
   "reason": ""
  },
  {
-  "path": "nixpacks.toml",
-  "origin": "C",
-  "status": "custom",
-  "reason": ""
- },
- {
   "path": "opencode.json",
   "origin": "C",
   "status": "custom",

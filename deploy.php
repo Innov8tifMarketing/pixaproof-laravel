@@ -666,17 +666,17 @@ task('lfs:pull', function () {
 
 after('deploy:update_code', 'lfs:pull');
 
-after('deploy:vendors', 'artisan:config:cache');
 after('deploy:vendors', 'storage:acl');
 
-after('artisan:config:cache', 'npm:install');
+// Hung off deploy:vendors, not artisan:config:cache: the recipe runs config:cache itself, so a chain
+// hooked to it (plus an extra config:cache after vendors) ran npm, the backup and migrate:safe twice.
+after('deploy:vendors', 'npm:install');
 after('npm:install', 'npm:build');
 
 after('npm:build', 'db:ensure-sqlite');
 
 after('db:ensure-sqlite', 'db:backup');
 after('db:backup', 'migrate:safe');
-
 
 before('deploy:symlink', 'artisan:down');
 

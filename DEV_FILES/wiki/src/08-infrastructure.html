@@ -8,7 +8,7 @@
 <ol class="steps">
 <li>Clone the branch with Git LFS smudging skipped, then <code>lfs:pull</code> runs <code>git lfs pull</code> for the videos; if that fails it copies them from the live release and refuses to continue if any LFS pointer file is left. Link <code>.env</code> and the shared dirs (<code>data/sqlite</code>, <code>data/media</code>, <code>data/backups</code>).</li>
 <li><code>composer install</code>, then <code>storage:acl</code> (see below). Its <code>post-autoload-dump</code> script runs <code>statamic:install</code>, which publishes the control panel's and the toolkit's assets to <code>public/vendor/</code> (git-ignored). Update scripts don't run here: they need the <code>composer.lock.bak</code> that only <code>composer update</code> writes.</li>
-<li><code>npm install</code> and <code>npm run build</code>.</li>
+<li><code>npm install</code> and <code>npm run build</code> (hung off <code>deploy:vendors</code>).</li>
 <li><code>db:ensure-sqlite</code> → <code>db:backup</code> (copy, keep 5) → <code>migrate:safe</code> (backs up again if migrations are pending).</li>
 <li>Storage links (<code>public/media</code> → <code>shared/data/media</code>), then <code>content:import</code>: <code>pixaproof:import-content --once</code>. The first deploy creates the content; every later deploy does nothing, so control panel edits are kept. The import must come after the links: <code>storage:link-custom</code> replaces <code>public/media</code>, which deleted the images the first production deploy had copied there.</li>
 <li>Maintenance mode on → switch the <code>current</code> symlink → restart PHP-FPM → maintenance mode off → restart the queue worker → rebuild caches → <code>stache:warm</code>.</li>
@@ -20,7 +20,7 @@
 </div>
 
 <div class="box why">
-<p><strong>Steps 3–5 run twice per deploy.</strong> Deployer's Laravel recipe runs <code>artisan:config:cache</code> twice, and this repo chains <code>npm:install → … → migrate:safe → content:import</code> after it. The second run is harmless (no pending migrations, <code>--once</code> skips) but doubles the build time. Not changed, because it needs a real deploy to test.</p>
+<p><strong>The build-backup-migrate chain hangs off <code>deploy:vendors</code>.</strong> Until 2026-10-07 it hung off <code>artisan:config:cache</code>, which ran twice (once from an extra hook, once in the recipe's own list), so every deploy built the assets, backed up and migrated twice.</p>
 </div>
 
 <h2>Server pieces</h2>

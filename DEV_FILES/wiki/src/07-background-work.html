@@ -10,9 +10,11 @@
 <tr><td><code>php please seo:report</code></td><td class="p">{{A:Toolkit}}</td><td>A site report with a score (Pro)</td></tr>
 <tr><td><code>php please seo:install --fields</code></td><td class="p">{{A:Toolkit}}</td><td>Add fields a newer toolkit version brings to SEO &amp; brand</td></tr>
 </table>
-<div class="box why">
-<p><strong>There is no <code>csp:summary</code>.</strong> The docblock in [[config/csp.php]] says to aggregate reports with <code>php artisan csp:summary</code>, but no such command exists in this repo. Read <code>storage/logs/csp-*.log</code> directly (one JSON object per line, with a <code>fingerprint</code> per directive, origin and path).</p>
-</div>
+<h3>Reading the CSP reports</h3>
+<p>The <code>csp</code> log is one JSON object per line, so <code>jq</code> aggregates it (the same one-liner is in [[config/csp.php]]):</p>
+<pre><code>cat storage/logs/csp-*.log | jq -r '.context | "\(.directive)\t\(.blocked_origin)"' \
+  | sort | uniq -c | sort -rn</code></pre>
+<p>A <code>csp:summary</code> command was built for the innov8tif site and then removed in favour of this; pixaproof's docblock referred to it until 2026-10-07.</p>
 
 <h2>Queue</h2>
 <p>The queue is Laravel's database driver {{L}}, run in production by the Supervisor program <code>pixaproof-prod-worker</code> (as <code>www-data</code>, like PHP-FPM; reference copy [[deploy/server/etc/supervisor/conf.d/pixaproof-prod-worker.conf]]), which every deploy restarts (<code>queue:restart</code> in [[deploy.php]]). Until 2026-10-07 the site had no worker; nothing was queued before Statamic. Statamic queues some listeners, including updating its search index when an entry is saved. In tests the queue is <code>sync</code>, so those listeners run inline. That is how the Eloquent-driver cache bug in <a href="03-content-seo.html">page 3</a> surfaced.</p>

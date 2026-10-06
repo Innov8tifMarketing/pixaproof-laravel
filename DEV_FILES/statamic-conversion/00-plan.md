@@ -321,6 +321,17 @@ fast-forwarded to the branch and deployed to production.
   - `POST /technology` now answers 419 (CSRF), not a redirect, consistent with the intended GET-only
     redirects.
 
+## Leftovers fixed (2026-10-07)
+
+- **Deploy chain ran twice:** `npm:install → npm:build → db:ensure-sqlite → db:backup → migrate:safe`
+  hung off `artisan:config:cache`, which ran twice (an extra hook after `deploy:vendors` plus the
+  recipe's own step). It now hangs off `deploy:vendors` and every step runs once (`storage:acl` twice on
+  purpose). Verified with a production deploy.
+- **`csp:summary`:** the reference in `config/csp.php` was carried over from innov8tif, where the
+  command was built and later removed in favour of a `jq` one-liner. The docblock now gives that
+  one-liner, tested against pixaproof's log format.
+- **`nixpacks.toml`** (Coolify) deleted; deploys use Deployer.
+
 ## Audit findings that shape the plan
 
 - **Storage: production uses SQLite.** `deploy.php` sets

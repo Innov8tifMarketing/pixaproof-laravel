@@ -6,7 +6,10 @@
  * The site ships its full target policy as Report-Only (see
  * App\Http\Middleware\SecurityHeaders). Browsers POST violations to
  * `route('csp.report')`, which App\Http\Controllers\CspReportController writes
- * to the `csp` log channel. Aggregate with `php artisan csp:summary`.
+ * to the `csp` log channel, one JSON object per line. Aggregate with jq:
+ *   cat storage/logs/csp-*.log | jq -r '.context | "\(.directive)\t\(.blocked_origin)"' \\
+ *     | sort | uniq -c | sort -rn
+ * Promote a directive from report-only to enforced only once that data is clean for it.
  *
  * Every knob here is env-driven so report volume can be dialled down on a live
  * site without a deploy — set the value in shared/.env and run `config:cache`.
