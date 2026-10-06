@@ -99,6 +99,56 @@ php please seo:install --container=assets
 vendor/bin/pint
 ```
 
+## Phase A results
+
+Done on 2026-10-06. Installed statamic/cms 6.35.0, statamic/eloquent-driver 5.12.2 and
+jotham-lec/statamic-marketing-toolkit 0.18.2 (Pro). Guzzle went down to 7.15.5.
+
+- **Install.** Followed the rehearsed script, with one change. `install:eloquent-driver` runs `migrate`
+  itself, so it applied `statamic:install`'s two-factor migration before `auth:migration` duplicated
+  it. The duplicates (`add_two_factor_columns_migration`, the second `statamic_webauthn_table`) were
+  deleted and the local DB restored from the pre-Phase-A copy, so the committed migrations run in one
+  pass, as they will in production.
+- **Toolkit CP assets (finding 7) fixed the Statamic-default way.** `composer.json` now has Statamic's
+  `post-autoload-dump` → `php artisan statamic:install --ansi` hook (from the blank baseline). It
+  publishes `public/vendor/statamic` and `public/vendor/statamic-marketing-toolkit`, both git-ignored as
+  in the baseline. `deploy.php` needs no extra publish step as long as `composer install` runs scripts.
+- **Config:** toolkit Pro in `config/statamic/editions.php`; `['type' => 'seo', 'width' => 100]` widget in
+  `config/statamic/cp.php`; `media` disk (`public/media`, URL `/media`, git-ignored; `deploy.php` already
+  links it to `shared/data/media`).
+- **Content:** `resources/blueprints/collections/pages/page.yaml` (title, markdown `content`, slug,
+  template, `seo::seo` tab); `resources/blueprints/globals/seo.yaml` (from `seo:install`);
+  `database/seo/redirects.csv` (22 rows, `/#technology` targets already `/#how-it-works`).
+- **`php artisan pixaproof:import-content`** creates the `assets` container and copies `og-image.webp`
+  and `pixaproof-icon.png` into it. It then creates the `pages` collection, its 3 entries and the tree,
+  the `main` and `footer` navigations, runs `seo:install --container=assets`, fills SEO & brand
+  (`title_site_name: false`, default description, default image, favicon, `ga4_id`) and imports the
+  redirects through `Csv::import()`. It checks the counts at the end. Run locally on a fresh DB; a rerun
+  updates in place (same entry IDs, `0 created, 22 updated`). Covered by
+  `tests/Feature/ImportStatamicContentTest.php` (6 tests, including idempotency and a rejected redirect
+  row).
+- **Two Eloquent-driver bugs, worked around in the command:**
+  1. `AssetContainer::save()` on the entity skips the repository's Blink reset, so a `null` cached by an
+     earlier `findByHandle()` outlives the save. Statamic's search indexer (`EntrySaved`, run in-process
+     by the `sync` queue) then hits `null->assets()`. Fix: save through `AssetContainer::save($container)`.
+  2. A new nav tree (no model yet) is always stored as `[]`:
+     `NavTree::makeModelFromContract()` writes `$source->model ? $source->tree() : []`. Fix: save the new
+     tree empty first, as the CP does, then set the items. This only showed in tests, because the local
+     DB had been filled by the second (idempotent) run.
+  Both are upstream issues worth reporting to statamic/eloquent-driver.
+- **Tests:** `RefreshDatabase` is in the base `TestCase` (Statamic's catch-all route needs the tables).
+  The array cache serialises in tests (`CACHE_ARRAY_SERIALIZE=true` in `phpunit.xml`, read by
+  `config/cache.php`). The suite takes about 24s, up from about 4s.
+- **Snapshot:** only `/sitemap.xml` and `/llms.txt` changed (404 → 200), as predicted. Every page, the 404
+  and all 22 redirects are unchanged. In tests the sitemap is empty, because the snapshot test doesn't
+  import content. **Phase B** runs `pixaproof:import-content` in the snapshot test's `setUp()`, since
+  the pages become entries then.
+- **Gates:** 73 tests pass; Pint (after formatting Statamic's published files), Sheath, PHPStan level 5
+  (`--memory-limit=1G`) and `npm run build` pass. Live: `/`, `/contact`, `/privacy`, `/sitemap.xml`
+  (3 URLs), `/llms.txt` and `/media/og-image.webp` return 200; `/cp` → login 200; `/technology` 301
+  (still the app route); `/nope` 404.
+- **Not done (needs you):** a CP super user (`php please make:user`, interactive, your password).
+
 ## Audit findings that shape the plan
 
 - **Storage: production uses SQLite.** `deploy.php` sets
@@ -171,7 +221,7 @@ vendor/bin/pint
 | Phase | Scope | Deletes | Confidence |
 |---|---|---|---|
 | 0 | This file, snapshot test, baselines, dry run | — | done |
-| A (1+2) | Rehearsed script above; `pages` blueprint (flat-file YAML), collection, navs, asset container, entries, SEO & brand values and redirects via the import command (with tests); `RefreshDatabase` in HTTP tests; serialising test cache. App routes still answer `/`, `/contact`, `/privacy` and the 22 redirects. Expected snapshot changes: `/sitemap.xml` (lists the 3 entries) and `/llms.txt` start answering 200 | — | 92% |
+| A (1+2) | **Done** (see Phase A results). Rehearsed script above; `pages` blueprint (flat-file YAML), collection, navs, asset container, entries, SEO & brand values and redirects via the import command (with tests); `RefreshDatabase` in HTTP tests; serialising test cache. App routes still answer `/`, `/contact`, `/privacy` and the 22 redirects. Expected snapshot changes: `/sitemap.xml` (lists the 3 entries) and `/llms.txt` start answering 200 | — | 92% |
 | B (3+5) | Pages become entries with templates and the layout; toolkit head/body; SEO & brand filled; redirects move to the toolkit; robots, sitemap, llms; CSP recheck | `routes/web.php` view and redirect routes, `layouts/*`, GA/GTM partials, `@fingerprintedAsset`, public favicons, manifest, robots.txt, `FaviconCacheBustingTest`, related `PublicRoutesTest` cases (line counts in the report) | 85% |
 | C (4+6) | Drop `leads`; Livewire → Alpine; remove `User` factory leftovers; update `deploy.php`, README, AGENTS.md; `route:list --except-vendor` shows only `/csp-report` and `/up` | `Lead.php`, Livewire, `vendor/livewire`, stale docs | 82% |
 | 7 | Wiki in `DEV_FILES/wiki` (moojing structure), `provenance.py`, badges | — | 75% |

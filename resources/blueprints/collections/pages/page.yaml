@@ -1,0 +1,43 @@
+title: Page
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        display: Content
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+          -
+            handle: content
+            field:
+              type: markdown
+              localizable: true
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+          -
+            handle: template
+            field:
+              type: template
+              display: Template
+  seo:
+    display: SEO
+    sections:
+      -
+        fields:
+          -
+            import: seo::seo

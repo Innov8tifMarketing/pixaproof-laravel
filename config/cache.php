@@ -36,7 +36,7 @@ return [
 
         'array' => [
             'driver' => 'array',
-            'serialize' => false,
+            'serialize' => (bool) env('CACHE_ARRAY_SERIALIZE', false),
         ],
 
         'database' => [
