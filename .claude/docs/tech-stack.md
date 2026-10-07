@@ -47,7 +47,7 @@
   "laravel/tinker": "^3.0",
   "statamic/cms": "^6.35",
   "statamic/eloquent-driver": "^5.12",
-  "jotham-lec/statamic-marketing-toolkit": "^0.22.1",
+  "jotham-lec/statamic-marketing-toolkit": "^0.22.2",
   "blade-ui-kit/blade-heroicons": "^2.6"
 }
 ```
