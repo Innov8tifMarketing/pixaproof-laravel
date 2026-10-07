@@ -38,6 +38,7 @@
 |----------|--------|
 | Deployer | `deploy.php`: SQLite backup, migrations, `pixaproof:import-content --once`, Stache warm, health check |
 | Scheduler | `deploy/server/etc/cron.d/pixaproof-laravel` (installed by hand) |
+| Off-site backups | spatie/laravel-backup to Backblaze B2 (`config/backup.php`, `deploy/backup.php`); runbook in `AGENTS.md` → Backups |
 
 ## Key Dependencies
 ```json

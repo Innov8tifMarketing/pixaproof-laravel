@@ -120,6 +120,37 @@ answer GET/HEAD requests that would otherwise 404.
 Each deploy backs up SQLite, migrates, runs `pixaproof:import-content --once` and warms the Stache.
 The scheduler cron is in `deploy/server/etc/cron.d/pixaproof-laravel` (installed by hand).
 
+### Backups
+
+Nightly off-site backups go to the Backblaze B2 bucket `cothinking-client-backups`, under
+`pixaproof/`, via spatie/laravel-backup (`config/backup.php`, scheduled in `routes/console.php`:
+`backup:clean` 19:50, `backup:run` 19:55, `backup:monitor` 20:55 UTC). Each
+`YYYY-MM-DD-HH-MM-SS.zip` holds a consistent `sqlite3 .dump` of the database
+(`db-dumps/*.sql.gz`) plus `shared/` (`.env`, `data/media`, all of `storage/app`), AES-256
+encrypted. Left out: `data/sqlite` (the dump replaces it), `data/backups`, `cache/`,
+`storage/framework`, `storage/logs` and `storage/statamic`. Kept: every backup for 7 days, then
+one a day to 30 days, then one a month for 12 months. The bucket has Object Lock (30 days).
+Failures are mailed to `BACKUP_NOTIFY_EMAIL`, but production has `MAIL_MAILER=log`, so that mail
+goes nowhere; the Uptime Kuma push (`BACKUP_HEARTBEAT_URL`) is the real alarm.
+
+The B2 key, archive password, bucket name and restore notes are in 1Password item
+`dig73jz7gqe6svm4llq7naj4fy` ("B2 CoThinking Client Backups Keys"); the Kuma push URL goes in its
+`heartbeat_pixaproof` field. Recipe: `deploy/backup.php`.
+
+- **Set up / rotate keys:** `dep backup:env prod` writes a marked block into `shared/.env` from
+  1Password and re-caches config. Don't add a second scheduler line; it already runs from
+  `/etc/cron.d/pixaproof-laravel`.
+- **Back up now / list:** `dep backup:run prod`, `dep backup:list prod`.
+- **Verify:** `dep backup:verify prod` downloads the newest backup, decrypts it and test-restores
+  the dump locally (needs `op`, `7z`, `jq`, `sqlite3`). Do this quarterly.
+- **Restore:** download the zip (see the 1Password notes), `7z x <file>.zip` with the archive
+  password (stock `unzip` can't open AES-256), then
+  `gunzip db-dumps/*.sql.gz && sqlite3 database.sqlite < db-dumps/<name>.sql`. Put it at
+  `shared/data/sqlite/database.sqlite` with `dep` locked, and copy the files back into `shared/`.
+
+`db:backup` still copies the SQLite file to `shared/data/backups` before each migration
+(`migrate:safe`); those copies stay on the box.
+
 **Git LFS:** Video assets in `public/videos/` are tracked via git-lfs. After pushing, always verify LFS objects are uploaded: `git lfs push origin main --all`.
 
 ## Environment Variables (Production)
