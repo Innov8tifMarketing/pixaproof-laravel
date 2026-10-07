@@ -30,7 +30,7 @@ class PublicRoutesTest extends TestCase
 
     public function test_no_cookie_notice_is_rendered(): void
     {
-        config(['seo.tracking.gtm' => 'GTM-TEST123', 'seo.tracking.environments' => ['testing']]);
+        config(['marketing-toolkit.tracking.gtm_id' => 'GTM-TEST123', 'marketing-toolkit.tracking.environments' => ['testing']]);
 
         $this->get('/')
             ->assertOk()

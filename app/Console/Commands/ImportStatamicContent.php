@@ -21,7 +21,7 @@ use Statamic\Structures\CollectionStructure;
 use Statamic\Structures\Nav as StatamicNav;
 
 #[Signature('pixaproof:import-content {--once : Do nothing if the pages collection exists, so edits made in the control panel are kept}')]
-#[Description('Create the Statamic content the Laravel site used to hard-code: pages, navigation, assets, SEO & brand values and redirects')]
+#[Description('Create the Statamic content the Laravel site used to hard-code: pages, navigation, assets, Brand and Marketing settings values and redirects')]
 class ImportStatamicContent extends Command
 {
     private const string CONTAINER = 'assets';
@@ -128,19 +128,27 @@ class ImportStatamicContent extends Command
     ];
 
     /**
-     * Values for the toolkit's "SEO & brand" global set.
+     * Values for the toolkit's "Brand" global set.
      *
      * @var array<string, mixed>
      */
-    private const array SEO_BRAND = [
+    private const array BRAND = [
         'title_site_name' => false,
         'default_description' => 'PixaProof verifies images at the point of capture, stopping fraudulent photos, AI-generated documents and tampered evidence before they enter your workflow.',
         'default_image' => 'og-image.webp',
         'favicon' => 'pixaproof-icon.png',
-        'ga4_id' => 'G-VKS70BYBWN',
         'og_accent' => '#0284c7',
         'og_text' => '#0f172a',
         'og_background' => '#ffffff',
+    ];
+
+    /**
+     * Values for the toolkit's "Marketing settings" global set (tracking, consent, leads, crawlers).
+     *
+     * @var array<string, mixed>
+     */
+    private const array MARKETING_SETTINGS = [
+        'ga4_id' => 'G-VKS70BYBWN',
     ];
 
     public function handle(): int
@@ -155,11 +163,12 @@ class ImportStatamicContent extends Command
         $entryIds = $this->importPages();
         $this->importNavigations($entryIds);
 
-        if ($this->call('statamic:seo:install', ['--container' => self::CONTAINER]) !== self::SUCCESS) {
+        if ($this->call('statamic:mt:install', ['--container' => self::CONTAINER]) !== self::SUCCESS) {
             return self::FAILURE;
         }
 
-        $this->importSeoBrand();
+        $this->importGlobal('marketing-toolkit.global', self::BRAND);
+        $this->importGlobal('marketing-toolkit.settings_global', self::MARKETING_SETTINGS);
 
         if (! $this->importRedirects()) {
             return self::FAILURE;
@@ -297,14 +306,18 @@ class ImportStatamicContent extends Command
         $this->components->info('Navigations: '.implode(', ', array_keys(self::NAVIGATIONS)).'.');
     }
 
-    private function importSeoBrand(): void
+    /**
+     * @param  string  $configKey  the config key naming the global set's handle
+     * @param  array<string, mixed>  $values
+     */
+    private function importGlobal(string $configKey, array $values): void
     {
-        $globalSet = GlobalSet::findByHandle((string) config('seo.global'));
+        $globalSet = GlobalSet::findByHandle((string) config($configKey));
         $variables = $globalSet->in(Site::default()->handle());
 
-        $variables->merge(self::SEO_BRAND)->save();
+        $variables->merge($values)->save();
 
-        $this->components->info('SEO & brand: '.implode(', ', array_keys(self::SEO_BRAND)).'.');
+        $this->components->info($globalSet->title().': '.implode(', ', array_keys($values)).'.');
     }
 
     private function importRedirects(): bool

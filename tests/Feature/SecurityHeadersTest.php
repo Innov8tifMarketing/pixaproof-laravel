@@ -101,7 +101,7 @@ class SecurityHeadersTest extends TestCase
     #[DataProvider('pageProvider')]
     public function test_no_inline_script_or_style_is_rendered_without_the_nonce(string $path): void
     {
-        config(['seo.tracking.environments' => ['testing'], 'seo.tracking.gtm' => 'GTM-TEST123']);
+        config(['marketing-toolkit.tracking.environments' => ['testing'], 'marketing-toolkit.tracking.gtm_id' => 'GTM-TEST123']);
 
         $response = $this->get($path);
         $html = $response->getContent();

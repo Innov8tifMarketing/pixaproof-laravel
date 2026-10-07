@@ -14,7 +14,7 @@ class DatabaseSchemaTest extends TestCase
 
     public function test_statamic_content_and_toolkit_tables_exist(): void
     {
-        foreach (['entries', 'collections', 'trees', 'navigations', 'global_sets', 'global_set_variables', 'asset_containers', 'assets_meta', 'addon_settings', 'seo_redirects', 'seo_404s'] as $table) {
+        foreach (['entries', 'collections', 'trees', 'navigations', 'global_sets', 'global_set_variables', 'asset_containers', 'assets_meta', 'addon_settings', 'mt_redirects', 'mt_404s'] as $table) {
             $this->assertTrue(Schema::hasTable($table), "Table [{$table}] is missing.");
         }
     }

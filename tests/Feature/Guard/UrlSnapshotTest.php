@@ -79,7 +79,7 @@ class UrlSnapshotTest extends TestCase
     {
         parent::setUp();
 
-        config(['seo.robots.noindex_outside_production' => false]);
+        config(['marketing-toolkit.robots.noindex_outside_production' => false]);
     }
 
     public function test_public_url_surface_matches_the_snapshot(): void

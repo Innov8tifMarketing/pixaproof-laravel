@@ -53,7 +53,7 @@ return [
     */
 
     'widgets' => [
-        ['type' => 'seo', 'width' => 100],
+        ['type' => 'mt', 'width' => 100],
     ],
 
     /*

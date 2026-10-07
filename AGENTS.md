@@ -59,7 +59,7 @@ php please make:user   # A control panel login (/cp)
 
 ## Stack
 
-Laravel 13 + **Statamic 6** (Core) with the **Marketing Toolkit** (Pro), Tailwind 4, Alpine.js, SQLite.
+Laravel 13 + **Statamic 6** (Core) with the **Marketing Toolkit** (MIT, no editions), Tailwind 4, Alpine.js, SQLite.
 Conversion plan and per-phase results: `DEV_FILES/statamic-conversion/00-plan.md`.
 
 ## Key Patterns
@@ -69,7 +69,7 @@ Conversion plan and per-phase results: `DEV_FILES/statamic-conversion/00-plan.md
   database (`config/statamic/eloquent-driver.php`). Blueprints stay flat-file in `resources/blueprints/`.
 - `pages` collection (structured, `{parent_uri}/{slug}`): `home`, `contact`, `privacy`. Navigations
   `main` and `footer`. Asset container `assets` on the `media` disk (`public/media`).
-- `php artisan pixaproof:import-content` creates all of it, including the SEO & brand values and the 22
+- `php artisan pixaproof:import-content` creates all of it, including the Brand and Marketing settings values and the 22
   legacy redirects (`database/seo/redirects.csv`). It updates in place; `--once` does nothing if the
   content exists (the deploy uses that, so control panel edits are kept). `DatabaseSeeder` runs it.
 
@@ -79,8 +79,10 @@ Blade, Statamic's names: `layout`, `home`, `contact`, `default` (renders an entr
 Navigation renders with `<s:nav:main>` / `<s:nav:footer>`. Homepage copy stays in `home.blade.php`.
 
 ### SEO, tracking, favicons, redirects
-All from the Marketing Toolkit: `<s:seo:head />` and `<s:seo:body />` in the layout; values in
-Globals → SEO & brand and each entry's SEO tab; `config/seo.php`. Don't hand-write meta tags, GA/GTM
+All from the Marketing Toolkit: `<s:mt:head />` and `<s:mt:body />` in the layout; values in
+Marketing → Brand (global `seo`), Marketing → Settings (global `marketing`: tracking, consent,
+crawlers, features) and each entry's SEO tab; `config/marketing-toolkit.php`. `<s:mt:body />` also loads
+the toolkit's front-end toolbar for signed-in control panel users. Don't hand-write meta tags, GA/GTM
 snippets, favicons, robots.txt or redirects. Tracking prints in production only; other environments
 are noindex.
 
@@ -102,7 +104,7 @@ Laravel's health check.
 `/#challenge` `/#solution` `/#how-it-works` `/#demos` `/#solutions` `/#about` `/#faq`
 
 ### 301 Redirects
-The toolkit's redirects (CP: Tools → SEO → Redirects), imported from `database/seo/redirects.csv`. They
+The toolkit's redirects (CP: Marketing → Redirects), imported from `database/seo/redirects.csv`. They
 answer GET/HEAD requests that would otherwise 404.
 
 ## Tests
@@ -176,7 +178,7 @@ APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://pixaproof.com
 CACHE_STORE=database        # the toolkit needs a serialising cache (not array)
-SEO_GTM_ID=                 # optional; the GA4 ID is in Globals → SEO & brand
+SEO_GTM_ID=                 # optional (MT_GTM_ID from 0.20; SEO_* read until 1.0); the GA4 ID is in Marketing → Settings
 
 MAIL_MAILER=smtp
 MAIL_HOST=smtp.example.com

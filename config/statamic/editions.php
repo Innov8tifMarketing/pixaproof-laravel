@@ -5,7 +5,7 @@ return [
     'pro' => env('STATAMIC_PRO_ENABLED', false),
 
     'addons' => [
-        'jotham-lec/statamic-marketing-toolkit' => 'pro',
+        //
     ],
 
 ];

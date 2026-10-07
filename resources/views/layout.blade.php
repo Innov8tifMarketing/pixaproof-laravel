@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     @section('seo')
-        <s:seo:head />
+        <s:mt:head />
     @show
 
     <!-- Fonts: Inter (via @fontsource) -->
@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    <s:seo:body />
+    <s:mt:body />
 
     <div class="flex min-h-screen flex-col bg-white">
         <x-navbar />

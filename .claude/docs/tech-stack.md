@@ -7,7 +7,7 @@
 | PHP | 8.4+ | Runtime version |
 | Statamic | 6.x (Core) | CMS: pages, navigation, globals, assets, control panel at `/cp` |
 | statamic/eloquent-driver | 5.x | Stores Statamic content in the SQLite database |
-| Marketing Toolkit (`jotham-lec/statamic-marketing-toolkit`) | 0.18 (Pro) | SEO meta, JSON-LD, sitemap, robots.txt, llms.txt, favicons, GA4/GTM, redirects, 404 log, reports |
+| Marketing Toolkit (`jotham-lec/statamic-marketing-toolkit`) | 0.22 (MIT) | SEO meta, JSON-LD, sitemap, robots.txt, llms.txt, favicons, GA4/GTM, redirects, 404 log, reports |
 | Alpine.js | 3.x | From npm, with the `@alpinejs/collapse` and `@alpinejs/intersect` plugins |
 
 ## Frontend
@@ -47,7 +47,7 @@
   "laravel/tinker": "^3.0",
   "statamic/cms": "^6.35",
   "statamic/eloquent-driver": "^5.12",
-  "jotham-lec/statamic-marketing-toolkit": "^0.18.2",
+  "jotham-lec/statamic-marketing-toolkit": "^0.22.1",
   "blade-ui-kit/blade-heroicons": "^2.6"
 }
 ```

@@ -11,7 +11,7 @@
     "require": {
         "php": "^8.4",
         "blade-ui-kit/blade-heroicons": "^2.6",
-        "jotham-lec/statamic-marketing-toolkit": "^0.18.2",
+        "jotham-lec/statamic-marketing-toolkit": "^0.22.1",
         "jothamlec/laravel-offsite-backup": "^0.2",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",

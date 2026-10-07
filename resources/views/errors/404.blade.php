@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('seo')
-    <s:seo:head title="Page not found" :canonical="false" status="404" />
+    <s:mt:head title="Page not found" :canonical="false" status="404" />
 @endsection
 
 @section('content')

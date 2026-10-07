@@ -70,18 +70,20 @@ class ImportStatamicContentTest extends TestCase
         ], Nav::findByHandle('footer')->in('default')->tree());
     }
 
-    public function test_it_fills_seo_and_brand_and_copies_the_images_into_the_asset_container(): void
+    public function test_it_fills_brand_and_marketing_settings_and_copies_the_images_into_the_asset_container(): void
     {
         $this->artisan('pixaproof:import-content')->assertSuccessful();
 
-        $variables = GlobalSet::findByHandle('seo')->in('default');
+        $brand = GlobalSet::findByHandle('seo')->in('default');
+        $marketingSettings = GlobalSet::findByHandle('marketing')->in('default');
 
-        $this->assertFalse($variables->get('title_site_name'));
-        $this->assertSame('og-image.webp', $variables->get('default_image'));
-        $this->assertSame('pixaproof-icon.png', $variables->get('favicon'));
-        $this->assertSame('G-VKS70BYBWN', $variables->get('ga4_id'));
-        $this->assertSame(['#0284c7', '#0f172a', '#ffffff'], [$variables->get('og_accent'), $variables->get('og_text'), $variables->get('og_background')]);
-        $this->assertSame(['/cp/'], $variables->get('robots_disallow'));
+        $this->assertFalse($brand->get('title_site_name'));
+        $this->assertSame('og-image.webp', $brand->get('default_image'));
+        $this->assertSame('pixaproof-icon.png', $brand->get('favicon'));
+        $this->assertSame(['#0284c7', '#0f172a', '#ffffff'], [$brand->get('og_accent'), $brand->get('og_text'), $brand->get('og_background')]);
+        $this->assertSame('G-VKS70BYBWN', $marketingSettings->get('ga4_id'));
+        $this->assertSame(['/cp/'], $marketingSettings->get('robots_disallow'));
+        $this->assertNull($brand->get('ga4_id'));
 
         Storage::disk('media')->assertExists(['og-image.webp', 'pixaproof-icon.png']);
     }

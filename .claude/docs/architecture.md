@@ -15,7 +15,7 @@ Statamic's Eloquent driver; blueprints stay flat-file. Conversion history:
 ```
 app/
 ├── Console/Commands/
-│   └── ImportStatamicContent.php       # pixaproof:import-content (pages, navs, assets, SEO & brand, redirects)
+│   └── ImportStatamicContent.php       # pixaproof:import-content (pages, navs, assets, Brand + Marketing settings, redirects)
 ├── Http/
 │   ├── Controllers/CspReportController.php   # POST /csp-report → csp log channel
 │   └── Middleware/SecurityHeaders.php        # Enforced + report-only CSP (nonce), skipped report-only on /cp
@@ -23,7 +23,7 @@ app/
 └── Providers/AppServiceProvider.php
 
 config/
-├── seo.php                             # Marketing Toolkit (description length 160; share cards on when imagick is loaded)
+├── marketing-toolkit.php               # Marketing Toolkit (description length 160; share cards on when imagick is loaded)
 └── statamic/                           # Statamic config; eloquent-driver.php lists which repositories use the DB
 
 database/
@@ -34,16 +34,16 @@ database/
 
 resources/
 ├── blueprints/
-│   ├── collections/pages/page.yaml     # title, markdown content, slug, template, SEO tab (seo::seo)
-│   └── globals/seo.yaml                # SEO & brand (created by seo:install)
+│   ├── collections/pages/page.yaml     # title, markdown content, slug, template, SEO tab (marketing-toolkit::seo)
+│   └── globals/seo.yaml, marketing.yaml # Brand and Marketing settings (created by mt:install)
 ├── css/app.css                         # Tailwind v4 + brand colors (primary/neutral/accent)
 ├── js/app.js                           # Alpine.js (+collapse, +intersect) and Motion helpers
 └── views/
-    ├── layout.blade.php                # <s:seo:head /> / <s:seo:body />, navbar, footer
+    ├── layout.blade.php                # <s:mt:head /> / <s:mt:body />, navbar, footer
     ├── home.blade.php                  # Mega landing (data-driven sections)
     ├── contact.blade.php               # Contact page (mailto)
     ├── default.blade.php               # An entry's title + markdown content (privacy)
-    ├── errors/404.blade.php            # 404 with <s:seo:head status="404" />
+    ├── errors/404.blade.php            # 404 with <s:mt:head status="404" />
     └── components/
         ├── navbar.blade.php            # Links from <s:nav:main>
         ├── footer.blade.php            # Links from <s:nav:footer>
@@ -63,10 +63,11 @@ resources/
 | Collection | `pages` | DB | Structured, root = home, route `{parent_uri}/{slug}` |
 | Entries | `home`, `contact`, `privacy` | DB | Templates `home`, `contact`, `default`; SEO tab per entry |
 | Navigations | `main`, `footer` | DB | URL items (anchors) + the home entry |
-| Global set | `seo` (SEO & brand) | DB | Default description and image, favicon, GA4 ID, robots lines |
+| Global set | `seo` (Brand) | DB | Default description and image, favicon, share-card colours |
+| Global set | `marketing` (Marketing settings) | DB | GA4 ID, robots lines, Features switches |
 | Asset container | `assets` | DB meta, files on `media` disk | `public/media` (production: `shared/data/media`) |
-| Redirects | toolkit `seo_redirects` | DB | 22 rows from `database/seo/redirects.csv` |
-| Blueprints | `collections.pages.page`, `globals.seo` | Flat files | Reviewable in git |
+| Redirects | toolkit `mt_redirects` | DB | 22 rows from `database/seo/redirects.csv` |
+| Blueprints | `collections.pages.page`, `globals.seo`, `globals.marketing` | Flat files | Reviewable in git |
 
 `php artisan pixaproof:import-content` creates all of it and updates in place; `--once` skips when the
 `pages` collection exists (used by deploys and `composer setup`).
@@ -96,11 +97,11 @@ Homepage sections 4–13 (except the scroll-scrubbed Challenge and the disabled 
 
 ### Templates and layout
 Blade templates with Statamic's names; each `@extends('layout')` (Statamic only auto-applies layouts to
-Antlers templates). The layout's `seo` section holds `<s:seo:head />`; the 404 page overrides it.
+Antlers templates). The layout's `seo` section holds `<s:mt:head />`; the 404 page overrides it.
 
 ### SEO and tracking
 Never hand-written: the Marketing Toolkit prints titles, meta, Open Graph, JSON-LD, favicons and GA4/GTM.
-Values come from each entry's SEO tab and Globals → SEO & brand. Tracking prints in production only;
+Values come from each entry's SEO tab, Marketing → Brand and Marketing → Settings. Tracking prints in production only;
 other environments are noindex.
 
 ### Anchor Navigation
@@ -146,7 +147,7 @@ section[id] {
 SQLite (`database/database.sqlite` locally, `shared/data/sqlite/database.sqlite` in production): Laravel's
 users/cache/jobs tables, Statamic's Eloquent-driver tables (`entries`, `collections`, `trees`,
 `navigations`, `global_sets`, `global_set_variables`, `asset_containers`, `assets_meta`, `addon_settings`),
-Statamic auth tables, and the toolkit's `seo_redirects`, `seo_404s`, `seo_reports*`, `seo_search_stats`.
+Statamic auth tables, and the toolkit's `mt_redirects`, `mt_404s`, `mt_reports*`, `mt_search_stats`.
 The old `leads` table was dropped (the contact form was removed; the table was empty).
 
 ---
