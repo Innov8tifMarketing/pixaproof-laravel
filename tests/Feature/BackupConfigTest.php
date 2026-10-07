@@ -43,6 +43,24 @@ class BackupConfigTest extends TestCase
         $this->assertSame(['b2'], config('backup.monitor_backups.0.disks'));
     }
 
+    public function test_a_placeholder_from_address_falls_back_to_a_valid_one(): void
+    {
+        $original = $_SERVER['MAIL_FROM_ADDRESS'] ?? null;
+        $_SERVER['MAIL_FROM_ADDRESS'] = 'hello@{{DOMAIN}}';
+
+        try {
+            $config = require config_path('backup.php');
+        } finally {
+            if ($original === null) {
+                unset($_SERVER['MAIL_FROM_ADDRESS']);
+            } else {
+                $_SERVER['MAIL_FROM_ADDRESS'] = $original;
+            }
+        }
+
+        $this->assertSame('noreply@pixaproof.com', $config['notifications']['mail']['from']['address']);
+    }
+
     public function test_the_shared_dir_is_backed_up_without_caches_or_the_live_sqlite_file(): void
     {
         $sharedPath = config('backup.backup.source.files.relative_path');

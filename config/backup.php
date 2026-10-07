@@ -261,7 +261,11 @@ return [
             'to' => env('BACKUP_NOTIFY_EMAIL', 'jotham@cothink.ing'),
 
             'from' => [
-                'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+                /*
+                 * The package rejects an invalid address at boot (which breaks every artisan
+                 * command, package:discover included), so a placeholder falls back here.
+                 */
+                'address' => filter_var(env('MAIL_FROM_ADDRESS'), FILTER_VALIDATE_EMAIL) ?: 'noreply@pixaproof.com',
                 'name' => env('MAIL_FROM_NAME', 'Example'),
             ],
         ],
