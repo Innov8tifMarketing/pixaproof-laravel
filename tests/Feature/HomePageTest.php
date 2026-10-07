@@ -27,6 +27,17 @@ class HomePageTest extends TestCase
             ->assertDontSee("activeTab === 'kyc'", false);
     }
 
+    /**
+     * NexG Berhad renamed itself back to Datasonic Group Berhad (2026-09).
+     */
+    public function test_the_parent_group_is_named_datasonic(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('Part of Datasonic Group Berhad, a public-listed group')
+            ->assertDontSee('NexG');
+    }
+
     public function test_each_industry_renders_in_tabs_accordion_and_panels(): void
     {
         $html = $this->get('/')->assertOk()->getContent();

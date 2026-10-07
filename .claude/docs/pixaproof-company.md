@@ -11,7 +11,7 @@
 
 ### Corporate Structure
 - **Innov8tif Solutions Pte. Ltd.** (Singapore) — Technology, operations, and PixaProof brand owner
-- **NexG Bhd.** — Parent holding company
+- **Datasonic Group Berhad** — Parent holding company (named NexG Berhad from February 2025 until September 2026)
 
 ### Product Portfolio
 1. **EMAS eKYC** - Flagship identity verification platform (Active)

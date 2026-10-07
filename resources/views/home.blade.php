@@ -943,7 +943,7 @@
                         ['year' => '2011', 'label' => 'Founded as Innov8tif', 'icon' => 'flag'],
                         ['year' => '2019', 'label' => 'ISO 30107-3 Certified', 'icon' => 'shield-check'],
                         ['year' => '2020', 'label' => 'US Patent Granted', 'icon' => 'light-bulb'],
-                        ['year' => '2023', 'label' => 'NexG / Bursa Listed', 'icon' => 'building-office'],
+                        ['year' => '2023', 'label' => 'Datasonic / Bursa Listed', 'icon' => 'building-office'],
                         ['year' => '2024', 'label' => '10M+ Verifications', 'icon' => 'finger-print'],
                         ['year' => '2025', 'label' => 'PixaProof Launches', 'icon' => 'rocket-launch'],
                     ];
@@ -972,7 +972,7 @@
                 Including US patent for hologram detection
             </x-icon-card>
             <x-icon-card layout="stacked" iconSize="lg" icon="building-office" title="Bursa Malaysia Listed">
-                Part of NexG Bhd. public-listed group
+                Part of Datasonic Group Berhad, a public-listed group
             </x-icon-card>
         </div>
 

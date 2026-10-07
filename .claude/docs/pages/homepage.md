@@ -139,7 +139,7 @@ Each tab shows industry-specific use case with benefits and process flow.
 - Innov8tif background: 14+ years, identity verification expertise
 - Certifications: ISO 27001:2022, ISO 27002:2022, SOC 2 Type II
 - Stats: 500+ clients, 3 patents, 10+ countries
-- NexG Bhd. / Innov8tif connection
+- Datasonic Group Berhad / Innov8tif connection
 
 ---
 
