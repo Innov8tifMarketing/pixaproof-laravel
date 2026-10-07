@@ -65,6 +65,7 @@ These docs describe content that was planned as separate pages but has been cons
 
 ### Deployment
 - **Config**: `tech-stack.md` → Deployment (Deployer, `deploy.php`, scheduler cron)
+- **Backups**: `AGENTS.md` → Backups (B2 off-site, `dep backup:*`, restore)
 - **Environment**: See `AGENTS.md` in project root
 
 ## Keyword Index

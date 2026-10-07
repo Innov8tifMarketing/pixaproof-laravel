@@ -3,8 +3,11 @@
 namespace Deployer;
 
 require 'recipe/laravel.php';
+require __DIR__.'/deploy/backup.php';
 
 set('application', 'Pixaproof');
+set('backup_name', 'pixaproof');
+set('backup_heartbeat_field', 'heartbeat_pixaproof');
 
 $origin = trim((string) shell_exec('git -C '.escapeshellarg(__DIR__).' config --get remote.origin.url 2>/dev/null'));
 set('repository', preg_match('#github\.com[:/](.+?)(?:\.git)?$#', $origin, $matches)
