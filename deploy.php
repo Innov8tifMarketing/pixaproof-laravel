@@ -3,11 +3,9 @@
 namespace Deployer;
 
 require 'recipe/laravel.php';
-require __DIR__.'/deploy/backup.php';
+require __DIR__.'/vendor/jothamlec/laravel-offsite-backup/recipe/offsite-backup.php';
 
 set('application', 'Pixaproof');
-set('backup_name', 'pixaproof');
-set('backup_heartbeat_field', 'heartbeat_pixaproof');
 
 $origin = trim((string) shell_exec('git -C '.escapeshellarg(__DIR__).' config --get remote.origin.url 2>/dev/null'));
 set('repository', preg_match('#github\.com[:/](.+?)(?:\.git)?$#', $origin, $matches)
@@ -26,6 +24,31 @@ set('forward_agent', false);
 
 set('update_code_strategy', 'clone');
 set('env', ['GIT_LFS_SKIP_SMUDGE' => '1']);
+
+/*
+ * Off-site backups (jothamlec/laravel-offsite-backup); see AGENTS.md (Backups). Secrets are
+ * resolved locally with one `op inject` and written into shared/.env by `dep offsite:env prod`.
+ * offsite_name is the existing folder in the bucket. The scheduler runs from
+ * /etc/cron.d/pixaproof-laravel, so don't run `dep offsite:scheduler`.
+ */
+set('offsite_stages', ['prod']);
+set('offsite_name', 'pixaproof');
+set('offsite_secrets', [
+    'BACKUP_ARCHIVE_PASSWORD' => 'op://Personal/dig73jz7gqe6svm4llq7naj4fy/archivePassword_pixaproof',
+    'B2_ACCESS_KEY_ID' => 'op://Personal/dig73jz7gqe6svm4llq7naj4fy/keyID',
+    'B2_SECRET_ACCESS_KEY' => 'op://Personal/dig73jz7gqe6svm4llq7naj4fy/applicationKey',
+    'OFFSITE_BACKUP_HEARTBEAT_URL' => 'op://Personal/dig73jz7gqe6svm4llq7naj4fy/heartbeat_pixaproof',
+]);
+set('offsite_env_extra', [
+    'B2_BUCKET' => 'cothinking-client-backups',
+    'B2_REGION' => 'us-east-005',
+    'B2_ENDPOINT' => 'https://s3.us-east-005.backblazeb2.com',
+    'OFFSITE_BACKUP_CONNECTIONS' => 'sqlite',
+    // backup:clean at 19:50, backup:run at 19:55, backup:monitor at 20:50 (UTC).
+    'OFFSITE_BACKUP_TIME' => '19:50',
+    'OFFSITE_BACKUP_TIMEZONE' => 'UTC',
+    'OFFSITE_BACKUP_HEARTBEAT_FORMAT' => 'kuma',
+]);
 
 host('prod')
     ->setHostname('47.237.191.213')

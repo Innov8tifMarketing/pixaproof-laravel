@@ -71,16 +71,19 @@ return [
 
         /*
          * Backblaze B2 (S3-compatible) bucket for off-site backups, shared by all
-         * CoThinking client projects. Used by spatie/laravel-backup only.
+         * CoThinking client projects. The jothamlec/laravel-offsite-backup preset
+         * (`php artisan offsite:install --disk=b2`); used by spatie/laravel-backup only.
+         * The key is restricted to this app's "<name>/" prefix.
          */
         'b2' => [
             'driver' => 's3',
-            'key' => env('B2_KEY_ID'),
-            'secret' => env('B2_APPLICATION_KEY'),
+            'key' => env('B2_ACCESS_KEY_ID'),
+            'secret' => env('B2_SECRET_ACCESS_KEY'),
             'region' => env('B2_REGION', 'us-east-005'),
             'bucket' => env('B2_BUCKET', 'cothinking-client-backups'),
             'endpoint' => env('B2_ENDPOINT', 'https://s3.us-east-005.backblazeb2.com'),
             'use_path_style_endpoint' => false,
+            // The AWS SDK's default CRC checksums break uploads to non-AWS endpoints.
             'request_checksum_calculation' => 'when_required',
             'response_checksum_validation' => 'when_required',
             'throw' => true,

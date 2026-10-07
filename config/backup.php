@@ -1,5 +1,6 @@
 <?php
 
+use Jothamlec\OffsiteBackup\Support\Preset;
 use Spatie\Backup\Notifications\Notifiable;
 use Spatie\Backup\Notifications\Notifications\BackupHasFailedNotification;
 use Spatie\Backup\Notifications\Notifications\BackupWasSuccessfulNotification;
@@ -12,6 +13,14 @@ use Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays;
 use Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumStorageInMegabytes;
 use Spatie\DbDumper\Compressors\GzipCompressor;
 
+/*
+ * spatie/laravel-backup's config (10.3.3), hardened by jothamlec/laravel-offsite-backup:
+ * AES-256, verified zips with retries, gzipped dumps, failure-only notifications, no size cap,
+ * and the name, disk, paths and connections from config/offsite-backup.php.
+ * `php artisan offsite:doctor` checks it.
+ */
+$offsite = Preset::load(__DIR__.'/offsite-backup.php');
+
 return [
 
     'backup' => [
@@ -19,44 +28,21 @@ return [
          * The name of this application. You can use this name to monitor
          * the backups.
          */
-        'name' => env('BACKUP_NAME', 'laravel-backup'),
+        'name' => $offsite['name'],
 
         'source' => [
             'files' => [
                 /*
                  * The list of directories and files that will be included in the backup.
                  */
-                'include' => [
-                    /*
-                     * Deployer's shared/ dir: .env, data/media and storage/app. It is
-                     * included directly so the release symlinks don't need following.
-                     */
-                    env('BACKUP_SHARED_PATH', base_path()),
-                ],
+                'include' => Preset::include($offsite),
 
                 /*
                  * These directories and files will be excluded from the backup.
                  *
                  * Directories used by the backup process will automatically be excluded.
                  */
-                'exclude' => [
-                    base_path('vendor'),
-                    base_path('node_modules'),
-                    storage_path('framework'),
-                    env('BACKUP_SHARED_PATH', base_path()).'/cache',
-                    env('BACKUP_SHARED_PATH', base_path()).'/storage/framework',
-                    env('BACKUP_SHARED_PATH', base_path()).'/storage/logs',
-                    /*
-                     * Statamic's Glide cache, search index, Stache locks and tmp; all rebuilt.
-                     */
-                    env('BACKUP_SHARED_PATH', base_path()).'/storage/statamic',
-                    /*
-                     * The live SQLite file and the pre-migration copies (db:backup); the
-                     * consistent dump in db-dumps/ replaces them.
-                     */
-                    env('BACKUP_SHARED_PATH', base_path()).'/data/sqlite',
-                    env('BACKUP_SHARED_PATH', base_path()).'/data/backups',
-                ],
+                'exclude' => Preset::exclude($offsite),
 
                 /*
                  * Determines if symlinks should be followed.
@@ -73,7 +59,7 @@ return [
                  * Set to `null` to include complete absolute path
                  * Example: base_path()
                  */
-                'relative_path' => env('BACKUP_SHARED_PATH', base_path()),
+                'relative_path' => Preset::sharedPath($offsite),
             ],
 
             /*
@@ -106,9 +92,8 @@ return [
              *
              * For a complete list of available customization options, see https://github.com/spatie/db-dumper
              */
-            'databases' => [
-                env('DB_CONNECTION', 'mysql'),
-            ],
+            // Explicit, from config/offsite-backup.php: never DB_CONNECTION.
+            'databases' => Preset::connections($offsite),
         ],
 
         /*
@@ -180,9 +165,7 @@ return [
             /*
              * The disk names on which the backups will be stored.
              */
-            'disks' => [
-                'b2',
-            ],
+            'disks' => [$offsite['disk']],
 
             /*
              * Determines whether to allow backups to continue when some targets fail instead of failing completely.
@@ -193,7 +176,7 @@ return [
         /*
          * The directory where the temporary files will be stored.
          */
-        'temporary_directory' => storage_path('app/backup-temp'),
+        'temporary_directory' => Preset::temporaryDirectory($offsite),
 
         /*
          * The password to be used for archive encryption.
@@ -227,11 +210,6 @@ return [
          * Set to `0` for none
          */
         'retry_delay' => 60,
-
-        /*
-         * Uptime Kuma push monitor pinged after each scheduled backup:run.
-         */
-        'heartbeat_url' => env('BACKUP_HEARTBEAT_URL'),
     ],
 
     /*
@@ -261,11 +239,7 @@ return [
             'to' => env('BACKUP_NOTIFY_EMAIL', 'jotham@cothink.ing'),
 
             'from' => [
-                /*
-                 * The package rejects an invalid address at boot (which breaks every artisan
-                 * command, package:discover included), so a placeholder falls back here.
-                 */
-                'address' => filter_var(env('MAIL_FROM_ADDRESS'), FILTER_VALIDATE_EMAIL) ?: 'noreply@pixaproof.com',
+                'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
                 'name' => env('MAIL_FROM_NAME', 'Example'),
             ],
         ],
@@ -322,11 +296,11 @@ return [
      */
     'monitor_backups' => [
         [
-            'name' => env('BACKUP_NAME', 'laravel-backup'),
-            'disks' => ['b2'],
+            'name' => $offsite['name'],
+            'disks' => [$offsite['disk']],
             'health_checks' => [
                 MaximumAgeInDays::class => 1,
-                MaximumStorageInMegabytes::class => 20000,
+                MaximumStorageInMegabytes::class => $offsite['monitor']['max_storage_mb'] ?? 20000,
             ],
         ],
 

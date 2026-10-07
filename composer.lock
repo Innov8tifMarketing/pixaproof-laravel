@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a302830060fe3afac21c6e11662f8c4a",
+    "content-hash": "8274e226c4b20e12f0821b652cd9d141",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -1998,6 +1998,82 @@
                 "source": "https://github.com/Jotham-LEC/statamic-marketing-toolkit/tree/v0.18.2"
             },
             "time": "2026-10-06T14:20:39+00:00"
+        },
+        {
+            "name": "jothamlec/laravel-offsite-backup",
+            "version": "v0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Jotham-LEC/laravel-offsite-backup.git",
+                "reference": "f91f549e71d50a99ef67df39804ab37d0b318688"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Jotham-LEC/laravel-offsite-backup/zipball/f91f549e71d50a99ef67df39804ab37d0b318688",
+                "reference": "f91f549e71d50a99ef67df39804ab37d0b318688",
+                "shasum": ""
+            },
+            "require": {
+                "ext-zip": "*",
+                "illuminate/console": "^12.0|^13.0",
+                "illuminate/contracts": "^12.0|^13.0",
+                "illuminate/support": "^12.0|^13.0",
+                "php": "^8.3",
+                "spatie/laravel-backup": "^10.0"
+            },
+            "require-dev": {
+                "deployer/deployer": "^8.0",
+                "larastan/larastan": "^3.0",
+                "laravel/pint": "^1.18",
+                "league/flysystem-aws-s3-v3": "^3.0",
+                "orchestra/testbench": "^10.0|^11.0",
+                "pestphp/pest": "^3.0|^4.0",
+                "pestphp/pest-plugin-laravel": "^3.0|^4.0"
+            },
+            "suggest": {
+                "deployer/deployer": "To use recipe/offsite-backup.php (^8.0)",
+                "league/flysystem-aws-s3-v3": "Required for the b2, r2, s3 and wasabi disk presets"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Jothamlec\\OffsiteBackup\\OffsiteBackupServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Jothamlec\\OffsiteBackup\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jotham Lim",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A Deployer recipe and hardened preset for spatie/laravel-backup, with pre-flight checks and off-server restore drills.",
+            "keywords": [
+                "b2",
+                "backblaze",
+                "backup",
+                "deployer",
+                "laravel",
+                "r2",
+                "restore",
+                "s3",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/Jotham-LEC/laravel-offsite-backup/issues",
+                "source": "https://github.com/Jotham-LEC/laravel-offsite-backup/tree/v0.2.0"
+            },
+            "time": "2026-10-07T16:21:34+00:00"
         },
         {
             "name": "laragraph/utils",

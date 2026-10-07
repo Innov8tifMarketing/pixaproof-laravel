@@ -123,30 +123,46 @@ The scheduler cron is in `deploy/server/etc/cron.d/pixaproof-laravel` (installed
 ### Backups
 
 Nightly off-site backups go to the Backblaze B2 bucket `cothinking-client-backups`, under
-`pixaproof/`, via spatie/laravel-backup (`config/backup.php`, scheduled in `routes/console.php`:
-`backup:clean` 19:50, `backup:run` 19:55, `backup:monitor` 20:55 UTC). Each
-`YYYY-MM-DD-HH-MM-SS.zip` holds a consistent `sqlite3 .dump` of the database
-(`db-dumps/*.sql.gz`) plus `shared/` (`.env`, `data/media`, all of `storage/app`), AES-256
-encrypted. Left out: `data/sqlite` (the dump replaces it), `data/backups`, `cache/`,
-`storage/framework`, `storage/logs` and `storage/statamic`. Kept: every backup for 7 days, then
-one a day to 30 days, then one a month for 12 months. The bucket has Object Lock (30 days).
-Failures are mailed to `BACKUP_NOTIFY_EMAIL`, but production has `MAIL_MAILER=log`, so that mail
-goes nowhere; the Uptime Kuma push (`BACKUP_HEARTBEAT_URL`) is the real alarm.
+`pixaproof/`, via spatie/laravel-backup, set up by
+[jothamlec/laravel-offsite-backup](https://github.com/jothamlec/laravel-offsite-backup)
+(`config/offsite-backup.php`, the hardened `config/backup.php`, the `b2` disk in
+`config/filesystems.php`). The package schedules `backup:clean` at 19:50, `backup:run` at 19:55
+and `backup:monitor` at 20:50 UTC (`OFFSITE_BACKUP_TIME=19:50`), plus an `offsite:heartbeat-tick`
+every minute; nothing is scheduled in `routes/console.php`. Each `YYYY-MM-DD-HH-MM-SS.zip` holds a
+consistent `sqlite3 .dump` of the database (`db-dumps/*.sql.gz`), `shared/` (`.env`, `data/media`,
+all of `storage/app`) and `offsite-manifest.json`, AES-256 encrypted with this app's own archive
+password. Left out (`offsite-backup.exclude`): `data/sqlite` (the dump replaces it),
+`data/backups`, `cache/`, `storage/framework`, `storage/logs` and `storage/statamic`. Kept: every
+backup for 7 days, then one a day to 30 days, then one a month for 12 months. The bucket has
+Object Lock (30 days). Failures are mailed to `BACKUP_NOTIFY_EMAIL` (default jotham@cothink.ing),
+but production has `MAIL_MAILER=log`, so that mail goes nowhere; the Uptime Kuma push
+(`OFFSITE_BACKUP_HEARTBEAT_URL`, up or down) is the real alarm.
 
-The B2 key, archive password, bucket name and restore notes are in 1Password item
-`dig73jz7gqe6svm4llq7naj4fy` ("B2 CoThinking Client Backups Keys"); the Kuma push URL goes in its
-`heartbeat_pixaproof` field. Recipe: `deploy/backup.php`.
+Secrets are in 1Password item `dig73jz7gqe6svm4llq7naj4fy` ("B2 CoThinking Client Backups Keys"):
+`archivePassword_pixaproof`, `keyID`, `applicationKey`, `heartbeat_pixaproof`. Archives made
+before 2026-10-08 use the old shared `archivePassword`. The recipe settings (`offsite_*`) are in
+`deploy.php`.
 
-- **Set up / rotate keys:** `dep backup:env prod` writes a marked block into `shared/.env` from
-  1Password and re-caches config. Don't add a second scheduler line; it already runs from
-  `/etc/cron.d/pixaproof-laravel`.
-- **Back up now / list:** `dep backup:run prod`, `dep backup:list prod`.
-- **Verify:** `dep backup:verify prod` downloads the newest backup, decrypts it and test-restores
-  the dump locally (needs `op`, `7z`, `jq`, `sqlite3`). Do this quarterly.
-- **Restore:** download the zip (see the 1Password notes), `7z x <file>.zip` with the archive
-  password (stock `unzip` can't open AES-256), then
-  `gunzip db-dumps/*.sql.gz && sqlite3 database.sqlite < db-dumps/<name>.sql`. Put it at
-  `shared/data/sqlite/database.sqlite` with `dep` locked, and copy the files back into `shared/`.
+- **Set up / rotate keys:** `dep offsite:env prod` resolves the secrets with one `op inject`
+  (one approval), writes a marked block into `shared/.env` in place (owner, mode and ACLs kept)
+  and re-caches config. With a local `KEY=VALUE` file (mode 600) instead of 1Password:
+  `-o offsite_secrets_file=<path>`.
+- **Scheduler:** it already runs from `/etc/cron.d/pixaproof-laravel` (as `deployer`). Don't run
+  `dep offsite:scheduler`; it would add a second line.
+- **Check:** `dep offsite:doctor prod` (13 pre-flight checks).
+- **Back up now / list:** `dep offsite:run prod`, `dep offsite:list prod`. The bucket has Object
+  Lock, so every extra run stays for 30 days.
+- **Verify:** `dep offsite:verify prod` downloads the newest backup, decrypts it and test-restores
+  the dump locally (`php artisan offsite:verify`; never on the server). It needs a PHP whose zip
+  extension has AES. Do this quarterly. An older archive:
+  `php artisan offsite:verify --backup=<file>.zip` with the matching `BACKUP_ARCHIVE_PASSWORD` in
+  the environment.
+- **Restore:** `php artisan offsite:verify --keep` leaves the decrypted archive in a temp dir (or
+  `7z x <file>.zip` with the archive password; stock `unzip` can't open AES-256), then
+  `gunzip -c db-dumps/<name>.sql.gz | sqlite3 database.sqlite`. Put it at
+  `shared/data/sqlite/database.sqlite` with `dep` locked, copy the files back into `shared/`, run
+  `php please stache:refresh` and `php please glide:clear`, and delete the extracted copy (it
+  holds `.env`).
 
 `db:backup` still copies the SQLite file to `shared/data/backups` before each migration
 (`migrate:safe`); those copies stay on the box.
