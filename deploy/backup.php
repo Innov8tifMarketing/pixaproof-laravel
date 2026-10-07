@@ -84,5 +84,5 @@ task('backup:list', function (): void {
 
 desc('Downloads the newest off-site backup and test-restores it locally');
 task('backup:verify', function (): void {
-    runLocally('deploy/backup-verify '.escapeshellarg(get('backup_name')), timeout: 3600, forceOutput: true);
+    writeln(runLocally('deploy/backup-verify '.escapeshellarg(get('backup_name')), timeout: 3600));
 })->once();

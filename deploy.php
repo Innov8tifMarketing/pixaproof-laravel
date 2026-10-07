@@ -61,20 +61,6 @@ set('migrate_backup_path', '{{deploy_path}}/shared/data/backups');
 
 set('migrate_backup_keep', 5);
 
-set('rclone_bin', '/home/deployer/bin/rclone');
-set('rclone_remote', 'b2');
-set('offsite_bucket', 'doom-innov8tif-backup');
-set('offsite_prefix', 'pixaproof');
-
-set('offsite_keep_daily', 7);
-set('offsite_keep_weekly', 8);
-
-set('offsite_media_paths', [
-    'data/media',
-    'storage/app/public',
-    'storage/app/private',
-]);
-
 set('verify_timeout', 15);
 set('verify_retries', 5);
 set('verify_retry_delay', 2);
@@ -84,17 +70,6 @@ function getStage(): string
     $labels = get('labels', []);
 
     return $labels['stage'] ?? 'unknown';
-}
-
-function offsitePruneKeep(string $rclone, string $path, int $keep): void
-{
-    $out = run("{$rclone} lsf {$path} --files-only 2>/dev/null || echo ''");
-    $files = array_values(array_filter(explode("\n", trim($out))));
-    sort($files);
-    $excess = count($files) - $keep;
-    for ($i = 0; $i < $excess; $i++) {
-        run("{$rclone} deletefile --b2-hard-delete {$path}/{$files[$i]}");
-    }
 }
 
 desc('Compare deploy/server/** against the live server and report drift');
@@ -267,106 +242,6 @@ task('db:restore', function () {
     if (test('[ -f {{deploy_path}}/current/artisan ]')) {
         run('cd {{deploy_path}}/current && {{bin/php}} artisan up');
     }
-});
-
-desc('Back up SQLite DB + media + .env offsite to Backblaze B2');
-task('backup:offsite', function () {
-    $stage = getStage();
-    $rclone = get('rclone_bin');
-    $remote = get('rclone_remote');
-    $bucket = get('offsite_bucket');
-    $prefix = get('offsite_prefix');
-    $keepDaily = get('offsite_keep_daily', 7);
-    $keepWeekly = get('offsite_keep_weekly', 8);
-    $mediaPaths = get('offsite_media_paths', []);
-    $keepLocal = get('migrate_backup_keep', 5);
-    $timestamp = date('Y-m-d-His');
-    $sqlitePath = get('sqlite_path');
-
-    $shared = '{{deploy_path}}/shared';
-    $base = "{$remote}:{$bucket}/{$prefix}";
-
-    if (! test("[ -x {$rclone} ]")) {
-        throw new \RuntimeException("rclone not found at {$rclone} — run the offsite tooling install first");
-    }
-    run("{$rclone} lsd {$remote}:{$bucket} > /dev/null");
-
-    if (! test("[ -f {$sqlitePath} ]")) {
-        throw new \RuntimeException("SQLite db not found at {$sqlitePath}");
-    }
-    $localDbDir = "{$shared}/data/backups";
-    $dbFile = "{$localDbDir}/database_{$stage}_{$timestamp}.sqlite.gz";
-    $tmpSnap = "{$localDbDir}/.snap_{$timestamp}.sqlite";
-
-    $dumpCmd = <<<BASH
-        set -eo pipefail
-        mkdir -p {$localDbDir}
-        rm -f {$tmpSnap} {$dbFile}.tmp
-        sqlite3 {$sqlitePath} ".backup '{$tmpSnap}'"
-        [ "\$(sqlite3 {$tmpSnap} 'PRAGMA integrity_check;')" = "ok" ]
-        gzip -c {$tmpSnap} > {$dbFile}.tmp
-        gzip -t {$dbFile}.tmp
-        mv {$dbFile}.tmp {$dbFile}
-        rm -f {$tmpSnap}
-        BASH;
-    run($dumpCmd);
-    $dbName = basename($dbFile);
-    info("SQLite snapshot created: {$dbName}");
-
-    run("{$rclone} copy {$dbFile} {$base}/db/daily/ --transfers 4");
-    run("{$rclone} check {$localDbDir} {$base}/db/daily --include {$dbName} --one-way");
-    info("Daily SQLite snapshot uploaded + verified → {$base}/db/daily/{$dbName}");
-
-    $isoWeek = date('o-\WW');
-    $weeklyHas = (int) trim(run("{$rclone} lsf {$base}/db/weekly/ 2>/dev/null | grep -c '_{$isoWeek}_' || true"));
-    if ($weeklyHas === 0) {
-        run("{$rclone} copyto {$dbFile} {$base}/db/weekly/database_{$stage}_{$isoWeek}_{$timestamp}.sqlite.gz");
-        info("Weekly SQLite snapshot created for {$isoWeek}");
-    }
-
-    foreach ($mediaPaths as $rel) {
-        $src = "{$shared}/{$rel}";
-        $dst = "{$base}/files/{$rel}";
-        if (! test("[ -d {$src} ]")) {
-            warning("Skipping missing media path: {$rel}");
-
-            continue;
-        }
-        run("{$rclone} sync {$src} {$dst} --fast-list --transfers 8 --checkers 16 --exclude 'livewire-tmp/**'", timeout: 1800);
-        info("Mirrored: {$rel}");
-    }
-
-    run("{$rclone} copyto {$shared}/.env {$base}/config/env_{$stage}.env");
-    info('.env uploaded');
-
-    offsitePruneKeep($rclone, "{$base}/db/daily", $keepDaily);
-    offsitePruneKeep($rclone, "{$base}/db/weekly", $keepWeekly);
-    info("Offsite retention applied (keep {$keepDaily} daily + {$keepWeekly} weekly)");
-
-    $backups = run("ls -1t {$localDbDir}/database_{$stage}_*.sqlite.gz 2>/dev/null || echo ''");
-    $files = array_filter(explode("\n", trim($backups)));
-    if (count($files) > $keepLocal) {
-        foreach (array_slice($files, $keepLocal) as $old) {
-            run("rm -f {$old}");
-        }
-    }
-
-    info("Offsite backup complete — stage={$stage} @ {$timestamp}");
-});
-
-desc('List offsite backups on Backblaze B2');
-task('backup:offsite:list', function () {
-    $rclone = get('rclone_bin');
-    $base = get('rclone_remote').':'.get('offsite_bucket').'/'.get('offsite_prefix');
-
-    writeln('── DB snapshots: daily ──');
-    writeln(run("{$rclone} lsl {$base}/db/daily 2>/dev/null || echo '(none)'"));
-    writeln('── DB snapshots: weekly ──');
-    writeln(run("{$rclone} lsl {$base}/db/weekly 2>/dev/null || echo '(none)'"));
-    writeln('── Media mirror (top level) ──');
-    writeln(run("{$rclone} lsd {$base}/files 2>/dev/null || echo '(none)'"));
-    writeln('── Config (.env) ──');
-    writeln(run("{$rclone} lsl {$base}/config 2>/dev/null || echo '(none)'"));
 });
 
 desc('Run migrations safely with backup');
