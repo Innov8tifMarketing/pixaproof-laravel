@@ -114,6 +114,8 @@ answer GET/HEAD requests that would otherwise 404.
 - `tests/Feature/Guard/UrlSnapshotTest.php` records every public URL's status, redirect and head
   metadata in `tests/__snapshots__/urls.json`. Regenerate with `UPDATE_SNAPSHOTS=1` only for intended
   changes.
+- The full suite peaks just over PHP's default 128 MB (in `ImportStatamicContentTest`). The nix devshell
+  sets 512 MB; with the system PHP run `php -d memory_limit=1G artisan test --compact`.
 - PHPStan needs `vendor/bin/phpstan --memory-limit=1G`.
 
 ## Deployment
@@ -178,7 +180,7 @@ APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://pixaproof.com
 CACHE_STORE=database        # the toolkit needs a serialising cache (not array)
-SEO_GTM_ID=                 # optional (MT_GTM_ID from 0.20; SEO_* read until 1.0); the GA4 ID is in Marketing → Settings
+MT_GTM_ID=                  # optional; the GA4 ID is in Marketing → Settings
 
 MAIL_MAILER=smtp
 MAIL_HOST=smtp.example.com
