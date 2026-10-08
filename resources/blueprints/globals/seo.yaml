@@ -45,6 +45,15 @@ tabs:
               display: 'marketing-toolkit::fields.brand.twitter_handle.display'
               width: 50
               prepend: '@'
+          -
+            handle: title_brand
+            field:
+              type: text
+              display: 'marketing-toolkit::fields.brand.title_brand.display'
+              instructions: 'marketing-toolkit::fields.brand.title_brand.instructions'
+              width: 50
+              if:
+                title_site_name: 'true'
       -
         display: 'marketing-toolkit::fields.brand.sections.icon.display'
         fields:
@@ -179,6 +188,13 @@ tabs:
                   field:
                     type: text
                     display: 'marketing-toolkit::fields.brand.email.display'
+          -
+            handle: legal_name
+            field:
+              type: text
+              display: 'marketing-toolkit::fields.brand.legal_name.display'
+              instructions: 'marketing-toolkit::fields.brand.legal_name.instructions'
+              width: 50
       -
         display: 'marketing-toolkit::fields.brand.sections.address.display'
         fields:

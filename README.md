@@ -173,7 +173,7 @@ APP_DEBUG=false
 APP_URL=https://pixaproof.com
 
 CACHE_STORE=database   # the Marketing Toolkit needs a serialising cache (not array)
-SEO_GTM_ID=            # optional Google Tag Manager container; the GA4 ID is set in SEO & brand
+MT_GTM_ID=             # optional Google Tag Manager container; the GA4 ID is set in Marketing → Settings
 
 MAIL_MAILER=smtp
 MAIL_HOST=smtp.example.com

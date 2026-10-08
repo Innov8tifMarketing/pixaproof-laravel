@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ec7929065a2aed1383b4f34320118cee",
+    "content-hash": "c197af5f4dbf4fbd3dcf0aac49d609eb",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -1940,23 +1940,21 @@
         },
         {
             "name": "jotham-lec/statamic-marketing-toolkit",
-            "version": "v0.22.3",
+            "version": "v0.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Jotham-LEC/statamic-marketing-toolkit.git",
-                "reference": "bd65e6328a430c8a8e13076d0dd31b89fef95ca8"
+                "reference": "49f68ad7d0cd448accc286b3f79e8b7a9a7c469a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Jotham-LEC/statamic-marketing-toolkit/zipball/bd65e6328a430c8a8e13076d0dd31b89fef95ca8",
-                "reference": "bd65e6328a430c8a8e13076d0dd31b89fef95ca8",
+                "url": "https://api.github.com/repos/Jotham-LEC/statamic-marketing-toolkit/zipball/49f68ad7d0cd448accc286b3f79e8b7a9a7c469a",
+                "reference": "49f68ad7d0cd448accc286b3f79e8b7a9a7c469a",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-dom": "*",
-                "ext-mbstring": "*",
-                "ext-openssl": "*",
                 "php": "^8.3",
                 "simonhamp/the-og": "^0.8",
                 "statamic/cms": "^6.34"
@@ -1999,7 +1997,7 @@
             "description": "The marketing fundamentals for a Statamic website: SEO, tracking tags, Consent Mode, favicons and redirects, Search Console numbers, site reports with a score and conversion events.",
             "support": {
                 "issues": "https://github.com/Jotham-LEC/statamic-marketing-toolkit/issues",
-                "source": "https://github.com/Jotham-LEC/statamic-marketing-toolkit/tree/v0.22.3"
+                "source": "https://github.com/Jotham-LEC/statamic-marketing-toolkit/tree/v0.24.0"
             },
             "funding": [
                 {
@@ -2007,7 +2005,7 @@
                     "type": "buy_me_a_coffee"
                 }
             ],
-            "time": "2026-10-08T02:59:26+00:00"
+            "time": "2026-10-08T07:28:44+00:00"
         },
         {
             "name": "jothamlec/laravel-offsite-backup",

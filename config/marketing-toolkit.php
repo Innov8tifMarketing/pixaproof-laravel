@@ -1,23 +1,8 @@
 <?php
 
 use JothamLec\MarketingToolkit\Og\DefaultTemplate;
-use JothamLec\MarketingToolkit\SiteSeo;
 
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Rules class
-    |--------------------------------------------------------------------------
-    |
-    | Every value the addon prints is worked out by one method on this class.
-    | Extend JothamLec\MarketingToolkit\SiteSeo in the project and override a method to
-    | change one rule (an extra JSON-LD node, a noindex condition, more
-    | sitemap URLs) without touching the rest.
-    |
-    */
-
-    'class' => SiteSeo::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -129,13 +114,19 @@ return [
         'per_page' => 1000,
     ],
 
-    'robots_txt' => true,
+    'robots_txt' => [
+        'enabled' => true,
+    ],
 
     // /llms.txt: the site's pages as a Markdown list for AI assistants (llmstxt.org).
-    'llms_txt' => true,
+    'llms_txt' => [
+        'enabled' => true,
+    ],
 
-    // /ads.txt: the lines in SEO & brand → Crawlers, when there are any.
-    'ads_txt' => true,
+    // /ads.txt: the lines in Marketing settings → Crawlers, when there are any.
+    'ads_txt' => [
+        'enabled' => true,
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -265,9 +256,10 @@ return [
         'ga4_id' => env('MT_GA4_ID'),
         'posthog_key' => env('MT_POSTHOG_KEY'),
         'posthog_host' => env('MT_POSTHOG_HOST'),
+        // When posthog_host is a proxy, set this to PostHog's app (https://eu.posthog.com) for its toolbar.
+        'posthog_ui_host' => env('MT_POSTHOG_UI_HOST'),
         'meta_pixel_id' => env('MT_META_PIXEL_ID'),
         'linkedin_partner_id' => env('MT_LINKEDIN_PARTNER_ID'),
-        'class' => null,
     ],
 
     /*
