@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Providers\AppServiceProvider;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -10,6 +11,7 @@ use JothamLec\MarketingToolkit\Redirects\Csv;
 use JothamLec\MarketingToolkit\Redirects\Redirect;
 use LogicException;
 use Statamic\Assets\AssetContainer as StatamicAssetContainer;
+use Statamic\Entries\Collection as StatamicCollection;
 use Statamic\Entries\Entry as StatamicEntry;
 use Statamic\Facades\AssetContainer;
 use Statamic\Facades\Collection;
@@ -17,16 +19,27 @@ use Statamic\Facades\Entry;
 use Statamic\Facades\GlobalSet;
 use Statamic\Facades\Nav;
 use Statamic\Facades\Site;
+use Statamic\Globals\GlobalSet as StatamicGlobalSet;
 use Statamic\Structures\CollectionStructure;
 use Statamic\Structures\Nav as StatamicNav;
 
-#[Signature('pixaproof:import-content {--once : Do nothing if the pages collection exists, so edits made in the control panel are kept}')]
-#[Description('Create the Statamic content the Laravel site used to hard-code: pages, navigation, assets, Brand and Marketing settings values and redirects')]
+#[Signature('pixaproof:import-content {--once : If the pages collection exists, only fill in what is missing (empty page sections, the Site global, media), so edits made in the control panel are kept}')]
+#[Description('Create the Statamic content: pages and their sections, navigation, media, the Site, Brand and Marketing settings values and redirects')]
 class ImportStatamicContent extends Command
 {
     private const string CONTAINER = 'assets';
 
     private const string REDIRECTS_CSV = 'database/seo/redirects.csv';
+
+    /**
+     * The template every page renders with: its sections, from the page builder.
+     */
+    private const string TEMPLATE = 'page';
+
+    /**
+     * Values for the Site global set, used while the set is empty.
+     */
+    private const string SITE_CONTENT = 'database/content/site.php';
 
     /**
      * Files copied into the asset container, keyed by their asset path; sources are relative to the project root.
@@ -36,18 +49,39 @@ class ImportStatamicContent extends Command
     private const array ASSETS = [
         'og-image.webp' => 'public/images/og-image.webp',
         'pixaproof-icon.png' => 'database/seo/pixaproof-icon.png',
+        'mockups/hero-live-capture.webp' => 'public/images/mockups/hero-live-capture.webp',
+        'mockups/hero-tampered-gallery.webp' => 'public/images/mockups/hero-tampered-gallery.webp',
+        'mockups/hero-ai-generated-id.webp' => 'public/images/mockups/hero-ai-generated-id.webp',
+        'mockups/prevention-camera-live.webp' => 'public/images/mockups/prevention-camera-live.webp',
+        'mockups/loan-draw-construction.webp' => 'public/images/mockups/loan-draw-construction.webp',
+        'mockups/insurance-car-damage.webp' => 'public/images/mockups/insurance-car-damage.webp',
+        'mockups/asset-warehouse.webp' => 'public/images/mockups/asset-warehouse.webp',
+        'mockups/property-inspection.webp' => 'public/images/mockups/property-inspection.webp',
+        'videos/genuine-device.mp4' => 'public/videos/genuine-device.mp4',
+        'videos/genuine-device.webm' => 'public/videos/genuine-device.webm',
+        'videos/genuine-device-poster.webp' => 'public/videos/genuine-device-poster.webp',
+        'videos/virtual-camera.mp4' => 'public/videos/virtual-camera.mp4',
+        'videos/virtual-camera.webm' => 'public/videos/virtual-camera.webm',
+        'videos/virtual-camera-poster.webp' => 'public/videos/virtual-camera-poster.webp',
+        'videos/emulator.mp4' => 'public/videos/emulator.mp4',
+        'videos/emulator.webm' => 'public/videos/emulator.webm',
+        'videos/emulator-poster.webp' => 'public/videos/emulator-poster.webp',
+        'videos/device-farm.mp4' => 'public/videos/device-farm.mp4',
+        'videos/device-farm.webm' => 'public/videos/device-farm.webm',
+        'videos/device-farm-poster.webp' => 'public/videos/device-farm-poster.webp',
     ];
 
     /**
-     * Pages in tree order; the first is the root (home) page.
+     * Pages in tree order; the first is the root (home) page. `blocks` names the file holding the
+     * page's sections (the page builder's `blocks` field).
      *
-     * @var list<array{slug: string, title: string, template: string, content?: string, seo: array<string, string>}>
+     * @var list<array{slug: string, title: string, blocks: string, seo: array<string, string>}>
      */
     private const array PAGES = [
         [
             'slug' => 'home',
             'title' => 'Home',
-            'template' => 'home',
+            'blocks' => 'database/content/home.php',
             'seo' => [
                 'title' => 'Verify Every Image. Eliminate Fraud.',
                 'image' => 'og-image.webp',
@@ -57,7 +91,7 @@ class ImportStatamicContent extends Command
         [
             'slug' => 'contact',
             'title' => 'Contact',
-            'template' => 'contact',
+            'blocks' => 'database/content/contact.php',
             'seo' => [
                 'description' => 'Get in touch with the PixaProof team. Email our sales team to book a demo, discuss your use case, or explore integration options.',
             ],
@@ -65,36 +99,7 @@ class ImportStatamicContent extends Command
         [
             'slug' => 'privacy',
             'title' => 'Privacy Policy',
-            'template' => 'default',
-            'content' => <<<'MARKDOWN'
-                ## Introduction
-
-                PixaProof ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use our mobile application.
-
-                ## Information We Collect
-
-                When you use PixaProof, we may collect:
-
-                - Images you submit for verification (processed in real-time, not stored)
-                - Device information for app functionality
-                - Usage analytics to improve our service
-
-                ## How We Use Your Information
-
-                We use the information we collect to:
-
-                - Provide photo authenticity verification services
-                - Improve and optimize our application
-                - Respond to your inquiries and support requests
-
-                ## Data Security
-
-                We implement appropriate security measures to protect your information. Images submitted for verification are processed in real-time and are not stored on our servers after analysis is complete.
-
-                ## Contact Us
-
-                If you have questions about this Privacy Policy, please [contact us](/contact).
-                MARKDOWN,
+            'blocks' => 'database/content/privacy.php',
             'seo' => [
                 'description' => 'PixaProof privacy policy — how we collect, use, and protect your data when using our image verification platform.',
             ],
@@ -154,9 +159,14 @@ class ImportStatamicContent extends Command
     public function handle(): int
     {
         if ($this->option('once') && Collection::findByHandle('pages')) {
-            $this->components->info('Content already imported; nothing to do.');
+            $this->components->info('Content already imported; filling in only what is missing.');
 
-            return self::SUCCESS;
+            $this->importAssets();
+            $this->usePageTemplate($this->pagesCollection());
+            $this->fillExistingPages();
+            $this->importSiteContent();
+
+            return $this->verifyCounts() ? self::SUCCESS : self::FAILURE;
         }
 
         $this->importAssets();
@@ -169,6 +179,7 @@ class ImportStatamicContent extends Command
 
         $this->importGlobal('marketing-toolkit.global', self::BRAND);
         $this->importGlobal('marketing-toolkit.settings_global', self::MARKETING_SETTINGS);
+        $this->importSiteContent();
 
         if (! $this->importRedirects()) {
             return self::FAILURE;
@@ -177,6 +188,10 @@ class ImportStatamicContent extends Command
         return $this->verifyCounts() ? self::SUCCESS : self::FAILURE;
     }
 
+    /**
+     * Copies each file in and adds it to the container, leaving files and assets that are already there
+     * (and anything an editor set on them, such as alt text) as they are.
+     */
     private function importAssets(): void
     {
         $container = AssetContainer::findByHandle(self::CONTAINER) ?? AssetContainer::make(self::CONTAINER);
@@ -198,13 +213,32 @@ class ImportStatamicContent extends Command
 
         foreach (self::ASSETS as $assetPath => $sourcePath) {
             if (! $disk->exists($assetPath)) {
-                $disk->put($assetPath, (string) file_get_contents(base_path($sourcePath)));
+                $source = fopen(base_path($sourcePath), 'r');
+
+                if ($source === false) {
+                    throw new LogicException("Cannot read {$sourcePath}.");
+                }
+
+                $disk->writeStream($assetPath, $source);
+                fclose($source);
             }
 
-            $container->makeAsset($assetPath)->save();
+            if (! $container->queryAssets()->where('path', $assetPath)->first()) {
+                $container->makeAsset($assetPath)->save();
+            }
         }
 
-        $this->components->info('Assets: '.implode(', ', array_keys(self::ASSETS)).'.');
+        $this->components->info('Assets: '.count(self::ASSETS).' files.');
+    }
+
+    private function pagesCollection(): StatamicCollection
+    {
+        return Collection::findByHandle('pages') ?? Collection::make('pages');
+    }
+
+    private function usePageTemplate(StatamicCollection $collection): void
+    {
+        $collection->template(self::TEMPLATE)->save();
     }
 
     /**
@@ -212,25 +246,24 @@ class ImportStatamicContent extends Command
      */
     private function importPages(): array
     {
-        $collection = Collection::findByHandle('pages') ?? Collection::make('pages');
-
-        $collection
+        $collection = $this->pagesCollection()
             ->title('Pages')
             ->routes('{parent_uri}/{slug}')
-            ->structureContents(['root' => true])
-            ->save();
+            ->structureContents(['root' => true]);
+
+        $this->usePageTemplate($collection);
 
         $entryIds = [];
 
         foreach (self::PAGES as $page) {
-            $entry = $this->findOrMakePage($page['slug']);
+            $entry = $this->findPage($page['slug']) ?? $this->makePage($page['slug']);
 
             $entry->published(true)->merge([
                 'title' => $page['title'],
-                'template' => $page['template'],
-                'content' => $page['content'] ?? null,
                 'seo' => $page['seo'],
             ]);
+
+            $this->fillBlocks($entry, $page['blocks']);
 
             $entry->save();
 
@@ -252,10 +285,104 @@ class ImportStatamicContent extends Command
         return $entryIds;
     }
 
-    private function findOrMakePage(string $slug): StatamicEntry
+    /**
+     * Gives the existing pages their sections where they have none, without touching anything else and
+     * without changing when they were last edited (the privacy page shows that date).
+     */
+    private function fillExistingPages(): void
     {
-        $entry = Entry::whereCollection('pages')->first(fn (StatamicEntry $entry) => $entry->slug() === $slug)
-            ?? Entry::make();
+        $filled = [];
+
+        foreach (self::PAGES as $page) {
+            $entry = $this->findPage($page['slug']);
+
+            if (! $entry || ! $this->fillBlocks($entry, $page['blocks'])) {
+                continue;
+            }
+
+            $lastModified = $entry->lastModified();
+
+            $entry->save();
+
+            config('statamic.eloquent-driver.entries.model')::query()
+                ->whereKey($entry->id())
+                ->update(['updated_at' => $lastModified]);
+
+            $filled[] = $page['slug'];
+        }
+
+        $this->components->info('Pages given their sections: '.($filled === [] ? 'none' : implode(', ', $filled)).'.');
+    }
+
+    /**
+     * Gives the page its sections when it has none, carrying over the markdown `content` of a page
+     * from before the page builder into its legal text section, and drops the per-page template
+     * (the collection's applies). Sections the page already has are never replaced.
+     *
+     * @return bool whether the entry changed
+     */
+    private function fillBlocks(StatamicEntry $entry, string $blocksFile): bool
+    {
+        $changed = $entry->has('template') || $entry->has('content');
+
+        if (blank($entry->get('blocks'))) {
+            /** @var list<array<string, mixed>> $blocks */
+            $blocks = require base_path($blocksFile);
+            $legacyContent = $entry->get('content');
+
+            $blocks = array_map(function (array $block) use ($legacyContent): array {
+                if ($block['type'] === 'legal_text' && filled($legacyContent)) {
+                    $block['content'] = $legacyContent;
+                }
+
+                return $this->withRowIds($block);
+            }, $blocks);
+
+            $entry->set('blocks', $blocks);
+            $changed = true;
+        }
+
+        // The Eloquent driver also keeps the template on the entry itself and writes it back on save.
+        $entry->template(null)->remove('template')->remove('content');
+
+        return $changed;
+    }
+
+    /**
+     * Gives each grid row in a section a stable ID (the control panel adds random ones to rows without).
+     *
+     * @param  array<string, mixed>  $block
+     * @return array<string, mixed>
+     */
+    private function withRowIds(array $block): array
+    {
+        foreach ($block as $field => $value) {
+            if (! is_array($value) || ! array_is_list($value) || ! is_array($value[0] ?? null)) {
+                continue;
+            }
+
+            foreach ($value as $index => $row) {
+                $block[$field][$index] = ['id' => "{$block['id']}-{$field}-".($index + 1), ...$row];
+            }
+        }
+
+        return $block;
+    }
+
+    private function findPage(string $slug): ?StatamicEntry
+    {
+        $entry = Entry::whereCollection('pages')->first(fn (StatamicEntry $entry) => $entry->slug() === $slug);
+
+        if ($entry !== null && ! $entry instanceof StatamicEntry) {
+            throw new LogicException('Entries are expected to extend '.StatamicEntry::class.'.');
+        }
+
+        return $entry;
+    }
+
+    private function makePage(string $slug): StatamicEntry
+    {
+        $entry = Entry::make();
 
         if (! $entry instanceof StatamicEntry) {
             throw new LogicException('Entries are expected to extend '.StatamicEntry::class.'.');
@@ -313,11 +440,38 @@ class ImportStatamicContent extends Command
     private function importGlobal(string $configKey, array $values): void
     {
         $globalSet = GlobalSet::findByHandle((string) config($configKey));
+
+        if (! $globalSet instanceof StatamicGlobalSet) {
+            throw new LogicException("The global set [{$configKey}] is missing or does not extend ".StatamicGlobalSet::class.'.');
+        }
+
         $variables = $globalSet->in(Site::default()->handle());
 
         $variables->merge($values)->save();
 
         $this->components->info($globalSet->title().': '.implode(', ', array_keys($values)).'.');
+    }
+
+    /**
+     * Creates the Site global set (navbar button, footer, 404 page) and fills it while it is empty.
+     */
+    private function importSiteContent(): void
+    {
+        if (! GlobalSet::findByHandle(AppServiceProvider::SITE_CONTENT_GLOBAL)) {
+            GlobalSet::make(AppServiceProvider::SITE_CONTENT_GLOBAL)->title('Site')->save();
+        }
+
+        $variables = GlobalSet::findByHandle(AppServiceProvider::SITE_CONTENT_GLOBAL)->in(Site::default()->handle());
+
+        if ($variables->data()->filter(fn ($value) => filled($value))->isNotEmpty()) {
+            $this->components->info('Site: already filled in; kept.');
+
+            return;
+        }
+
+        $variables->data(require base_path(self::SITE_CONTENT))->save();
+
+        $this->components->info('Site: filled in.');
     }
 
     private function importRedirects(): bool
@@ -340,8 +494,13 @@ class ImportStatamicContent extends Command
             array_slice(file(base_path(self::REDIRECTS_CSV), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [], 1),
         );
 
+        $pages = Entry::whereCollection('pages');
+        $siteContent = GlobalSet::findByHandle(AppServiceProvider::SITE_CONTENT_GLOBAL)?->inDefaultSite();
+
         $counts = [
-            'pages' => [count(self::PAGES), Entry::whereCollection('pages')->count()],
+            'pages' => [count(self::PAGES), $pages->count()],
+            'pages with sections' => [count(self::PAGES), $pages->filter(fn (StatamicEntry $entry) => filled($entry->get('blocks')))->count()],
+            'filled-in Site global sets' => [1, $siteContent && $siteContent->data()->filter(fn ($value) => filled($value))->isNotEmpty() ? 1 : 0],
             'navigations' => [count(self::NAVIGATIONS), Nav::all()->filter(fn ($nav) => array_key_exists($nav->handle(), self::NAVIGATIONS))->count()],
             'redirects' => [count($redirectSources), Redirect::query()->whereIn('source', $redirectSources)->count()],
         ];

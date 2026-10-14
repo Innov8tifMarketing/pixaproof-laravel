@@ -15,18 +15,19 @@ Statamic's Eloquent driver; blueprints stay flat-file. Conversion history:
 ```
 app/
 ├── Console/Commands/
-│   └── ImportStatamicContent.php       # pixaproof:import-content (pages, navs, assets, Brand + Marketing settings, redirects)
+│   └── ImportStatamicContent.php       # pixaproof:import-content (pages + sections, navs, media, Site/Brand/Marketing settings, redirects)
 ├── Http/
 │   ├── Controllers/CspReportController.php   # POST /csp-report → csp log channel
 │   └── Middleware/SecurityHeaders.php        # Enforced + report-only CSP (nonce), skipped report-only on /cp
 ├── Models/User.php                     # Statamic database users
-└── Providers/AppServiceProvider.php
+└── Providers/AppServiceProvider.php   # Registers the `heroicons` icon set; shares the Site global with navbar/footer/404
 
 config/
 ├── marketing-toolkit.php               # Marketing Toolkit (description length 160; share cards on when imagick is loaded)
 └── statamic/                           # Statamic config; eloquent-driver.php lists which repositories use the DB
 
 database/
+├── content/                            # Shipped copy: home.php, contact.php, privacy.php (page sections), site.php (Site global)
 ├── seeders/DatabaseSeeder.php          # Runs pixaproof:import-content
 └── seo/
     ├── redirects.csv                   # The 22 legacy redirects (toolkit CSV format)
@@ -34,19 +35,26 @@ database/
 
 resources/
 ├── blueprints/
-│   ├── collections/pages/page.yaml     # title, markdown content, slug, template, SEO tab (marketing-toolkit::seo)
+│   ├── collections/pages/page.yaml     # title, the page builder (import: page_builder), slug, SEO tab
+│   ├── globals/site_content.yaml       # "Site": navbar button, footer copy and links, 404 copy
 │   └── globals/seo.yaml, marketing.yaml # Brand and Marketing settings (created by mt:install)
+├── fieldsets/
+│   ├── page_builder.yaml               # The `blocks` Replicator: one set per section type
+│   └── section_options.yaml            # `anchor`, imported at the end of every set
+├── icons/heroicons/                    # Heroicons outline SVGs (no `o-` prefix) for the CP icon picker
 ├── css/app.css                         # Tailwind v4 + brand colors (primary/neutral/accent)
 ├── js/app.js                           # Alpine.js (+collapse, +intersect) and Motion helpers
 └── views/
     ├── layout.blade.php                # <s:mt:head /> / <s:mt:body />, navbar, footer
-    ├── home.blade.php                  # Mega landing (data-driven sections)
-    ├── contact.blade.php               # Contact page (mailto)
-    ├── default.blade.php               # An entry's title + markdown content (privacy)
-    ├── errors/404.blade.php            # 404 with <s:mt:head status="404" />
+    ├── page.blade.php                  # Every page: <x-blocks :blocks="$page->blocks" />
+    ├── errors/404.blade.php            # 404 with <s:mt:head status="404" />, copy from the Site global
     └── components/
-        ├── navbar.blade.php            # Links from <s:nav:main>
-        ├── footer.blade.php            # Links from <s:nav:footer>
+        ├── blocks.blade.php            # The page builder loop: each enabled set → components/blocks/{set}
+        ├── blocks/                     # One view per set: hero, trust-strip, challenge, difference, layers,
+        │                               #   how-it-works, demos, industries, stats, comparison, about, faq, cta,
+        │                               #   contact-hero, offices, legal-text
+        ├── navbar.blade.php            # Links from <s:nav:main>; button from the Site global
+        ├── footer.blade.php            # Links from <s:nav:footer>; copy from the Site global
         ├── button.blade.php            # Button with variants/sizes
         ├── rotating-text.blade.php     # Animated text rotation
         ├── section.blade.php           # Reveal-on-scroll section shell + centered header
@@ -61,42 +69,71 @@ resources/
 | Item | Handle | Storage | Notes |
 |------|--------|---------|-------|
 | Collection | `pages` | DB | Structured, root = home, route `{parent_uri}/{slug}` |
-| Entries | `home`, `contact`, `privacy` | DB | Templates `home`, `contact`, `default`; SEO tab per entry |
+| Entries | `home`, `contact`, `privacy` | DB | Collection template `page`; sections in `blocks`; SEO tab per entry |
 | Navigations | `main`, `footer` | DB | URL items (anchors) + the home entry |
+| Global set | `site_content` (Site) | DB | Navbar button, footer, 404 copy. Not `site`: a global set named `site` would replace the cascade's `site` variable |
 | Global set | `seo` (Brand) | DB | Default description and image, favicon, share-card colours |
 | Global set | `marketing` (Marketing settings) | DB | GA4 ID, robots lines, Features switches |
 | Asset container | `assets` | DB meta, files on `media` disk | `public/media` (production: `shared/data/media`) |
 | Redirects | toolkit `mt_redirects` | DB | 22 rows from `database/seo/redirects.csv` |
-| Blueprints | `collections.pages.page`, `globals.seo`, `globals.marketing` | Flat files | Reviewable in git |
+| Blueprints, fieldsets | `collections.pages.page`, `globals.site_content`, `globals.seo`, `globals.marketing`; `page_builder`, `section_options` | Flat files | Reviewable in git |
 
-`php artisan pixaproof:import-content` creates all of it and updates in place; `--once` skips when the
-`pages` collection exists (used by deploys and `composer setup`).
+`php artisan pixaproof:import-content` creates all of it and updates in place. A page's `blocks` and the Site
+global are only filled while empty, and existing assets are left alone, so control panel edits survive either way.
+With `--once` (deploys, `composer setup`) and an existing `pages` collection it only fills in what is missing:
+empty `blocks` (privacy's old markdown `content` goes into its legal text section; the page's last-edited
+date is kept), the Site global, missing media, and the `page` template.
 
 ## Homepage Sections (Mega Landing)
 
-The homepage (`resources/views/home.blade.php`, the `home` entry's template) contains 9 major sections accessed via anchor navigation:
+The homepage is the `home` entry's `blocks`, in this order (admins can reorder, switch off or add sections):
 
-| # | Section | Anchor ID | Description |
-|---|---------|-----------|-------------|
-| 1 | Hero | (top) | Innov8tif co-branding, PIXAPROOF wordmark, CTAs |
-| 2 | Problem Statement | `#challenge` | Verification Gap + Cost of Compensating Controls |
-| 3 | Solution Introduction | `#solution` | PixaProof value prop |
-| 4 | How It Works | `#how-it-works` | 3-step: Capture → Analyze → Deliver |
-| 5 | Use Cases | `#solutions` | Tabbed: Loan Draw, Insurance, Field Operations & Assets (`$industries` array) |
-| 6 | Technology Highlights | `#technology` | Disabled (`@if (false)`) — data accuracy under review; links point to `#how-it-works` |
-| 7 | Company Credibility | `#about` | Innov8tif background, certifications, stats |
-| 8 | FAQ | `#faq` | Accordion with Alpine.js |
-| 9 | Final CTA | (bottom) | "Ready to Eliminate Image Fraud?" + Request Demo |
+| # | Set | Anchor | Notes |
+|---|-----|--------|-------|
+| 1 | `hero` | — | Rotating words, two buttons, three phone panels (exactly 3) |
+| 2 | `trust_strip` | — | Icon + label items, staggered in |
+| 3 | `challenge` | `challenge` | Scroll-scrubbed: title, 3 figures (90 / 67 / 30 %), quote, attack cards. Once per page |
+| 4 | `difference` | — | Before/after phones (`prevention-visual`) |
+| 5 | `layers` | `solution` | Icon cards + summary card (`data-layer-card` stagger) |
+| 6 | `how_it_works` | `how-it-works` | Exactly 3 steps (`solution-flow`) |
+| 7 | `demos` | `demos` | Video cards + lightbox (mp4, webm, poster assets in `videos/`) |
+| 8 | `industries` | `solutions` | Tabs (desktop) / accordion (mobile); `tab_key` drives Alpine |
+| 9 | `stats` | — | Counting figures (`<x-stat>`) |
+| 10 | `comparison` | — | `yes` / `no` cells render a tick / cross; one wording on desktop and mobile |
+| 11 | `about` | `about` | Timeline, certification cards, link |
+| 12 | `faq` | `faq` | Accordion |
+| 13 | `cta` | — | Closing heading and buttons |
+
+Contact is `contact_hero` + `offices`; privacy is one `legal_text` (title, last-updated date, markdown).
+The old Technology bento grid (`#technology`) was dropped; links point to `#how-it-works`.
 
 ## Patterns
+
+### Page builder (after the Penang kit's pattern)
+`resources/fieldsets/page_builder.yaml` holds one `blocks` Replicator (`collapse: accordion`), so each section
+is a collapsible card in the CP that can be dragged, switched off or duplicated. `components/blocks.blade.php`
+loops over the enabled sets and `@include`s `components/blocks/{set}` (underscores → hyphens) with `$block`
+(a `Statamic\Fields\Values`) and `$page`; it adds no wrapper element, so the DOM matches the hand-written pages.
+A second `challenge` is skipped (the scroll-scrub JS binds the first `[data-scrub-section]` only, with three figures).
+Styling is fixed per set; only words, images and icons are editable.
+
+- Reserved handles in sets and grid rows: `id`, `type`, `enabled` (hence `tab_key`).
+- Icon fields (`type: icon, set: heroicons`) augment to SVG markup; views use `$row->raw('icon')` and render
+  `<x-dynamic-component :component="'heroicon-o-'.$name">` so the classes stay as before.
+- Assets (`max_files: 1`) augment to an Asset: `$block->image?->url()` (`/media/...`).
+- Grids that the layout or JS needs a fixed count for have `min_rows`/`max_rows` (hero panels, challenge figures, steps).
+
+**Adding a section:** add a set to `page_builder.yaml` (with `display`, `instructions`, an `icon` from
+`vendor/statamic/cms/resources/svg/icons`, and `- import: section_options` last), then create
+`resources/views/components/blocks/{set-with-hyphens}.blade.php` reading `$block->…`. Render
+`id="{{ $block->anchor }}"` (or `<x-section :id="$block->anchor">`). Add seed copy to `database/content/*.php`
+only if the section should exist on a new install.
 
 ### Homepage Section Components
-Homepage sections 4–13 (except the scroll-scrubbed Challenge and the disabled Technology grid) are wrapped in `<x-section>`, which owns the `x-data="{ visible: false }"` / `x-intersect.once` reveal and the eyebrow / h2 / description header. Children may read the parent `visible` state (`<x-stat>` does). Repeated markup uses `<x-check-list>`, `<x-icon-card>` and `<x-stat>`; repeated copy lives in `@php` arrays (`$industries`, `$milestones`, `$comparisons`, `$faqs`) rendered via `@foreach`, so an industry or FAQ is added or removed in one place. Desktop copy is canonical for industries; the mobile accordion renders the same headline, body and bullets.
-
-## Patterns
+Most sections are wrapped in `<x-section>`, which owns the `x-data="{ visible: false }"` / `x-intersect.once` reveal and the eyebrow / h2 / description header. Children may read the parent `visible` state (`<x-stat>` does). Repeated markup uses `<x-check-list>`, `<x-icon-card>` and `<x-stat>`. The graphics components (`hero-comparison`, `prevention-visual`, `solution-flow`) take their copy and images as props; the phone-screen illustrations inside them stay fixed.
 
 ### Templates and layout
-Blade templates with Statamic's names; each `@extends('layout')` (Statamic only auto-applies layouts to
+Blade templates with Statamic's names (`page` for every entry, `errors/404`); each `@extends('layout')` (Statamic only auto-applies layouts to
 Antlers templates). The layout's `seo` section holds `<s:mt:head />`; the 404 page overrides it.
 
 ### SEO and tracking
@@ -154,3 +191,4 @@ The old `leads` table was dropped (the contact form was removed; the table was e
 *Updated: 2026-02-09 - Rewritten to match current single-page mega landing architecture*
 *Updated: 2026-09-23 - Removed KYC Onboarding industry; added section, check-list, icon-card and stat components; homepage sections data-driven*
 *Updated: 2026-10-06 - Statamic 6 + Marketing Toolkit conversion: entries, templates, navs, toolkit SEO/redirects; Livewire, Actions, Lead and leads removed*
+*Updated: 2026-10-14 - Page builder: `blocks` Replicator, block views, Site global, heroicons icon set, import fills empty sections*

@@ -69,14 +69,25 @@ Conversion plan and per-phase results: `DEV_FILES/statamic-conversion/00-plan.md
   database (`config/statamic/eloquent-driver.php`). Blueprints stay flat-file in `resources/blueprints/`.
 - `pages` collection (structured, `{parent_uri}/{slug}`): `home`, `contact`, `privacy`. Navigations
   `main` and `footer`. Asset container `assets` on the `media` disk (`public/media`).
-- `php artisan pixaproof:import-content` creates all of it, including the Brand and Marketing settings values and the 22
-  legacy redirects (`database/seo/redirects.csv`). It updates in place; `--once` does nothing if the
-  content exists (the deploy uses that, so control panel edits are kept). `DatabaseSeeder` runs it.
+- Global `site_content` (CP title "Site"): the navbar button, footer copy and links, and the 404 copy. Not
+  named `site`, which would replace the cascade's `site` variable. Menus stay in Navigations.
+- `php artisan pixaproof:import-content` creates all of it, including the page sections and Site values
+  (`database/content/*.php`), the media, the Brand and Marketing settings values and the 22 legacy redirects
+  (`database/seo/redirects.csv`). It updates in place but only fills a page's `blocks` and the Site global
+  while they are empty, and leaves existing assets alone. With `--once` (the deploy) and existing content it
+  only fills in what is missing, so control panel edits are kept. `DatabaseSeeder` runs it.
 
-### Templates
-Blade, Statamic's names: `layout`, `home`, `contact`, `default` (renders an entry's markdown `content`),
-`errors/404`. Templates `@extends('layout')` (Statamic applies layouts automatically only to Antlers).
-Navigation renders with `<s:nav:main>` / `<s:nav:footer>`. Homepage copy stays in `home.blade.php`.
+### Page builder and templates
+Every page renders `page.blade.php`: `<x-blocks :blocks="$page->blocks" />`. `blocks` is one Replicator
+(`resources/fieldsets/page_builder.yaml`, after the Penang kit's pattern): admins reorder, switch off and edit
+sections; styling stays fixed per set. `components/blocks.blade.php` includes `components/blocks/{set}` per
+enabled set (a second `challenge` renders nothing: the scroll-scrub JS drives one). Icons: `type: icon,
+set: heroicons` (`resources/icons/heroicons`, registered in `AppServiceProvider`); views read
+`$row->raw('icon')`. Assets: `$block->image?->url()`. **To add a section:** a set in `page_builder.yaml`
+ending in `- import: section_options` (the `anchor`), plus `resources/views/components/blocks/{set}.blade.php`
+(underscores become hyphens). Details: `.claude/docs/architecture.md` → Page builder.
+Other templates: `layout`, `errors/404`; each `@extends('layout')` (Statamic applies layouts automatically
+only to Antlers). Navigation renders with `<s:nav:main>` / `<s:nav:footer>`.
 
 ### SEO, tracking, favicons, redirects
 All from the Marketing Toolkit: `<s:mt:head />` and `<s:mt:body />` in the layout; values in
@@ -110,12 +121,14 @@ answer GET/HEAD requests that would otherwise 404.
 ## Tests
 
 - `php artisan test --compact`. The base `TestCase` migrates and seeds the content once per run; each
-  test runs in a transaction.
+  test runs in a transaction. The `media` disk is faked (with its `/media` URL) and emptied per test, so
+  pages link their assets but the files are gone; assert on URLs, not files, outside the import tests.
 - `tests/Feature/Guard/UrlSnapshotTest.php` records every public URL's status, redirect and head
   metadata in `tests/__snapshots__/urls.json`. Regenerate with `UPDATE_SNAPSHOTS=1` only for intended
   changes.
 - The full suite peaks just over PHP's default 128 MB (in `ImportStatamicContentTest`). The nix devshell
-  sets 512 MB; with the system PHP run `php -d memory_limit=1G artisan test --compact`.
+  sets 512 MB; with the system PHP run `php -d memory_limit=1G vendor/bin/phpunit` (`artisan test` starts
+  PHPUnit in a child process that doesn't inherit `-d`).
 - PHPStan needs `vendor/bin/phpstan --memory-limit=1G`.
 
 ## Deployment

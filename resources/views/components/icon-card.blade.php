@@ -13,7 +13,7 @@ Usage:
 <x-icon-card variant="inverted" icon="bolt" title="All in Under 500ms">...</x-icon-card>
 
 Props:
-- icon: heroicon outline name without the `heroicon-o-` prefix
+- icon: heroicon outline name without the `heroicon-o-` prefix (empty: an empty tile)
 - title: card heading
 - layout: 'inline' (icon beside title) | 'stacked' (centered icon above title)
 - iconSize: 'md' (h-10 tile / h-5 icon) | 'lg' (h-12 tile / h-6 icon)
@@ -21,7 +21,7 @@ Props:
 --}}
 
 @props([
-    'icon',
+    'icon' => null,
     'title',
     'layout' => 'inline',
     'iconSize' => 'md',
@@ -50,13 +50,17 @@ Props:
 <div {{ $attributes->merge(['class' => $cardClasses]) }}>
     @if ($stacked)
         <div class="{{ $tileClasses }} {{ $tileSize }} mx-auto mb-4 flex items-center justify-center rounded-lg">
-            <x-dynamic-component :component="'heroicon-o-'.$icon" class="{{ $iconClasses }}" />
+            @if (filled($icon))
+                <x-dynamic-component :component="'heroicon-o-'.$icon" class="{{ $iconClasses }}" />
+            @endif
         </div>
         <h3 class="font-heading mb-1 font-semibold{{ $titleClasses }}">{{ $title }}</h3>
     @else
         <div class="mb-4 flex items-center gap-3">
             <div class="{{ $tileClasses }} {{ $tileSize }} flex shrink-0 items-center justify-center rounded-lg">
-                <x-dynamic-component :component="'heroicon-o-'.$icon" class="{{ $iconClasses }}" />
+                @if (filled($icon))
+                    <x-dynamic-component :component="'heroicon-o-'.$icon" class="{{ $iconClasses }}" />
+                @endif
             </div>
             <h3 class="font-heading font-semibold{{ $titleClasses }}">{{ $title }}</h3>
         </div>

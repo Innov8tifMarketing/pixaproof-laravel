@@ -1,0 +1,10 @@
+title: 'Section options'
+fields:
+  -
+    handle: anchor
+    field:
+      type: slug
+      display: Anchor
+      instructions: 'Lets a link jump to this section: `/#anchor`. The menus link to `challenge`, `solution`, `how-it-works`, `demos`, `solutions`, `about` and `faq`, so keep those.'
+      generate: false
+      width: 50

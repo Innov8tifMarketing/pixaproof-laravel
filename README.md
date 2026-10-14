@@ -41,10 +41,10 @@ php please make:user   # Create a control panel login for /cp
 
 Pages, navigation, SEO settings and redirects are edited in the control panel (`/cp`):
 
-- **Collections → Pages:** Home, Contact and Privacy Policy. The homepage and contact copy live in their
-  Blade templates (`resources/views/home.blade.php`, `contact.blade.php`); the privacy policy is the
-  entry's markdown. Each page has an SEO tab.
+- **Collections → Pages:** Home, Contact and Privacy Policy. Each page is a list of sections (the page
+  builder): reorder, switch off or edit their text, pictures and icons. Each page has an SEO tab.
 - **Navigation:** `Main` (header) and `Footer`.
+- **Globals → Site:** the navbar button, the footer copy and links, and the "page not found" copy.
 - **Globals → SEO & brand:** default description and share image, icon, GA4 ID, robots.txt lines.
 - **Tools → SEO:** redirects, the 404 log and site reports.
 

@@ -208,10 +208,6 @@ window.Motion = {
             el.style.transform = 'translateY(20px)';
         });
 
-        // Stat data
-        const statTargets = [90, 67, 30];
-        const statSuffixes = ['%', '%', '%'];
-
         // Track last-written bg/text colors and counter values to skip redundant DOM writes
         let lastBgColor = '';
         let lastTextColor = '';
@@ -258,8 +254,8 @@ window.Motion = {
                     if (counter) {
                         const countEnd = range.start + (range.end - range.start) * 0.4;
                         const countProgress = remap(progress, range.start, countEnd);
-                        const value = Math.round(statTargets[i] * countProgress);
-                        const newText = value + statSuffixes[i];
+                        const value = Math.round(parseInt(counter.dataset.target, 10) * countProgress);
+                        const newText = value + (counter.dataset.suffix || '');
                         if (counter._lastText !== newText) {
                             counter.textContent = newText;
                             counter._lastText = newText;

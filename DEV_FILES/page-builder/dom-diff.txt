@@ -1,0 +1,140 @@
+=== page_
+28,31c28,31
+---
+133c133
+<                                 <img alt="Live camera capture of vehicle damage" class="absolute inset-0 size-full object-cover object-bottom" src="http://127.0.0.1:8017/images/mockups/hero-live-capture.webp">
+---
+>                                 <img alt="Live camera capture of vehicle damage" class="absolute inset-0 size-full object-cover object-bottom" src="http://127.0.0.1:8017/media/mockups/hero-live-capture.webp">
+174c174
+<                                 <img alt="Tampered gallery photo" class="absolute inset-0 h-full w-full object-cover" src="http://127.0.0.1:8017/images/mockups/hero-tampered-gallery.webp">
+---
+>                                 <img alt="Tampered gallery photo" class="absolute inset-0 h-full w-full object-cover" src="http://127.0.0.1:8017/media/mockups/hero-tampered-gallery.webp">
+204c204
+<                                 <img alt="AI generated document" class="absolute inset-0 h-full w-full object-cover" src="http://127.0.0.1:8017/images/mockups/hero-ai-generated-id.webp">
+---
+>                                 <img alt="AI generated document" class="absolute inset-0 h-full w-full object-cover" src="http://127.0.0.1:8017/media/mockups/hero-ai-generated-id.webp">
+271c271
+<                     <span data-scrub-counter="" data-suffix="%" data-target="64">
+---
+>                     <span data-scrub-counter="" data-suffix="%" data-target="67">
+444c444
+<                               <img alt="PixaProof live camera capture" class="absolute inset-0 size-full object-cover object-bottom" src="http://127.0.0.1:8017/images/mockups/prevention-camera-live.webp">
+---
+>                               <img alt="PixaProof live camera capture" class="absolute inset-0 size-full object-cover object-bottom" src="http://127.0.0.1:8017/media/mockups/prevention-camera-live.webp">
+599c599
+<             <div @keydown.escape.window="close()" x-data="{ open: false, activeVideo: null, activeLabel: '', activeResult: '', activeGenuine: false, play(video) { this.activeVideo = video.file; this.activeLabel = video.label; this.activeResult = video.result; this.activeGenuine = video.genuine; this.open = true; this.$nextTick(() => { this.$refs.lightboxVideo && this.$refs.lightboxVideo.play(); }); }, close() { this.open = false; this.$refs.lightboxVideo && this.$refs.lightboxVideo.pause(); this.activeVideo = null; }, }">
+---
+>             <div @keydown.escape.window="close()" x-data="{ open: false, activeVideo: null, activeLabel: '', activeResult: '', activeGenuine: false, play(video) { this.activeVideo = video; this.activeLabel = video.label; this.activeResult = video.result; this.activeGenuine = video.genuine; this.open = true; this.$nextTick(() => { this.$refs.lightboxVideo && this.$refs.lightboxVideo.play(); }); }, close() { this.open = false; this.$refs.lightboxVideo && this.$refs.lightboxVideo.pause(); this.activeVideo = null; }, }">
+601c601
+<                 <div @click="play(JSON.parse('{\u0022file\u0022:\u0022genuine-device\u0022,\u0022label\u0022:\u0022Phone Capture\u0022,\u0022result\u0022:\u0022Detected as genuine capture\u0022,\u0022genuine\u0022:true}'))" class="group cursor-pointer overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
+---
+>                 <div @click="play(JSON.parse('{\u0022label\u0022:\u0022Phone Capture\u0022,\u0022result\u0022:\u0022Detected as genuine capture\u0022,\u0022genuine\u0022:true,\u0022poster\u0022:\u0022\\\/media\\\/videos\\\/genuine-device-poster.webp\u0022,\u0022webm\u0022:\u0022\\\/media\\\/videos\\\/genuine-device.webm\u0022,\u0022mp4\u0022:\u0022\\\/media\\\/videos\\\/genuine-device.mp4\u0022}'))" class="group cursor-pointer overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
+603c603
+<                     <img alt="Phone Capture demo" class="h-full w-full object-contain" loading="lazy" src="/videos/genuine-device-poster.webp">
+---
+>                     <img alt="Phone Capture demo" class="h-full w-full object-contain" loading="lazy" src="/media/videos/genuine-device-poster.webp">
+614c614
+<                 <div @click="play(JSON.parse('{\u0022file\u0022:\u0022virtual-camera\u0022,\u0022label\u0022:\u0022Virtual Camera\u0022,\u0022result\u0022:\u0022Detected as simulated source\u0022,\u0022genuine\u0022:false}'))" class="group cursor-pointer overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
+---
+>                 <div @click="play(JSON.parse('{\u0022label\u0022:\u0022Virtual Camera\u0022,\u0022result\u0022:\u0022Detected as simulated source\u0022,\u0022genuine\u0022:false,\u0022poster\u0022:\u0022\\\/media\\\/videos\\\/virtual-camera-poster.webp\u0022,\u0022webm\u0022:\u0022\\\/media\\\/videos\\\/virtual-camera.webm\u0022,\u0022mp4\u0022:\u0022\\\/media\\\/videos\\\/virtual-camera.mp4\u0022}'))" class="group cursor-pointer overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
+616c616
+<                     <img alt="Virtual Camera demo" class="h-full w-full object-contain" loading="lazy" src="/videos/virtual-camera-poster.webp">
+---
+>                     <img alt="Virtual Camera demo" class="h-full w-full object-contain" loading="lazy" src="/media/videos/virtual-camera-poster.webp">
+627c627
+<                 <div @click="play(JSON.parse('{\u0022file\u0022:\u0022emulator\u0022,\u0022label\u0022:\u0022Emulator\u0022,\u0022result\u0022:\u0022Detected as simulated source\u0022,\u0022genuine\u0022:false}'))" class="group cursor-pointer overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
+---
+>                 <div @click="play(JSON.parse('{\u0022label\u0022:\u0022Emulator\u0022,\u0022result\u0022:\u0022Detected as simulated source\u0022,\u0022genuine\u0022:false,\u0022poster\u0022:\u0022\\\/media\\\/videos\\\/emulator-poster.webp\u0022,\u0022webm\u0022:\u0022\\\/media\\\/videos\\\/emulator.webm\u0022,\u0022mp4\u0022:\u0022\\\/media\\\/videos\\\/emulator.mp4\u0022}'))" class="group cursor-pointer overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
+629c629
+<                     <img alt="Emulator demo" class="h-full w-full object-contain" loading="lazy" src="/videos/emulator-poster.webp">
+---
+>                     <img alt="Emulator demo" class="h-full w-full object-contain" loading="lazy" src="/media/videos/emulator-poster.webp">
+640c640
+<                 <div @click="play(JSON.parse('{\u0022file\u0022:\u0022device-farm\u0022,\u0022label\u0022:\u0022Device Farm\u0022,\u0022result\u0022:\u0022Detected as simulated source\u0022,\u0022genuine\u0022:false}'))" class="group cursor-pointer overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
+---
+>                 <div @click="play(JSON.parse('{\u0022label\u0022:\u0022Device Farm\u0022,\u0022result\u0022:\u0022Detected as simulated source\u0022,\u0022genuine\u0022:false,\u0022poster\u0022:\u0022\\\/media\\\/videos\\\/device-farm-poster.webp\u0022,\u0022webm\u0022:\u0022\\\/media\\\/videos\\\/device-farm.webm\u0022,\u0022mp4\u0022:\u0022\\\/media\\\/videos\\\/device-farm.mp4\u0022}'))" class="group cursor-pointer overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
+642c642
+<                     <img alt="Device Farm demo" class="h-full w-full object-contain" loading="lazy" src="/videos/device-farm-poster.webp">
+---
+>                     <img alt="Device Farm demo" class="h-full w-full object-contain" loading="lazy" src="/media/videos/device-farm-poster.webp">
+662,664c662,664
+<                         <video :poster="'/videos/' + activeVideo + '-poster.webp'" class="h-auto max-h-[80vh] w-full" controls="" muted="" playsinline="" preload="none" x-ref="lightboxVideo">
+<                           <source :src="'/videos/' + activeVideo + '.webm'" type="video/webm">
+<                           <source :src="'/videos/' + activeVideo + '.mp4'" type="video/mp4">
+---
+>                         <video :poster="activeVideo.poster" class="h-auto max-h-[80vh] w-full" controls="" muted="" playsinline="" preload="none" x-ref="lightboxVideo">
+>                           <source :src="activeVideo.webm" type="video/webm">
+>                           <source :src="activeVideo.mp4" type="video/mp4">
+836c836
+<                             <img alt="Construction site progress photo" class="absolute inset-0 h-full w-full object-cover" src="http://127.0.0.1:8017/images/mockups/loan-draw-construction.webp?v=2">
+---
+>                             <img alt="Construction site progress photo" class="absolute inset-0 h-full w-full object-cover" src="http://127.0.0.1:8017/media/mockups/loan-draw-construction.webp">
+876c876
+<                             <img alt="Insurance claim damage photo" class="absolute inset-0 h-full w-full object-cover" src="http://127.0.0.1:8017/images/mockups/insurance-car-damage.webp?v=2">
+---
+>                             <img alt="Insurance claim damage photo" class="absolute inset-0 h-full w-full object-cover" src="http://127.0.0.1:8017/media/mockups/insurance-car-damage.webp">
+903c903
+<                             <img alt="Asset warehouse inventory verification" class="absolute inset-0 h-full w-full object-cover" src="http://127.0.0.1:8017/images/mockups/asset-warehouse.webp?v=2">
+---
+>                             <img alt="Asset warehouse inventory verification" class="absolute inset-0 h-full w-full object-cover" src="http://127.0.0.1:8017/media/mockups/asset-warehouse.webp">
+934c934
+<                             <img alt="Remote rental property inspection with authenticated live capture" class="absolute inset-0 h-full w-full object-cover" src="http://127.0.0.1:8017/images/mockups/property-inspection.webp">
+---
+>                             <img alt="Remote rental property inspection with authenticated live capture" class="absolute inset-0 h-full w-full object-cover" src="http://127.0.0.1:8017/media/mockups/property-inspection.webp">
+1054c1054
+<                       "Manual"
+---
+>                       "Manual Review"
+1068c1068
+<                       "Manual"
+---
+>                       "Manual Review"
+1082c1082
+<                       "Manual"
+---
+>                       "Manual Review"
+1096c1096
+<                       "Manual"
+---
+>                       "Manual Review"
+1106c1106
+<                   "Detect AI content"
+---
+>                   "Detect AI-generated content"
+1110c1110
+<                       "Manual"
+---
+>                       "Manual Review"
+1120c1120
+<                   "Detect pixel edits"
+---
+>                   "Detect pixel-level edits"
+1124c1124
+<                       "Manual"
+---
+>                       "Manual Review"
+1134c1134
+<                   "End-to-end integrity"
+---
+>                   "End-to-end integrity (MITM)"
+1138c1138
+<                       "Manual"
+---
+>                       "Manual Review"
+1152c1152
+<                       "Manual"
+---
+>                       "Manual Review"
+1154c1154
+<                       "Hours"
+---
+>                       "Hours–Days"
+=== page_contact
+30,33c30,33
+---
+=== page_privacy
+30,33c30,33
+---
+=== page_this-does-not-exist
+25,28c25,28
+---

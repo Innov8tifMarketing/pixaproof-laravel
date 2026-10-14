@@ -16,7 +16,7 @@
 ## Current Architecture
 
 The site runs on **Statamic 6** (Eloquent driver, SQLite) with the **Marketing Toolkit** for SEO, tracking
-and redirects. It is a **single-page mega landing** (the `home` entry, template `home.blade.php`) with
+and redirects. It is a **single-page mega landing** (the `home` entry, built from page-builder sections) with
 anchor navigation; Contact and Privacy are the other two entries. All former multi-page URLs are 301
 redirects managed by the toolkit.
 
@@ -53,6 +53,7 @@ These docs describe content that was planned as separate pages but has been cons
 
 ### Backend Development
 - **Content model**: `architecture.md` → Content Model (Statamic), `pixaproof:import-content`
+- **Page builder**: `architecture.md` → Patterns → Page builder (sets, block views, adding a section)
 - **SEO & tracking**: `architecture.md` → Patterns (Marketing Toolkit; never hand-written)
 - **Database**: `architecture.md` → Database
 - **Routes**: `architecture.md` → Routes, 301 redirects
@@ -75,6 +76,7 @@ These docs describe content that was planned as separate pages but has been cons
 | Accent Colors | stylesheet-guidelines.md | Color Palette |
 | Alpine.js | tech-stack.md | Frontend |
 | Anchor Navigation | architecture.md | Anchor Navigation |
+| Blocks | architecture.md | Page builder |
 | Badge | stylesheet-guidelines.md | Components |
 | Bento Grid | stylesheet-guidelines.md | Components |
 | Brand | pixaproof-company.md | Brand Identity |
@@ -94,6 +96,7 @@ These docs describe content that was planned as separate pages but has been cons
 | Homepage | pages/homepage.md | Full page |
 | How It Works | pages/homepage.md | Section 4 |
 | Icon Card | architecture.md | Homepage Section Components |
+| Icon Picker | architecture.md | Page builder |
 | Industry Use Cases | pages/homepage.md | Section 5 |
 | Innov8tif | pixaproof-company.md | Parent Organization |
 | Import Command | architecture.md | Content Model (Statamic) |
@@ -103,6 +106,7 @@ These docs describe content that was planned as separate pages but has been cons
 | Navbar | stylesheet-guidelines.md | Navbar |
 | Navigation | site-structure.md | Primary Navigation |
 | Neutral Colors | stylesheet-guidelines.md | Color Palette |
+| Page Builder | architecture.md | Page builder |
 | PIEA | pixaproof-product.md | Core Technology |
 | Primary Colors | stylesheet-guidelines.md | Color Palette |
 | Redirects | architecture.md | 301 Redirects |
@@ -111,6 +115,7 @@ These docs describe content that was planned as separate pages but has been cons
 | SEO | architecture.md | SEO and tracking |
 | Section Component | architecture.md | Homepage Section Components |
 | Section Pattern | stylesheet-guidelines.md | Structural Conventions |
+| Site Global | architecture.md | Content Model (Statamic) |
 | Spacing | stylesheet-guidelines.md | Spacing |
 | Statamic | tech-stack.md | Core Framework |
 | Tailwind | tech-stack.md | Frontend |
@@ -124,3 +129,4 @@ These docs describe content that was planned as separate pages but has been cons
 ---
 *Updated: 2026-02-09 - Rewritten for single-page mega landing architecture*
 *Updated: 2026-10-06 - Statamic + Marketing Toolkit conversion; removed Livewire, Leads, forms and Coolify entries*
+*Updated: 2026-10-14 - Page builder, Site global and icon picker keywords*

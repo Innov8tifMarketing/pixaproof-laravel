@@ -2,7 +2,16 @@
     Solution Flow Graphic
     Shows the three-pillar flow: Secure Capture → Reliable Transmission → Instant Verification
     Horizontal timeline cards with arrow connectors (desktop) / stacked cards (mobile)
+
+    Props:
+    - steps: three rows (page builder grid) with title and text; the icons and colours stay fixed per step
 --}}
+
+@props(['steps' => []])
+
+@php
+    [$capture, $transmission, $verification] = array_pad(array_values(is_array($steps) ? $steps : iterator_to_array($steps)), 3, null);
+@endphp
 
 <div class="grid items-stretch gap-4 md:grid-cols-[1fr_auto_1fr_auto_1fr]">
     {{-- Step 1: Secure Capture --}}
@@ -17,12 +26,10 @@
         {{-- Badge --}}
         <div class="bg-primary-500/10 text-primary-600 mt-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium">
             <span class="bg-primary-500 flex h-5 w-5 items-center justify-center rounded-full text-xs text-white">1</span>
-            Secure Capture
+            {{ $capture?->title }}
         </div>
         {{-- Description --}}
-        <p class="mt-3 text-sm text-neutral-700">
-            The Web SDK captures device metadata to verify live photos and flag gallery uploads or emulators.
-        </p>
+        <p class="mt-3 text-sm text-neutral-700">{{ $capture?->text }}</p>
     </div>
 
     {{-- Arrow 1→2 --}}
@@ -43,12 +50,10 @@
         {{-- Badge --}}
         <div class="bg-primary-500/10 text-primary-600 mt-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium">
             <span class="bg-primary-500 flex h-5 w-5 items-center justify-center rounded-full text-xs text-white">2</span>
-            Reliable Transmission
+            {{ $transmission?->title }}
         </div>
         {{-- Description --}}
-        <p class="mt-3 text-sm text-neutral-700">
-            End-to-end encrypted with PIEA signature. Every image is sealed and tamper-evident from device to cloud.
-        </p>
+        <p class="mt-3 text-sm text-neutral-700">{{ $transmission?->text }}</p>
     </div>
 
     {{-- Arrow 2→3 --}}
@@ -69,11 +74,9 @@
         {{-- Badge --}}
         <div class="mt-4 inline-flex items-center gap-2 rounded-full bg-green-500/10 px-3 py-1 text-sm font-medium text-green-600">
             <span class="flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-xs text-white">3</span>
-            Instant Verification
+            {{ $verification?->title }}
         </div>
         {{-- Description --}}
-        <p class="mt-3 text-sm text-neutral-700">
-            35+ tamper tests run in under 500ms. AI-powered scanning delivers a clear pass or fail verdict in real time.
-        </p>
+        <p class="mt-3 text-sm text-neutral-700">{{ $verification?->text }}</p>
     </div>
 </div>

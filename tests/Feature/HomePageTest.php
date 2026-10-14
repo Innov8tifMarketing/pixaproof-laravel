@@ -16,7 +16,7 @@ class HomePageTest extends TestCase
             ->assertSee('Field Operations &amp; Assets', false)
             ->assertSee('Property Inspections')
             ->assertSee('Protect Your Rental Investment and Prevent Deposit Fraud')
-            ->assertSee('images/mockups/property-inspection.webp', false)
+            ->assertSee('/media/mockups/property-inspection.webp', false)
             ->assertSee('warehouse inventory checks')
             ->assertDontSee('property listings')
             ->assertSee("activeTab: 'loan-draw'", false)
@@ -94,6 +94,18 @@ class HomePageTest extends TestCase
             ->getContent();
 
         $this->assertSame(3, substr_count($html, 'Motion.animateCounter('));
+    }
+
+    /**
+     * The phone cards repeat the table's rows, in the table's wording.
+     */
+    public function test_comparison_cards_use_the_table_wording(): void
+    {
+        $html = $this->get('/')->assertOk()->getContent();
+
+        $this->assertSame(2, substr_count($html, 'Detect AI-generated content'));
+        $this->assertSame(2, substr_count($html, 'Hours–Days'));
+        $this->assertStringNotContainsString('Detect AI content', $html);
     }
 
     public function test_video_lightbox_is_teleported_once(): void

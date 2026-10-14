@@ -14,10 +14,7 @@ tabs:
               validate:
                 - required
           -
-            handle: content
-            field:
-              type: markdown
-              localizable: true
+            import: page_builder
   sidebar:
     display: Sidebar
     sections:
@@ -29,11 +26,6 @@ tabs:
               type: slug
               localizable: true
               validate: 'max:200'
-          -
-            handle: template
-            field:
-              type: template
-              display: Template
   seo:
     display: SEO
     sections:

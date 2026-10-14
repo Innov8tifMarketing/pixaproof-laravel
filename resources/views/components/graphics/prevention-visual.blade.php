@@ -1,7 +1,25 @@
 {{--
 Prevention Visual Component
-Shows side-by-side comparison of Traditional vs PixaProof approach with phone mockups
+Shows side-by-side comparison of Traditional vs PixaProof approach with phone mockups.
+The phone screens are fixed illustrations; the copy around them comes from the props.
+
+Props:
+- beforeHeading / afterHeading: the label over each phone
+- beforeResult / afterResult: the pill under each phone
+- beforePoints / afterPoints: list<string> for the boxes underneath
+- afterImage / afterImageAlt: the photo behind the PixaProof phone's screen
 --}}
+
+@props([
+    'beforeHeading' => null,
+    'beforeResult' => null,
+    'beforePoints' => [],
+    'afterHeading' => null,
+    'afterResult' => null,
+    'afterPoints' => [],
+    'afterImage' => null,
+    'afterImageAlt' => '',
+])
 
 <div class="relative">
     {{-- Background glow effects --}}
@@ -13,7 +31,7 @@ Shows side-by-side comparison of Traditional vs PixaProof approach with phone mo
         <div class="relative">
             <div class="mb-4 flex items-center justify-center gap-2">
                 <div class="h-3 w-3 rounded-full bg-red-500"></div>
-                <span class="text-sm font-medium text-red-600">Traditional Verification</span>
+                <span class="text-sm font-medium text-red-600">{{ $beforeHeading }}</span>
             </div>
 
             {{-- Phone mockup with gallery upload flow --}}
@@ -106,7 +124,7 @@ Shows side-by-side comparison of Traditional vs PixaProof approach with phone mo
                             <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                             </svg>
-                            <span>Fraud succeeds</span>
+                            <span>{{ $beforeResult }}</span>
                         </div>
                     </div>
                 </div>
@@ -114,24 +132,14 @@ Shows side-by-side comparison of Traditional vs PixaProof approach with phone mo
 
             {{-- Issues list --}}
             <div class="mt-6 space-y-2 rounded-xl border border-red-500/20 bg-red-500/5 p-4">
-                <div class="flex items-center gap-2 text-sm text-neutral-700">
-                    <svg class="h-4 w-4 shrink-0 text-red-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                    <span>Gallery uploads easily bypass security</span>
-                </div>
-                <div class="flex items-center gap-2 text-sm text-neutral-700">
-                    <svg class="h-4 w-4 shrink-0 text-red-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                    <span>No origin authenticity check</span>
-                </div>
-                <div class="flex items-center gap-2 text-sm text-neutral-700">
-                    <svg class="h-4 w-4 shrink-0 text-red-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                    <span>Basic analysis of image content only</span>
-                </div>
+                @foreach ($beforePoints as $point)
+                    <div class="flex items-center gap-2 text-sm text-neutral-700">
+                        <svg class="h-4 w-4 shrink-0 text-red-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        <span>{{ $point }}</span>
+                    </div>
+                @endforeach
             </div>
         </div>
 
@@ -139,17 +147,13 @@ Shows side-by-side comparison of Traditional vs PixaProof approach with phone mo
         <div class="relative">
             <div class="mb-4 flex items-center justify-center gap-2">
                 <div class="h-3 w-3 rounded-full bg-green-500"></div>
-                <span class="text-sm font-medium text-green-600">PixaProof Protection</span>
+                <span class="text-sm font-medium text-green-600">{{ $afterHeading }}</span>
             </div>
 
             {{-- Phone showing fraud blocked --}}
             <div class="flex justify-center">
                 <div class="relative">
-                    <x-graphics.phone-mockup
-                        size="xl"
-                        image="images/mockups/prevention-camera-live.webp"
-                        imageAlt="PixaProof live camera capture"
-                    >
+                    <x-graphics.phone-mockup size="xl" :image="$afterImage" :imageAlt="(string) $afterImageAlt">
                         <div class="flex h-full flex-col">
                             {{-- Status bar --}}
                             <div class="flex items-center justify-between px-4 pt-6 pb-2 text-xs text-neutral-400">
@@ -200,7 +204,7 @@ Shows side-by-side comparison of Traditional vs PixaProof approach with phone mo
                             <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span>Fraud flagged</span>
+                            <span>{{ $afterResult }}</span>
                         </div>
                     </div>
                 </div>
@@ -208,24 +212,14 @@ Shows side-by-side comparison of Traditional vs PixaProof approach with phone mo
 
             {{-- Benefits list --}}
             <div class="mt-6 space-y-2 rounded-xl border border-green-500/20 bg-green-500/5 p-4">
-                <div class="flex items-center gap-2 text-sm text-neutral-700">
-                    <svg class="h-4 w-4 shrink-0 text-green-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                    </svg>
-                    <span>Flags injected gallery uploads</span>
-                </div>
-                <div class="flex items-center gap-2 text-sm text-neutral-700">
-                    <svg class="h-4 w-4 shrink-0 text-green-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                    </svg>
-                    <span>Cryptographic PIEA signature embedded</span>
-                </div>
-                <div class="flex items-center gap-2 text-sm text-neutral-700">
-                    <svg class="h-4 w-4 shrink-0 text-green-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                    </svg>
-                    <span>Capture environment forensics</span>
-                </div>
+                @foreach ($afterPoints as $point)
+                    <div class="flex items-center gap-2 text-sm text-neutral-700">
+                        <svg class="h-4 w-4 shrink-0 text-green-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                        </svg>
+                        <span>{{ $point }}</span>
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>

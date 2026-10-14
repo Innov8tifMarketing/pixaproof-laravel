@@ -7,12 +7,16 @@
 @section('content')
     <section class="py-32">
         <div class="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-            <p class="text-primary-600 text-sm font-semibold tracking-wider uppercase">404</p>
-            <h1 class="mt-4 text-4xl font-bold text-neutral-900">Page not found</h1>
-            <p class="mt-4 text-lg text-neutral-600">The page you're looking for doesn't exist or has moved.</p>
-            <div class="mt-8">
-                <x-button href="/">Back to home</x-button>
-            </div>
+            <p class="text-primary-600 text-sm font-semibold tracking-wider uppercase">
+                {{ $siteContent?->get('not_found_eyebrow') }}
+            </p>
+            <h1 class="mt-4 text-4xl font-bold text-neutral-900">{{ $siteContent?->get('not_found_heading') }}</h1>
+            <p class="mt-4 text-lg text-neutral-600">{{ $siteContent?->get('not_found_text') }}</p>
+            @if (filled($siteContent?->get('not_found_button_label')))
+                <div class="mt-8">
+                    <x-button :href="$siteContent->get('not_found_button_url')">{{ $siteContent->get('not_found_button_label') }}</x-button>
+                </div>
+            @endif
         </div>
     </section>
 @endsection

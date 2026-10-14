@@ -1,7 +1,17 @@
 {{--
 Hero Comparison Graphic
 Shows three-panel comparison: Live Capture (Protected) vs Tampered Photos (Blocked) vs AI Generated (Detected)
+
+Props:
+- panels: three rows (page builder grid) with image (asset), image_alt, status, title, caption;
+  styled in that order: green / red / amber
 --}}
+
+@props(['panels' => []])
+
+@php
+    [$live, $tampered, $generated] = array_pad(array_values(is_array($panels) ? $panels : iterator_to_array($panels)), 3, null);
+@endphp
 
 <div class="relative">
     {{-- Background glow --}}
@@ -21,15 +31,14 @@ Shows three-panel comparison: Live Capture (Protected) vs Tampered Photos (Block
                     <svg class="h-3 w-3 text-green-700" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span class="text-xs font-medium text-green-700">Protected</span>
+                    <span class="text-xs font-medium text-green-700">{{ $live?->status }}</span>
                 </div>
 
                 {{-- Phone mockup with camera overlay --}}
-                {{-- Phone mockup with camera overlay --}}
                 <x-graphics.phone-mockup
                     size="md"
-                    image="images/mockups/hero-live-capture.webp"
-                    imageAlt="Live camera capture of vehicle damage"
+                    :image="$live?->image?->url()"
+                    :imageAlt="(string) $live?->image_alt"
                 >
                     <div class="flex h-full w-full flex-col">
                         {{-- Top bar with dark overlay --}}
@@ -65,8 +74,8 @@ Shows three-panel comparison: Live Capture (Protected) vs Tampered Photos (Block
                 </x-graphics.phone-mockup>
 
                 <div class="mt-4 text-center">
-                    <h4 class="font-semibold text-neutral-900">Accept Only Live Capture</h4>
-                    <p class="mt-1 text-xs text-neutral-500">Prevents spoofing and injecting attacks</p>
+                    <h4 class="font-semibold text-neutral-900">{{ $live?->title }}</h4>
+                    <p class="mt-1 text-xs text-neutral-500">{{ $live?->caption }}</p>
                 </div>
             </div>
         </div>
@@ -80,20 +89,20 @@ Shows three-panel comparison: Live Capture (Protected) vs Tampered Photos (Block
                     <svg class="h-3 w-3 text-red-700" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                     </svg>
-                    <span class="text-xs font-medium text-red-700">Flagged</span>
+                    <span class="text-xs font-medium text-red-700">{{ $tampered?->status }}</span>
                 </div>
 
                 {{-- Phone mockup with gallery image + error overlay --}}
                 <x-graphics.phone-mockup
                     size="md"
-                    image="images/mockups/hero-tampered-gallery.webp"
-                    imageAlt="Tampered gallery photo"
+                    :image="$tampered?->image?->url()"
+                    :imageAlt="(string) $tampered?->image_alt"
                     variant="error"
                 />
 
                 <div class="mt-4 text-center">
-                    <h4 class="font-semibold text-neutral-900">Detect Edited Photos</h4>
-                    <p class="mt-1 text-xs text-neutral-500">Tampered or manipulated images</p>
+                    <h4 class="font-semibold text-neutral-900">{{ $tampered?->title }}</h4>
+                    <p class="mt-1 text-xs text-neutral-500">{{ $tampered?->caption }}</p>
                 </div>
             </div>
         </div>
@@ -107,20 +116,20 @@ Shows three-panel comparison: Live Capture (Protected) vs Tampered Photos (Block
                     <svg class="h-3 w-3 text-amber-700" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                     </svg>
-                    <span class="text-xs font-medium text-amber-700">Detected</span>
+                    <span class="text-xs font-medium text-amber-700">{{ $generated?->status }}</span>
                 </div>
 
                 {{-- Phone mockup with AI image + scanning overlay --}}
                 <x-graphics.phone-mockup
                     size="md"
-                    image="images/mockups/hero-ai-generated-id.webp"
-                    imageAlt="AI generated document"
+                    :image="$generated?->image?->url()"
+                    :imageAlt="(string) $generated?->image_alt"
                     variant="scanning"
                 />
 
                 <div class="mt-4 text-center">
-                    <h4 class="font-semibold text-neutral-900">Flag AI Image Submissions</h4>
-                    <p class="mt-1 text-xs text-neutral-500">Detect Deepfakes, AI-generated photos</p>
+                    <h4 class="font-semibold text-neutral-900">{{ $generated?->title }}</h4>
+                    <p class="mt-1 text-xs text-neutral-500">{{ $generated?->caption }}</p>
                 </div>
             </div>
         </div>

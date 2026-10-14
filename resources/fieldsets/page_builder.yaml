@@ -1,0 +1,1001 @@
+title: 'Page builder'
+fields:
+  -
+    handle: blocks
+    field:
+      type: replicator
+      display: Sections
+      instructions: 'The page, from top to bottom. Add sections, drag them into order, and switch one off to hide it. Each section keeps its own design; only the words, pictures and icons change.'
+      collapse: accordion
+      previews: true
+      button_label: 'Add a section'
+      sets:
+        sections:
+          display: Sections
+          sets:
+            hero:
+              display: Hero
+              instructions: 'The opening: a badge, the heading with its rotating words, text, two buttons and three phone pictures.'
+              icon: hero-image-above-text
+              fields:
+                -
+                  handle: badge
+                  field:
+                    type: text
+                    display: Badge
+                    width: 33
+                -
+                  handle: heading
+                  field:
+                    type: text
+                    display: Heading
+                    instructions: 'Before the rotating words.'
+                    width: 66
+                    validate:
+                      - required
+                -
+                  handle: rotating_words
+                  field:
+                    type: list
+                    display: 'Rotating words'
+                    instructions: 'Shown one at a time, in this order.'
+                    width: 50
+                -
+                  handle: heading_end
+                  field:
+                    type: text
+                    display: 'Heading end'
+                    instructions: 'After the rotating words.'
+                    width: 50
+                -
+                  handle: intro
+                  field:
+                    type: textarea
+                    display: Text
+                -
+                  handle: primary_label
+                  field:
+                    type: text
+                    display: 'Button label'
+                    width: 25
+                -
+                  handle: primary_url
+                  field:
+                    type: text
+                    display: 'Button link'
+                    width: 25
+                -
+                  handle: secondary_label
+                  field:
+                    type: text
+                    display: 'Second button label'
+                    width: 25
+                -
+                  handle: secondary_url
+                  field:
+                    type: text
+                    display: 'Second button link'
+                    width: 25
+                -
+                  handle: panels
+                  field:
+                    type: grid
+                    display: 'Phone pictures'
+                    instructions: 'Shown on large screens, in this order: live capture (green), edited photo (red), AI image (amber).'
+                    mode: stacked
+                    min_rows: 3
+                    max_rows: 3
+                    fields:
+                      -
+                        handle: image
+                        field:
+                          type: assets
+                          display: Picture
+                          container: assets
+                          folder: mockups
+                          max_files: 1
+                          mode: list
+                          width: 50
+                      -
+                        handle: image_alt
+                        field:
+                          type: text
+                          display: 'Picture description'
+                          width: 50
+                      -
+                        handle: status
+                        field:
+                          type: text
+                          display: Badge
+                          width: 33
+                      -
+                        handle: title
+                        field:
+                          type: text
+                          display: Title
+                          width: 33
+                      -
+                        handle: caption
+                        field:
+                          type: text
+                          display: Caption
+                          width: 33
+                -
+                  import: section_options
+            trust_strip:
+              display: 'Trust strip'
+              instructions: 'A thin band of icons with short claims.'
+              icon: layout-header
+              fields:
+                -
+                  handle: label
+                  field:
+                    type: text
+                    display: Label
+                -
+                  handle: items
+                  field:
+                    type: grid
+                    display: Items
+                    mode: table
+                    fields:
+                      -
+                        handle: icon
+                        field:
+                          type: icon
+                          display: Icon
+                          set: heroicons
+                      -
+                        handle: label
+                        field:
+                          type: text
+                          display: Label
+                -
+                  import: section_options
+            challenge:
+              display: 'The problem (scroll story)'
+              instructions: 'Pinned while the visitor scrolls: the heading, three figures, a quote and the attack list. Use it once per page.'
+              icon: chart-monitoring-indicator
+              fields:
+                -
+                  handle: eyebrow
+                  field:
+                    type: text
+                    display: Eyebrow
+                    width: 33
+                -
+                  handle: heading
+                  field:
+                    type: text
+                    display: Heading
+                    width: 66
+                -
+                  handle: stats
+                  field:
+                    type: grid
+                    display: Figures
+                    instructions: 'Exactly three, shown one at a time and counted up from 0. The first is red, the second amber.'
+                    mode: stacked
+                    min_rows: 3
+                    max_rows: 3
+                    fields:
+                      -
+                        handle: number
+                        field:
+                          type: integer
+                          display: Number
+                          width: 25
+                          validate:
+                            - required
+                      -
+                        handle: suffix
+                        field:
+                          type: text
+                          display: Suffix
+                          instructions: 'For example `%`.'
+                          width: 25
+                      -
+                        handle: source
+                        field:
+                          type: text
+                          display: Source
+                          width: 50
+                      -
+                        handle: text
+                        field:
+                          type: textarea
+                          display: Text
+                -
+                  handle: quote
+                  field:
+                    type: text
+                    display: Quote
+                -
+                  handle: quote_text
+                  field:
+                    type: textarea
+                    display: 'Text under the quote'
+                -
+                  handle: gallery_eyebrow
+                  field:
+                    type: text
+                    display: 'List eyebrow'
+                    width: 33
+                -
+                  handle: gallery_heading
+                  field:
+                    type: text
+                    display: 'List heading'
+                    width: 66
+                -
+                  handle: attacks
+                  field:
+                    type: grid
+                    display: Attacks
+                    mode: stacked
+                    fields:
+                      -
+                        handle: icon
+                        field:
+                          type: icon
+                          display: Icon
+                          set: heroicons
+                          width: 33
+                      -
+                        handle: title
+                        field:
+                          type: text
+                          display: Title
+                          width: 66
+                      -
+                        handle: text
+                        field:
+                          type: textarea
+                          display: Text
+                -
+                  import: section_options
+            difference:
+              display: 'Before and after'
+              instructions: 'Two phones side by side: an ordinary upload, and PixaProof flagging it.'
+              icon: layout-two-columns
+              fields:
+                -
+                  handle: eyebrow
+                  field:
+                    type: text
+                    display: Eyebrow
+                    width: 33
+                -
+                  handle: heading
+                  field:
+                    type: text
+                    display: Heading
+                    width: 66
+                -
+                  handle: intro
+                  field:
+                    type: textarea
+                    display: Text
+                -
+                  handle: before_heading
+                  field:
+                    type: text
+                    display: 'Before: heading'
+                    width: 50
+                -
+                  handle: before_result
+                  field:
+                    type: text
+                    display: 'Before: result'
+                    width: 50
+                -
+                  handle: before_points
+                  field:
+                    type: list
+                    display: 'Before: points'
+                -
+                  handle: after_heading
+                  field:
+                    type: text
+                    display: 'After: heading'
+                    width: 50
+                -
+                  handle: after_result
+                  field:
+                    type: text
+                    display: 'After: result'
+                    width: 50
+                -
+                  handle: after_points
+                  field:
+                    type: list
+                    display: 'After: points'
+                -
+                  handle: after_image
+                  field:
+                    type: assets
+                    display: 'After: picture'
+                    instructions: 'Behind the phone screen.'
+                    container: assets
+                    folder: mockups
+                    max_files: 1
+                    mode: list
+                    width: 50
+                -
+                  handle: after_image_alt
+                  field:
+                    type: text
+                    display: 'After: picture description'
+                    width: 50
+                -
+                  import: section_options
+            layers:
+              display: 'Cards with icons'
+              instructions: 'A heading, cards with an icon each, and a highlighted summary card.'
+              icon: layout-grid
+              fields:
+                -
+                  handle: eyebrow
+                  field:
+                    type: text
+                    display: Eyebrow
+                    width: 33
+                -
+                  handle: heading
+                  field:
+                    type: text
+                    display: Heading
+                    width: 66
+                -
+                  handle: intro
+                  field:
+                    type: textarea
+                    display: Text
+                -
+                  handle: cards
+                  field:
+                    type: grid
+                    display: Cards
+                    mode: stacked
+                    fields:
+                      -
+                        handle: icon
+                        field:
+                          type: icon
+                          display: Icon
+                          set: heroicons
+                          width: 33
+                      -
+                        handle: title
+                        field:
+                          type: text
+                          display: Title
+                          width: 66
+                      -
+                        handle: text
+                        field:
+                          type: textarea
+                          display: Text
+                -
+                  handle: summary_icon
+                  field:
+                    type: icon
+                    display: 'Summary icon'
+                    set: heroicons
+                    width: 33
+                -
+                  handle: summary_title
+                  field:
+                    type: text
+                    display: 'Summary title'
+                    instructions: 'Leave empty to hide the summary card.'
+                    width: 66
+                -
+                  handle: summary_text
+                  field:
+                    type: textarea
+                    display: 'Summary text'
+                -
+                  import: section_options
+            how_it_works:
+              display: 'Three steps'
+              instructions: 'Three numbered steps joined by arrows.'
+              icon: steps
+              fields:
+                -
+                  handle: eyebrow
+                  field:
+                    type: text
+                    display: Eyebrow
+                    width: 33
+                -
+                  handle: heading
+                  field:
+                    type: text
+                    display: Heading
+                    width: 66
+                -
+                  handle: intro
+                  field:
+                    type: textarea
+                    display: Text
+                -
+                  handle: steps
+                  field:
+                    type: grid
+                    display: Steps
+                    instructions: 'Exactly three: capture, transmission, verification.'
+                    mode: stacked
+                    min_rows: 3
+                    max_rows: 3
+                    fields:
+                      -
+                        handle: title
+                        field:
+                          type: text
+                          display: Title
+                      -
+                        handle: text
+                        field:
+                          type: textarea
+                          display: Text
+                -
+                  import: section_options
+            demos:
+              display: 'Demo videos'
+              instructions: 'Video cards that open in a player.'
+              icon: movie-video-clip
+              fields:
+                -
+                  handle: eyebrow
+                  field:
+                    type: text
+                    display: Eyebrow
+                    width: 33
+                -
+                  handle: heading
+                  field:
+                    type: text
+                    display: Heading
+                    width: 66
+                -
+                  handle: intro
+                  field:
+                    type: textarea
+                    display: Text
+                -
+                  handle: videos
+                  field:
+                    type: grid
+                    display: Videos
+                    mode: stacked
+                    fields:
+                      -
+                        handle: label
+                        field:
+                          type: text
+                          display: Label
+                          width: 33
+                      -
+                        handle: result
+                        field:
+                          type: text
+                          display: Result
+                          width: 33
+                      -
+                        handle: genuine
+                        field:
+                          type: toggle
+                          display: Genuine
+                          instructions: 'Green when on, red when off.'
+                          width: 33
+                      -
+                        handle: mp4
+                        field:
+                          type: assets
+                          display: 'Video (MP4)'
+                          container: assets
+                          folder: videos
+                          max_files: 1
+                          mode: list
+                          width: 33
+                      -
+                        handle: webm
+                        field:
+                          type: assets
+                          display: 'Video (WebM)'
+                          instructions: 'Optional; smaller, played first where the browser can.'
+                          container: assets
+                          folder: videos
+                          max_files: 1
+                          mode: list
+                          width: 33
+                      -
+                        handle: poster
+                        field:
+                          type: assets
+                          display: 'Still picture'
+                          container: assets
+                          folder: videos
+                          max_files: 1
+                          mode: list
+                          width: 33
+                -
+                  import: section_options
+            industries:
+              display: Industries
+              instructions: 'Tabs on large screens, an accordion on phones: one per industry.'
+              icon: tabs-sections
+              fields:
+                -
+                  handle: eyebrow
+                  field:
+                    type: text
+                    display: Eyebrow
+                    width: 33
+                -
+                  handle: heading
+                  field:
+                    type: text
+                    display: Heading
+                    width: 66
+                -
+                  handle: industries
+                  field:
+                    type: grid
+                    display: Industries
+                    instructions: 'The first is open when the page loads.'
+                    mode: stacked
+                    fields:
+                      -
+                        handle: tab_key
+                        field:
+                          type: slug
+                          display: Key
+                          instructions: 'Short, unique, lowercase with hyphens.'
+                          generate: false
+                          width: 25
+                          validate:
+                            - required
+                      -
+                        handle: label
+                        field:
+                          type: text
+                          display: 'Tab label'
+                          width: 50
+                      -
+                        handle: icon
+                        field:
+                          type: icon
+                          display: Icon
+                          set: heroicons
+                          width: 25
+                      -
+                        handle: headline
+                        field:
+                          type: text
+                          display: Headline
+                      -
+                        handle: citation_source
+                        field:
+                          type: text
+                          display: 'Citation: source'
+                          instructions: 'Optional; shown under the headline.'
+                          width: 33
+                      -
+                        handle: citation_title
+                        field:
+                          type: text
+                          display: 'Citation: title'
+                          width: 33
+                      -
+                        handle: citation_year
+                        field:
+                          type: text
+                          display: 'Citation: year'
+                          width: 33
+                      -
+                        handle: subheading
+                        field:
+                          type: text
+                          display: Subheading
+                      -
+                        handle: body
+                        field:
+                          type: textarea
+                          display: Text
+                      -
+                        handle: bullets
+                        field:
+                          type: list
+                          display: Points
+                      -
+                        handle: image
+                        field:
+                          type: assets
+                          display: 'Phone picture'
+                          container: assets
+                          folder: mockups
+                          max_files: 1
+                          mode: list
+                          width: 50
+                      -
+                        handle: image_alt
+                        field:
+                          type: text
+                          display: 'Picture description'
+                          width: 50
+                -
+                  handle: footnote
+                  field:
+                    type: text
+                    display: 'Note under the tabs'
+                -
+                  import: section_options
+            stats:
+              display: Figures
+              instructions: 'A blue band of large figures that count up.'
+              icon: charts-donut-graph
+              fields:
+                -
+                  handle: items
+                  field:
+                    type: grid
+                    display: Figures
+                    mode: table
+                    fields:
+                      -
+                        handle: number
+                        field:
+                          type: integer
+                          display: Number
+                          instructions: 'Counted up from 0.'
+                      -
+                        handle: suffix
+                        field:
+                          type: text
+                          display: Suffix
+                      -
+                        handle: text
+                        field:
+                          type: text
+                          display: 'Or text'
+                          instructions: 'Shown instead of a number.'
+                      -
+                        handle: label
+                        field:
+                          type: text
+                          display: Label
+                -
+                  import: section_options
+            comparison:
+              display: 'Comparison table'
+              instructions: 'A table on large screens, cards on phones.'
+              icon: fieldtype-table
+              fields:
+                -
+                  handle: eyebrow
+                  field:
+                    type: text
+                    display: Eyebrow
+                    width: 33
+                -
+                  handle: heading
+                  field:
+                    type: text
+                    display: Heading
+                    width: 66
+                -
+                  handle: capability_heading
+                  field:
+                    type: text
+                    display: 'First column heading'
+                    width: 33
+                -
+                  handle: manual_heading
+                  field:
+                    type: text
+                    display: 'Second column heading'
+                    width: 33
+                -
+                  handle: pixaproof_heading
+                  field:
+                    type: text
+                    display: 'Highlighted column heading'
+                    width: 33
+                -
+                  handle: rows
+                  field:
+                    type: grid
+                    display: Rows
+                    instructions: 'Type `yes` for a tick or `no` for a cross; anything else shows as text.'
+                    mode: table
+                    fields:
+                      -
+                        handle: capability
+                        field:
+                          type: text
+                          display: Capability
+                      -
+                        handle: manual
+                        field:
+                          type: text
+                          display: Second column
+                      -
+                        handle: pixaproof
+                        field:
+                          type: text
+                          display: Highlighted column
+                -
+                  import: section_options
+            about:
+              display: 'About and timeline'
+              instructions: 'A heading, a timeline, three certification cards and a link.'
+              icon: time-clock
+              fields:
+                -
+                  handle: eyebrow
+                  field:
+                    type: text
+                    display: Eyebrow
+                    width: 33
+                -
+                  handle: heading
+                  field:
+                    type: text
+                    display: Heading
+                    width: 66
+                -
+                  handle: intro
+                  field:
+                    type: textarea
+                    display: Text
+                -
+                  handle: milestones
+                  field:
+                    type: grid
+                    display: Timeline
+                    instructions: 'Six fit on one line.'
+                    mode: table
+                    fields:
+                      -
+                        handle: year
+                        field:
+                          type: text
+                          display: Year
+                      -
+                        handle: label
+                        field:
+                          type: text
+                          display: Label
+                      -
+                        handle: icon
+                        field:
+                          type: icon
+                          display: Icon
+                          set: heroicons
+                -
+                  handle: certifications
+                  field:
+                    type: grid
+                    display: Cards
+                    mode: stacked
+                    fields:
+                      -
+                        handle: icon
+                        field:
+                          type: icon
+                          display: Icon
+                          set: heroicons
+                          width: 33
+                      -
+                        handle: title
+                        field:
+                          type: text
+                          display: Title
+                          width: 66
+                      -
+                        handle: text
+                        field:
+                          type: text
+                          display: Text
+                -
+                  handle: link_label
+                  field:
+                    type: text
+                    display: 'Link label'
+                    width: 50
+                -
+                  handle: link_url
+                  field:
+                    type: text
+                    display: 'Link address'
+                    instructions: 'Opens in a new tab.'
+                    width: 50
+                -
+                  import: section_options
+            faq:
+              display: Questions
+              instructions: 'Questions that open to show their answers.'
+              icon: text-formatting-quotation
+              fields:
+                -
+                  handle: eyebrow
+                  field:
+                    type: text
+                    display: Eyebrow
+                    width: 33
+                -
+                  handle: heading
+                  field:
+                    type: text
+                    display: Heading
+                    width: 66
+                -
+                  handle: items
+                  field:
+                    type: grid
+                    display: Questions
+                    mode: stacked
+                    fields:
+                      -
+                        handle: question
+                        field:
+                          type: text
+                          display: Question
+                      -
+                        handle: answer
+                        field:
+                          type: textarea
+                          display: Answer
+                -
+                  import: section_options
+            cta:
+              display: 'Call to action'
+              instructions: 'A closing heading, text and two buttons.'
+              icon: mail-chat-bubble-text
+              fields:
+                -
+                  handle: heading
+                  field:
+                    type: text
+                    display: Heading
+                -
+                  handle: text
+                  field:
+                    type: textarea
+                    display: Text
+                -
+                  handle: primary_label
+                  field:
+                    type: text
+                    display: 'Button label'
+                    width: 25
+                -
+                  handle: primary_url
+                  field:
+                    type: text
+                    display: 'Button link'
+                    width: 25
+                -
+                  handle: secondary_label
+                  field:
+                    type: text
+                    display: 'Second button label'
+                    width: 25
+                -
+                  handle: secondary_url
+                  field:
+                    type: text
+                    display: 'Second button link'
+                    width: 25
+                -
+                  handle: trust_line
+                  field:
+                    type: text
+                    display: 'Line under the buttons'
+                -
+                  import: section_options
+            contact_hero:
+              display: 'Contact header'
+              instructions: 'The contact page opening: heading, text, the email button and two short lines.'
+              icon: mail
+              fields:
+                -
+                  handle: badge
+                  field:
+                    type: text
+                    display: Badge
+                    width: 33
+                -
+                  handle: heading
+                  field:
+                    type: text
+                    display: Heading
+                    width: 66
+                -
+                  handle: text
+                  field:
+                    type: textarea
+                    display: Text
+                -
+                  handle: email
+                  field:
+                    type: text
+                    display: Email
+                    width: 50
+                    input_type: email
+                -
+                  handle: hours
+                  field:
+                    type: text
+                    display: 'First line (clock)'
+                    width: 50
+                -
+                  handle: response_time
+                  field:
+                    type: text
+                    display: 'Second line (tick)'
+                    width: 50
+                -
+                  import: section_options
+            offices:
+              display: Offices
+              instructions: 'Office addresses in cards.'
+              icon: pin
+              fields:
+                -
+                  handle: heading
+                  field:
+                    type: text
+                    display: Heading
+                -
+                  handle: intro
+                  field:
+                    type: textarea
+                    display: Text
+                -
+                  handle: offices
+                  field:
+                    type: grid
+                    display: Offices
+                    mode: stacked
+                    fields:
+                      -
+                        handle: flag
+                        field:
+                          type: text
+                          display: Flag
+                          instructions: 'An emoji flag.'
+                          width: 25
+                      -
+                        handle: name
+                        field:
+                          type: text
+                          display: Name
+                          width: 75
+                      -
+                        handle: address
+                        field:
+                          type: textarea
+                          display: Address
+                          instructions: 'One line per row.'
+                -
+                  handle: footnote
+                  field:
+                    type: textarea
+                    display: 'Note under the offices'
+                -
+                  import: section_options
+            legal_text:
+              display: 'Legal text'
+              instructions: 'The page title, the date it was last saved, and long text (a privacy policy, terms).'
+              icon: text-formatting-paragraph
+              fields:
+                -
+                  handle: content
+                  field:
+                    type: markdown
+                    display: Text
+                -
+                  import: section_options

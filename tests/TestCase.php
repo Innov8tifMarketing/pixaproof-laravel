@@ -27,10 +27,11 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * Keeps the asset container's files (copied in by the seeder) out of public/media.
+     * Keeps the asset container's files (copied in by the seeder) out of public/media. The fake keeps
+     * the disk's URL, so the pages link their images and videos at /media as they do for real.
      */
     protected function beforeRefreshingDatabase(): void
     {
-        Storage::fake('media');
+        Storage::fake('media', ['url' => config('filesystems.disks.media.url')]);
     }
 }

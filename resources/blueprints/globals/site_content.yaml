@@ -1,0 +1,169 @@
+tabs:
+  header:
+    display: Header
+    sections:
+      -
+        display: 'Menu button'
+        instructions: 'The button beside the main menu. The menu itself is under Navigation.'
+        fields:
+          -
+            handle: cta_label
+            field:
+              type: text
+              display: Label
+              width: 50
+          -
+            handle: cta_url
+            field:
+              type: text
+              display: Link
+              width: 50
+  footer:
+    display: Footer
+    sections:
+      -
+        display: About
+        fields:
+          -
+            handle: footer_blurb
+            field:
+              type: textarea
+              display: 'Text under the logo'
+          -
+            handle: parent_prefix
+            field:
+              type: text
+              display: 'Parent company line'
+              instructions: 'Before the company name, as in "A product of Innov8tif".'
+              width: 33
+          -
+            handle: parent_name
+            field:
+              type: text
+              display: 'Parent company'
+              width: 33
+          -
+            handle: parent_url
+            field:
+              type: text
+              display: 'Parent company link'
+              width: 33
+      -
+        display: Columns
+        instructions: 'The Navigation column lists the footer menu (under Navigation).'
+        fields:
+          -
+            handle: navigation_heading
+            field:
+              type: text
+              display: 'Navigation heading'
+              width: 33
+          -
+            handle: contact_heading
+            field:
+              type: text
+              display: 'Contact heading'
+              width: 33
+          -
+            handle: legal_heading
+            field:
+              type: text
+              display: 'Legal heading'
+              width: 33
+          -
+            handle: contact_email
+            field:
+              type: text
+              display: Email
+              input_type: email
+              width: 33
+          -
+            handle: website_label
+            field:
+              type: text
+              display: Website
+              width: 33
+          -
+            handle: website_url
+            field:
+              type: text
+              display: 'Website link'
+              width: 33
+          -
+            handle: legal_links
+            field:
+              type: grid
+              display: 'Legal links'
+              mode: table
+              fields:
+                -
+                  handle: label
+                  field:
+                    type: text
+                    display: Label
+                -
+                  handle: url
+                  field:
+                    type: text
+                    display: Link
+      -
+        display: 'Bottom line'
+        fields:
+          -
+            handle: copyright
+            field:
+              type: text
+              display: Copyright
+              instructions: 'After "© {year}".'
+          -
+            handle: bottom_links
+            field:
+              type: grid
+              display: Links
+              mode: table
+              fields:
+                -
+                  handle: label
+                  field:
+                    type: text
+                    display: Label
+                -
+                  handle: url
+                  field:
+                    type: text
+                    display: Link
+  not_found:
+    display: 'Page not found'
+    sections:
+      -
+        instructions: 'Shown for an address that has no page.'
+        fields:
+          -
+            handle: not_found_eyebrow
+            field:
+              type: text
+              display: Eyebrow
+              width: 33
+          -
+            handle: not_found_heading
+            field:
+              type: text
+              display: Heading
+              width: 66
+          -
+            handle: not_found_text
+            field:
+              type: textarea
+              display: Text
+          -
+            handle: not_found_button_label
+            field:
+              type: text
+              display: 'Button label'
+              width: 50
+          -
+            handle: not_found_button_url
+            field:
+              type: text
+              display: 'Button link'
+              width: 50
