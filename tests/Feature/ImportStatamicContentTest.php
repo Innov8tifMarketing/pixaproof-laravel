@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Storage;
 use JothamLec\MarketingToolkit\Redirects\Redirect;
 use Statamic\Entries\Entry as StatamicEntry;
 use Statamic\Facades\Asset;
-use Statamic\Facades\Blink;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Entry;
 use Statamic\Facades\GlobalSet;
@@ -148,7 +147,7 @@ class ImportStatamicContentTest extends TestCase
         GlobalSet::findByHandle('site_content')->in('default')->set('cta_label', 'Say hello')->save();
 
         $this->artisan('pixaproof:import-content', ['--once' => true])
-            ->expectsOutputToContain('filling in only what is missing')
+            ->expectsOutputToContain('nothing to do')
             ->assertSuccessful();
 
         $this->assertSame('Talk to us', $this->page('contact')->get('title'));
@@ -165,42 +164,6 @@ class ImportStatamicContentTest extends TestCase
         $this->artisan('pixaproof:import-content')->assertSuccessful();
 
         $this->assertSame(['edited'], array_column($this->page('home')->get('blocks'), 'id'));
-    }
-
-    /**
-     * A site imported before the page builder: pages with a template and no sections, privacy's text in
-     * `content`, no Site global. --once (the deploy) gives the pages their sections and keeps the rest.
-     */
-    public function test_once_fills_in_the_sections_of_a_site_imported_before_the_page_builder(): void
-    {
-        $this->artisan('pixaproof:import-content')->assertSuccessful();
-
-        foreach (['home', 'contact', 'privacy'] as $slug) {
-            $this->page($slug)->remove('blocks')->set('template', 'default')->save();
-        }
-
-        $privacy = $this->page('privacy')->set('content', "## Edited policy\n\nOur own words.");
-        $privacy->save();
-        $lastModified = $this->page('privacy')->lastModified()->timestamp;
-        GlobalSet::findByHandle('site_content')->delete();
-        config('statamic.eloquent-driver.global_set_variables.model')::query()->where('handle', 'site_content')->delete();
-        Blink::flush();
-        Storage::disk('media')->delete('mockups/hero-live-capture.webp');
-
-        $this->travel(1)->day();
-
-        $this->artisan('pixaproof:import-content', ['--once' => true])->assertSuccessful();
-
-        $pages = Entry::query()->where('collection', 'pages')->get()->keyBy->slug();
-
-        $this->assertSame('hero', $pages['home']->get('blocks')[0]['type']);
-        $this->assertSame('contact_hero', $pages['contact']->get('blocks')[0]['type']);
-        $this->assertSame("## Edited policy\n\nOur own words.", $this->privacyText());
-        $this->assertNull($pages['privacy']->get('content'));
-        $this->assertSame(['page', 'page', 'page'], $pages->map->template()->values()->all());
-        $this->assertSame($lastModified, $pages['privacy']->lastModified()->timestamp);
-        $this->assertSame('Request Demo', GlobalSet::findByHandle('site_content')->in('default')->get('cta_label'));
-        Storage::disk('media')->assertExists('mockups/hero-live-capture.webp');
     }
 
     public function test_it_fails_when_a_redirect_row_is_rejected(): void

@@ -294,12 +294,6 @@ task('migrate:safe', function () {
     info('Migrations completed');
 });
 
-desc('Import the Statamic content on the first deploy (never overwrites control panel edits)');
-task('content:import', function () {
-    $output = run('cd {{release_path}} && {{bin/php}} artisan pixaproof:import-content --once 2>&1');
-    writeln($output);
-});
-
 desc('Let PHP-FPM (www-data) write what the deploy user created under shared/storage');
 task('storage:acl', function () {
     // The directories carry default ACLs for www-data, but PHP's mkdir(..., 0755) (Statamic's
@@ -589,9 +583,6 @@ after('artisan:cache:refresh', 'statamic:stache:warm');
 after('statamic:stache:warm', 'storage:acl');
 
 after('artisan:storage:link', 'storage:link-custom');
-// After the media symlink: storage:link-custom replaces public/media with a link to shared/data/media,
-// deleting anything the import copied there first (the first deploy lost og-image.webp that way).
-after('storage:link-custom', 'content:import');
 
 task('artisan:migrate', function () {})->hidden();
 

@@ -80,9 +80,10 @@ resources/
 
 `php artisan pixaproof:import-content` creates all of it and updates in place. A page's `blocks` and the Site
 global are only filled while empty, and existing assets are left alone, so control panel edits survive either way.
-With `--once` (deploys, `composer setup`) and an existing `pages` collection it only fills in what is missing:
-empty `blocks` (privacy's old markdown `content` goes into its legal text section; the page's last-edited
-date is kept), the Site global, missing media, and the `page` template.
+With `--once` (`composer setup`) it does nothing if the `pages` collection exists. Deploys never run it: they
+ship code only, so content (entries, globals, navigation trees, assets, redirects) is only changed in the
+control panel. Blueprints, fieldsets and the other flat-file structure ship with the release, so control panel
+edits to them revert on deploy; structure changes go through git.
 
 ## Homepage Sections (Mega Landing)
 
@@ -192,3 +193,4 @@ The old `leads` table was dropped (the contact form was removed; the table was e
 *Updated: 2026-09-23 - Removed KYC Onboarding industry; added section, check-list, icon-card and stat components; homepage sections data-driven*
 *Updated: 2026-10-06 - Statamic 6 + Marketing Toolkit conversion: entries, templates, navs, toolkit SEO/redirects; Livewire, Actions, Lead and leads removed*
 *Updated: 2026-10-14 - Page builder: `blocks` Replicator, block views, Site global, heroicons icon set, import fills empty sections*
+*Updated: 2026-10-14 - Deploys no longer import content; the leads migrations are gone*

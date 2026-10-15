@@ -49,7 +49,10 @@ Pages, navigation, SEO settings and redirects are edited in the control panel (`
 - **Tools → SEO:** redirects, the 404 log and site reports.
 
 `php artisan pixaproof:import-content` creates all of this from the code (used for new installs and
-tests). With `--once` it does nothing if the content already exists, which is how deploys run it.
+tests). With `--once` it does nothing if the content already exists. Deploys never run it.
+
+Blueprints, fieldsets, collection and navigation definitions, roles and sites are files in the release,
+so control panel edits to them revert on the next deploy: structure changes go through git.
 
 Tests:
 
@@ -132,7 +135,7 @@ dep list
 1. Clone repo (LFS smudge skipped) → `lfs:pull` pulls video assets from GitHub
 2. `composer install` → cache config
 3. `npm ci` + `npm run build`
-4. Ensure SQLite file exists → backup current DB → run pending migrations safely → import the Statamic content if the site has none (`pixaproof:import-content --once`)
+4. Ensure SQLite file exists → backup current DB → run pending migrations safely (no content is imported)
 5. Maintenance mode ON → swap symlink → restart PHP-FPM → maintenance OFF → restart queue → refresh caches → warm Statamic's Stache
 6. HTTP health check (5 retries) → auto-rollback if it fails
 

@@ -11,7 +11,6 @@ use JothamLec\MarketingToolkit\Redirects\Csv;
 use JothamLec\MarketingToolkit\Redirects\Redirect;
 use LogicException;
 use Statamic\Assets\AssetContainer as StatamicAssetContainer;
-use Statamic\Entries\Collection as StatamicCollection;
 use Statamic\Entries\Entry as StatamicEntry;
 use Statamic\Facades\AssetContainer;
 use Statamic\Facades\Collection;
@@ -23,7 +22,7 @@ use Statamic\Globals\GlobalSet as StatamicGlobalSet;
 use Statamic\Structures\CollectionStructure;
 use Statamic\Structures\Nav as StatamicNav;
 
-#[Signature('pixaproof:import-content {--once : If the pages collection exists, only fill in what is missing (empty page sections, the Site global, media), so edits made in the control panel are kept}')]
+#[Signature('pixaproof:import-content {--once : Do nothing if the pages collection exists, so edits made in the control panel are kept}')]
 #[Description('Create the Statamic content: pages and their sections, navigation, media, the Site, Brand and Marketing settings values and redirects')]
 class ImportStatamicContent extends Command
 {
@@ -159,14 +158,9 @@ class ImportStatamicContent extends Command
     public function handle(): int
     {
         if ($this->option('once') && Collection::findByHandle('pages')) {
-            $this->components->info('Content already imported; filling in only what is missing.');
+            $this->components->info('Content already imported; nothing to do.');
 
-            $this->importAssets();
-            $this->usePageTemplate($this->pagesCollection());
-            $this->fillExistingPages();
-            $this->importSiteContent();
-
-            return $this->verifyCounts() ? self::SUCCESS : self::FAILURE;
+            return self::SUCCESS;
         }
 
         $this->importAssets();
@@ -231,27 +225,19 @@ class ImportStatamicContent extends Command
         $this->components->info('Assets: '.count(self::ASSETS).' files.');
     }
 
-    private function pagesCollection(): StatamicCollection
-    {
-        return Collection::findByHandle('pages') ?? Collection::make('pages');
-    }
-
-    private function usePageTemplate(StatamicCollection $collection): void
-    {
-        $collection->template(self::TEMPLATE)->save();
-    }
-
     /**
      * @return array<string, string> entry IDs by slug
      */
     private function importPages(): array
     {
-        $collection = $this->pagesCollection()
+        $collection = Collection::findByHandle('pages') ?? Collection::make('pages');
+
+        $collection
             ->title('Pages')
             ->routes('{parent_uri}/{slug}')
-            ->structureContents(['root' => true]);
-
-        $this->usePageTemplate($collection);
+            ->template(self::TEMPLATE)
+            ->structureContents(['root' => true])
+            ->save();
 
         $entryIds = [];
 
@@ -286,66 +272,18 @@ class ImportStatamicContent extends Command
     }
 
     /**
-     * Gives the existing pages their sections where they have none, without touching anything else and
-     * without changing when they were last edited (the privacy page shows that date).
+     * Gives the page its sections when it has none. Sections the page already has are never replaced.
      */
-    private function fillExistingPages(): void
+    private function fillBlocks(StatamicEntry $entry, string $blocksFile): void
     {
-        $filled = [];
-
-        foreach (self::PAGES as $page) {
-            $entry = $this->findPage($page['slug']);
-
-            if (! $entry || ! $this->fillBlocks($entry, $page['blocks'])) {
-                continue;
-            }
-
-            $lastModified = $entry->lastModified();
-
-            $entry->save();
-
-            config('statamic.eloquent-driver.entries.model')::query()
-                ->whereKey($entry->id())
-                ->update(['updated_at' => $lastModified]);
-
-            $filled[] = $page['slug'];
+        if (filled($entry->get('blocks'))) {
+            return;
         }
 
-        $this->components->info('Pages given their sections: '.($filled === [] ? 'none' : implode(', ', $filled)).'.');
-    }
+        /** @var list<array<string, mixed>> $blocks */
+        $blocks = require base_path($blocksFile);
 
-    /**
-     * Gives the page its sections when it has none, carrying over the markdown `content` of a page
-     * from before the page builder into its legal text section, and drops the per-page template
-     * (the collection's applies). Sections the page already has are never replaced.
-     *
-     * @return bool whether the entry changed
-     */
-    private function fillBlocks(StatamicEntry $entry, string $blocksFile): bool
-    {
-        $changed = $entry->has('template') || $entry->has('content');
-
-        if (blank($entry->get('blocks'))) {
-            /** @var list<array<string, mixed>> $blocks */
-            $blocks = require base_path($blocksFile);
-            $legacyContent = $entry->get('content');
-
-            $blocks = array_map(function (array $block) use ($legacyContent): array {
-                if ($block['type'] === 'legal_text' && filled($legacyContent)) {
-                    $block['content'] = $legacyContent;
-                }
-
-                return $this->withRowIds($block);
-            }, $blocks);
-
-            $entry->set('blocks', $blocks);
-            $changed = true;
-        }
-
-        // The Eloquent driver also keeps the template on the entry itself and writes it back on save.
-        $entry->template(null)->remove('template')->remove('content');
-
-        return $changed;
+        $entry->set('blocks', array_map($this->withRowIds(...), $blocks));
     }
 
     /**

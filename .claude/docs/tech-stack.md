@@ -36,7 +36,7 @@
 ## Deployment
 | Platform | Config |
 |----------|--------|
-| Deployer | `deploy.php`: SQLite backup, migrations, `pixaproof:import-content --once`, Stache warm, health check |
+| Deployer | `deploy.php`: SQLite backup, migrations, Stache warm, health check (no content import) |
 | Scheduler | `deploy/server/etc/cron.d/pixaproof-laravel` (installed by hand) |
 | Off-site backups | spatie/laravel-backup to Backblaze B2 via jothamlec/laravel-offsite-backup (`config/offsite-backup.php`, `config/backup.php`, recipe in `deploy.php`); runbook in `AGENTS.md` → Backups |
 

@@ -74,8 +74,10 @@ Conversion plan and per-phase results: `DEV_FILES/statamic-conversion/00-plan.md
 - `php artisan pixaproof:import-content` creates all of it, including the page sections and Site values
   (`database/content/*.php`), the media, the Brand and Marketing settings values and the 22 legacy redirects
   (`database/seo/redirects.csv`). It updates in place but only fills a page's `blocks` and the Site global
-  while they are empty, and leaves existing assets alone. With `--once` (the deploy) and existing content it
-  only fills in what is missing, so control panel edits are kept. `DatabaseSeeder` runs it.
+  while they are empty, and leaves existing assets alone. With `--once` (`composer setup`) it does nothing
+  if the `pages` collection exists. `DatabaseSeeder` runs it; deploys never do.
+- Blueprints, fieldsets, collection and navigation definitions, roles and sites are files in the release,
+  so control panel edits to them revert on the next deploy: structure changes go through git.
 
 ### Page builder and templates
 Every page renders `page.blade.php`: `<x-blocks :blocks="$page->blocks" />`. `blocks` is one Replicator
@@ -134,7 +136,7 @@ answer GET/HEAD requests that would otherwise 404.
 ## Deployment
 
 **Platform:** Deployer (`deploy.php`). Deploy via `dep deploy prod`. SSH via `dep ssh prod`.
-Each deploy backs up SQLite, migrates, runs `pixaproof:import-content --once` and warms the Stache.
+Each deploy backs up SQLite, migrates and warms the Stache. It ships code only and never writes content.
 The scheduler cron is in `deploy/server/etc/cron.d/pixaproof-laravel` (installed by hand).
 
 ### Backups
