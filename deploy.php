@@ -70,6 +70,8 @@ add('shared_dirs', [
 add('writable_dirs', [
     'data/sqlite',
     'data/media',
+    // Statamic's CP upload temp dir (statamic/file-uploads); the recipe only covers storage/app.
+    'storage/app/private',
 ]);
 
 set('storage_links', [
@@ -294,13 +296,17 @@ task('migrate:safe', function () {
     info('Migrations completed');
 });
 
-desc('Let PHP-FPM (www-data) write what the deploy user created under shared/storage');
+desc('Let PHP-FPM (www-data) write what the deploy user created under shared/storage and shared/data/media');
 task('storage:acl', function () {
     // The directories carry default ACLs for www-data, but PHP's mkdir(..., 0755) (Statamic's
     // stache-locks, tmp, …) sets the ACL mask to r-x, capping www-data at read-only: every request
     // then fails with "FlockStore directory … is not writable". Restore the mask on what deployer owns.
-    run('find {{deploy_path}}/shared/storage -user deployer -type d -exec setfacl -m m::rwx -m d:m::rwx {} +');
-    run('find {{deploy_path}}/shared/storage -user deployer -type f -exec setfacl -m m::rw {} +');
+    // The same goes for media folders an import run as deployer creates: CP uploads into them save
+    // the asset record but not the file (0 bytes, "56 years ago").
+    foreach (['storage', 'data/media'] as $dir) {
+        run("find {{deploy_path}}/shared/{$dir} -user deployer -type d -exec setfacl -m m::rwx -m d:m::rwx {} +");
+        run("find {{deploy_path}}/shared/{$dir} -user deployer -type f -exec setfacl -m m::rw {} +");
+    }
 });
 
 desc('Warm the Stache (Statamic\'s flat-file index: blueprints, fieldsets)');
