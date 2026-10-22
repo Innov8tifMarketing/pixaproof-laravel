@@ -31,3 +31,5 @@ Thumbs.db
 # tmp/ path, and nothing in here survives a clean checkout.
 tmp/
 .scratch/
+
+/DEV_FILES/
