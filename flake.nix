@@ -1,5 +1,5 @@
 {
-  description = "Laravel dev shell (php85)";
+  description = "Laravel dev shell (php84)";
 
   # Per-project nixpkgs pin. `nix flake update` bumps THIS project only.
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -11,11 +11,11 @@
       pkgs = nixpkgs.legacyPackages.${system};
 
       # ── The two per-project knobs ────────────────────────────────────────
-      # 1) PHP version: pkgs.php85 / php85 / php85 / php85 / php85
+      # 1) PHP version: pkgs.php84 / pkgs.php85
       # 2) Extensions: `enabled` is nixpkgs' default, Laravel-ready set
       #    (mbstring, openssl, tokenizer, curl, xml, pdo_sqlite, …). Uncomment
       #    to add project extras; composer below is built against this php.
-      php = pkgs.php85.buildEnv {
+      php = pkgs.php84.buildEnv {
         extensions =
           { enabled, all }:
           enabled
@@ -38,7 +38,7 @@
         packages = [
           php
           php.packages.composer # Composer built against THIS php — no version skew
-          pkgs.nodejs # Vite / frontend build
+          pkgs.nodejs_24 # Vite / frontend build
         ];
 
         shellHook = ''
