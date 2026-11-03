@@ -625,6 +625,17 @@ fields:
                           type: text
                           display: 'Picture description'
                           width: 50
+                      -
+                        handle: material
+                        field:
+                          type: entries
+                          display: 'Downloadable material'
+                          instructions: 'Optional: adds a "Download the use case" button, and "Watch the video" when the material has a video. Shown once the material is published with its PDF.'
+                          collections:
+                            - downloadable_materials
+                          max_items: 1
+                          mode: select
+                          create: false
                 -
                   handle: footnote
                   field:
@@ -894,6 +905,111 @@ fields:
                   field:
                     type: text
                     display: 'Line under the buttons'
+                -
+                  import: section_options
+            contact_form:
+              display: 'Contact form'
+              instructions: 'The big closing call to action: a heading, text and points beside the enquiry form. Enquiries are emailed to marketing (sales copied), and the visitor gets a thank-you email.'
+              icon: forms
+              fields:
+                -
+                  handle: badge
+                  field:
+                    type: text
+                    display: Badge
+                    width: 33
+                -
+                  handle: heading
+                  field:
+                    type: text
+                    display: Heading
+                    width: 66
+                    validate:
+                      - required
+                -
+                  handle: text
+                  field:
+                    type: textarea
+                    display: Text
+                -
+                  handle: points
+                  field:
+                    type: list
+                    display: Points
+                    instructions: 'Short reasons to get in touch, with a tick each.'
+                -
+                  handle: email
+                  field:
+                    type: text
+                    display: Email
+                    instructions: 'Shown under the points, for those who would rather write.'
+                    width: 50
+                -
+                  handle: note
+                  field:
+                    type: text
+                    display: 'Line beside the email'
+                    instructions: 'Such as how soon you reply.'
+                    width: 50
+                -
+                  handle: form_heading
+                  field:
+                    type: text
+                    display: 'Form heading'
+                    width: 50
+                -
+                  handle: button_label
+                  field:
+                    type: text
+                    display: 'Button label'
+                    width: 50
+                -
+                  handle: success_heading
+                  field:
+                    type: text
+                    display: 'Thank-you heading'
+                    instructions: 'Shown in place of the form once it is sent.'
+                    width: 50
+                -
+                  handle: success_text
+                  field:
+                    type: text
+                    display: 'Thank-you text'
+                    width: 50
+                -
+                  import: section_options
+            materials:
+              display: 'Downloadable materials'
+              instructions: 'Cards for brochures and use cases (Collections → Downloadable materials). Visitors give their name, email and company to download; marketing is emailed each time. Hidden while no material has a PDF.'
+              icon: pdf
+              fields:
+                -
+                  handle: eyebrow
+                  field:
+                    type: text
+                    display: Eyebrow
+                    width: 33
+                -
+                  handle: heading
+                  field:
+                    type: text
+                    display: Heading
+                    width: 66
+                -
+                  handle: intro
+                  field:
+                    type: textarea
+                    display: Text
+                -
+                  handle: materials
+                  field:
+                    type: entries
+                    display: Materials
+                    instructions: 'Leave empty to show them all, in the collection''s order.'
+                    collections:
+                      - downloadable_materials
+                    mode: select
+                    create: false
                 -
                   import: section_options
             contact_hero:

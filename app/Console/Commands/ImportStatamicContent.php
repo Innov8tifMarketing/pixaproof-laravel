@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Providers\AppServiceProvider;
+use App\Support\DownloadableMaterials;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -22,8 +23,10 @@ use Statamic\Globals\GlobalSet as StatamicGlobalSet;
 use Statamic\Structures\CollectionStructure;
 use Statamic\Structures\Nav as StatamicNav;
 
-#[Signature('pixaproof:import-content {--once : Do nothing if the pages collection exists, so edits made in the control panel are kept}')]
-#[Description('Create the Statamic content: pages and their sections, navigation, media, the Site, Brand and Marketing settings values and redirects')]
+#[Signature('pixaproof:import-content
+    {--once : Do nothing if the pages collection exists, so edits made in the control panel are kept}
+    {--materials : Only add the downloadable materials (their file container, collection and first entries), leaving everything else alone}')]
+#[Description('Create the Statamic content: pages and their sections, downloadable materials, navigation, media, the Site, Brand and Marketing settings values and redirects')]
 class ImportStatamicContent extends Command
 {
     private const string CONTAINER = 'assets';
@@ -39,6 +42,11 @@ class ImportStatamicContent extends Command
      * Values for the Site global set, used while the set is empty.
      */
     private const string SITE_CONTENT = 'database/content/site.php';
+
+    /**
+     * The downloadable materials, added while the collection is empty.
+     */
+    private const string MATERIALS = 'database/content/materials.php';
 
     /**
      * Files copied into the asset container, keyed by their asset path; sources are relative to the project root.
@@ -157,6 +165,12 @@ class ImportStatamicContent extends Command
 
     public function handle(): int
     {
+        if ($this->option('materials')) {
+            $this->importMaterials();
+
+            return self::SUCCESS;
+        }
+
         if ($this->option('once') && Collection::findByHandle('pages')) {
             $this->components->info('Content already imported; nothing to do.');
 
@@ -164,6 +178,7 @@ class ImportStatamicContent extends Command
         }
 
         $this->importAssets();
+        $this->importMaterials();
         $entryIds = $this->importPages();
         $this->importNavigations($entryIds);
 
@@ -223,6 +238,70 @@ class ImportStatamicContent extends Command
         }
 
         $this->components->info('Assets: '.count(self::ASSETS).' files.');
+    }
+
+    /**
+     * Creates the materials' private file container and their collection (ordered, no pages of
+     * their own), and adds the materials as drafts while the collection is empty.
+     */
+    private function importMaterials(): void
+    {
+        $container = AssetContainer::findByHandle(DownloadableMaterials::CONTAINER) ?? AssetContainer::make(DownloadableMaterials::CONTAINER);
+
+        if (! $container instanceof StatamicAssetContainer) {
+            throw new LogicException('Asset containers are expected to extend '.StatamicAssetContainer::class.'.');
+        }
+
+        // Through the repository, as in importAssets().
+        AssetContainer::save($container->disk(DownloadableMaterials::DISK)->title('Downloadable materials'));
+
+        $collection = Collection::findByHandle(DownloadableMaterials::COLLECTION) ?? Collection::make(DownloadableMaterials::COLLECTION);
+
+        $collection
+            ->title('Downloadable materials')
+            ->structureContents(['max_depth' => 1])
+            ->save();
+
+        if (Entry::whereCollection(DownloadableMaterials::COLLECTION)->isNotEmpty()) {
+            $this->components->info('Downloadable materials: already added; kept.');
+
+            return;
+        }
+
+        /** @var list<array{id: string, slug: string, title: string, kind: string, summary: string, video_url: ?string}> $materials */
+        $materials = require base_path(self::MATERIALS);
+
+        foreach ($materials as $material) {
+            $entry = Entry::make();
+
+            if (! $entry instanceof StatamicEntry) {
+                throw new LogicException('Entries are expected to extend '.StatamicEntry::class.'.');
+            }
+
+            $entry->id($material['id'])
+                ->collection(DownloadableMaterials::COLLECTION)
+                ->slug($material['slug'])
+                ->published(false)
+                ->data(array_filter([
+                    'title' => $material['title'],
+                    'kind' => $material['kind'],
+                    'summary' => $material['summary'],
+                    'video_url' => $material['video_url'],
+                ]))
+                ->save();
+        }
+
+        $structure = $collection->structure();
+
+        if (! $structure instanceof CollectionStructure) {
+            throw new LogicException('The downloadable materials collection has no structure.');
+        }
+
+        $structure->in(Site::default()->handle())
+            ->tree(array_map(fn (array $material) => ['entry' => $material['id']], $materials))
+            ->save();
+
+        $this->components->info('Downloadable materials: '.count($materials).' drafts, waiting for their PDFs.');
     }
 
     /**
@@ -439,6 +518,7 @@ class ImportStatamicContent extends Command
             'pages' => [count(self::PAGES), $pages->count()],
             'pages with sections' => [count(self::PAGES), $pages->filter(fn (StatamicEntry $entry) => filled($entry->get('blocks')))->count()],
             'filled-in Site global sets' => [1, $siteContent && $siteContent->data()->filter(fn ($value) => filled($value))->isNotEmpty() ? 1 : 0],
+            'downloadable materials collections' => [1, Collection::findByHandle(DownloadableMaterials::COLLECTION) ? 1 : 0],
             'navigations' => [count(self::NAVIGATIONS), Nav::all()->filter(fn ($nav) => array_key_exists($nav->handle(), self::NAVIGATIONS))->count()],
             'redirects' => [count($redirectSources), Redirect::query()->whereIn('source', $redirectSources)->count()],
         ];

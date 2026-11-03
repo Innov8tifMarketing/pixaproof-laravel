@@ -1,0 +1,45 @@
+title: 'Download requests'
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: material
+            field:
+              type: text
+              display: 'Material (entry ID)'
+              instructions: 'The downloadable material asked for.'
+              validate:
+                - required
+                - string
+                - 'max:64'
+          -
+            handle: name
+            field:
+              type: text
+              display: Name
+              validate:
+                - required
+                - string
+                - 'max:120'
+          -
+            handle: email
+            field:
+              type: text
+              input_type: email
+              display: 'Work email'
+              validate:
+                - required
+                - email
+                - 'max:255'
+          -
+            handle: company
+            field:
+              type: text
+              display: Company
+              validate:
+                - required
+                - string
+                - 'max:160'

@@ -16,6 +16,7 @@
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
         "league/flysystem-aws-s3-v3": "^3.35",
+        "resend/resend-php": "^1.3",
         "spatie/laravel-backup": "^10.3",
         "statamic/cms": "^6.35",
         "statamic/eloquent-driver": "^5.12"

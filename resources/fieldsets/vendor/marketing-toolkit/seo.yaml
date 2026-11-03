@@ -1,0 +1,113 @@
+# Override of jotham-lec/statamic-marketing-toolkit's marketing-toolkit::seo fieldset (v0.24.1).
+# Only change, on the share image: `container: assets` (the addon's field names
+# no container, which Statamic rejects once a site has more than one: the
+# downloadable materials have their own private `materials` container).
+# Re-copy from vendor when the toolkit is upgraded.
+title: SEO
+fields:
+  -
+    handle: seo_preview
+    field:
+      type: mt_preview
+      localizable: true
+      display: 'marketing-toolkit::fields.seo.seo_preview.display'
+      listable: false
+  -
+    handle: seo
+    field:
+      type: group
+      localizable: true
+      display: 'marketing-toolkit::fields.seo.seo.display'
+      fullscreen: false
+      # No card around the fields: they sit in the SEO tab like any other.
+      border: false
+      hide_display: true
+      fields:
+        -
+          handle: title
+          field:
+            type: text
+            display: 'marketing-toolkit::fields.seo.title.display'
+        -
+          handle: description
+          field:
+            type: textarea
+            display: 'marketing-toolkit::fields.seo.description.display'
+        -
+          handle: sharing
+          field:
+            type: mt_heading
+            display: 'marketing-toolkit::fields.seo.sharing.display'
+            hide_display: true
+        -
+          handle: image
+          field:
+            type: assets
+            display: 'marketing-toolkit::fields.seo.image.display'
+            max_files: 1
+            mode: list
+            container: assets
+        -
+          handle: og_title
+          field:
+            type: text
+            display: 'marketing-toolkit::fields.seo.og_title.display'
+        -
+          handle: og_subtitle
+          field:
+            type: textarea
+            display: 'marketing-toolkit::fields.seo.og_subtitle.display'
+        -
+          handle: advanced
+          field:
+            type: mt_heading
+            display: 'marketing-toolkit::fields.seo.advanced.display'
+            hide_display: true
+        -
+          handle: canonical
+          field:
+            type: text
+            input_type: url
+            display: 'marketing-toolkit::fields.seo.canonical.display'
+            validate:
+              - nullable
+              - 'url:http,https'
+        -
+          handle: noindex
+          field:
+            type: toggle
+            display: 'marketing-toolkit::fields.seo.noindex.display'
+            width: 50
+        -
+          handle: nofollow
+          field:
+            type: toggle
+            display: 'marketing-toolkit::fields.seo.nofollow.display'
+            width: 50
+        -
+          handle: sitemap
+          field:
+            type: toggle
+            display: 'marketing-toolkit::fields.seo.sitemap.display'
+            default: true
+            width: 50
+        -
+          handle: nosnippet
+          field:
+            type: toggle
+            display: 'marketing-toolkit::fields.seo.nosnippet.display'
+            width: 50
+        -
+          handle: max_snippet
+          field:
+            type: integer
+            display: 'marketing-toolkit::fields.seo.max_snippet.display'
+            width: 50
+            unless:
+              nosnippet: 'true'
+        -
+          handle: json_ld
+          field:
+            type: code
+            mode: javascript
+            display: 'marketing-toolkit::fields.seo.json_ld.display'

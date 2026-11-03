@@ -1,0 +1,67 @@
+title: Material
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              display: Title
+              required: true
+              validate:
+                - required
+          -
+            handle: kind
+            field:
+              type: text
+              display: Kind
+              instructions: 'A short label over the title, such as Brochure or Use case.'
+              width: 50
+          -
+            handle: summary
+            field:
+              type: textarea
+              display: Summary
+              instructions: 'One or two sentences on what is inside.'
+          -
+            handle: file
+            field:
+              type: assets
+              display: File
+              instructions: 'The PDF. It stays private: visitors get it after filling in their name, email and company. A material without a file is not shown.'
+              container: materials
+              max_files: 1
+              mode: list
+              width: 50
+          -
+            handle: cover
+            field:
+              type: assets
+              display: Cover
+              instructions: 'Optional: a picture of the first page.'
+              container: assets
+              folder: materials
+              max_files: 1
+              mode: list
+              width: 50
+          -
+            handle: video_url
+            field:
+              type: text
+              input_type: url
+              display: 'Video link'
+              instructions: 'Optional: a video of this use case (YouTube), shown as a "Watch the video" link beside the download.'
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'

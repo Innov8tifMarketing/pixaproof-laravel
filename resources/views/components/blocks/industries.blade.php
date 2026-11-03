@@ -1,7 +1,11 @@
 {{-- Industries: tabs on desktop, an accordion on phones. Each instance keeps
-     its own Alpine state; the first industry starts open. --}}
+     its own Alpine state; the first industry starts open. An industry with a
+     downloadable material on offer shows its download and video buttons. --}}
 @php
     $industries = collect($block->industries ?? [])->filter(fn ($industry) => filled($industry->tab_key))->values();
+    $materials = $industries->mapWithKeys(fn ($industry) => [
+        $industry->tab_key => \App\Support\DownloadableMaterials::find(\Illuminate\Support\Arr::first(\Illuminate\Support\Arr::wrap($industry->raw('material')))),
+    ]);
 @endphp
 <x-section :id="$block->anchor" class="bg-neutral-50" :eyebrow="$block->eyebrow" :title="$block->heading">
     {{-- Tabbed Interface --}}
@@ -52,6 +56,13 @@
                     <div class="text-primary-600 mb-2 text-2xl font-bold">{{ $industry->headline }}</div>
                     <p class="mb-4 text-neutral-700">{{ $industry->body }}</p>
                     <x-check-list :items="$industry->bullets ?? []" compact />
+                    @if ($materials[$industry->tab_key])
+                        <x-material-actions
+                            :material="$materials[$industry->tab_key]"
+                            label="Download the use case"
+                            class="mt-5"
+                        />
+                    @endif
                 </div>
             @endforeach
         </div>
@@ -81,6 +92,13 @@
                         <h3 class="mb-4 text-xl font-semibold text-neutral-900">{{ $industry->subheading }}</h3>
                         <p class="mb-6 text-neutral-700">{{ $industry->body }}</p>
                         <x-check-list :items="$industry->bullets ?? []" />
+                        @if ($materials[$industry->tab_key])
+                            <x-material-actions
+                                :material="$materials[$industry->tab_key]"
+                                label="Download the use case"
+                                class="mt-8"
+                            />
+                        @endif
                     </div>
                     <div class="flex justify-center lg:col-span-2">
                         <x-graphics.phone-mockup

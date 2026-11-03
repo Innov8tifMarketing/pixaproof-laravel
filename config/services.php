@@ -22,6 +22,15 @@ return [
         'key' => env('RESEND_API_KEY'),
     ],
 
+    /*
+     * Who hears about form submissions: contact enquiries go to marketing with sales
+     * copied; download requests go to marketing only.
+     */
+    'lead_mail' => [
+        'marketing_to' => env('LEAD_MAIL_MARKETING_TO', 'marketing@innov8tif.com'),
+        'sales_cc' => env('LEAD_MAIL_SALES_CC', 'sales@innov8tif.com'),
+    ],
+
     'ses' => [
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),

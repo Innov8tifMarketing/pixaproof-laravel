@@ -47,6 +47,18 @@ return [
             'report' => false,
         ],
 
+        /*
+         * The downloadable materials' files (asset container `materials`). Private: they
+         * are served only by the download route, to someone who filled in the form.
+         */
+        'materials' => [
+            'driver' => 'local',
+            'root' => storage_path('app/materials'),
+            'visibility' => 'private',
+            'throw' => false,
+            'report' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

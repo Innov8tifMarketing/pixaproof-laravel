@@ -368,6 +368,84 @@ document.addEventListener('DOMContentLoaded', () => {
     Motion.initScrubSection();
 });
 
+// Posts a Statamic form (resources/forms) without leaving the page. Statamic answers an
+// XHR with { success } or a 400 with { error: { field: message } }.
+async function submitStatamicForm(form) {
+    let response;
+
+    try {
+        response = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' },
+        });
+    } catch {
+        return { ok: false, errors: { form: 'We couldn’t reach the server. Check your connection and try again.' } };
+    }
+
+    const data = await response.json().catch(() => ({}));
+
+    if (response.ok && data.success) {
+        return { ok: true, errors: {} };
+    }
+
+    const messages = {
+        419: 'This page has been open a while. Please reload it and try again.',
+        429: 'Too many attempts. Please wait a minute and try again.',
+    };
+
+    return { ok: false, errors: data.error ?? { form: messages[response.status] ?? 'Something went wrong. Please try again.' } };
+}
+
+// The contact form section (components/blocks/contact-form).
+Alpine.data('contactForm', () => ({
+    sending: false,
+    sent: false,
+    errors: {},
+
+    async submit(form) {
+        this.sending = true;
+        const result = await submitStatamicForm(form);
+        this.sending = false;
+        this.errors = result.errors;
+
+        if (result.ok) {
+            this.sent = true;
+            form.reset();
+        }
+    },
+}));
+
+// The download request dialog (components/material-request-dialog), opened by any
+// button that dispatches `request-material` with { id, title, url }.
+Alpine.data('materialRequest', () => ({
+    open: false,
+    material: {},
+    sending: false,
+    sent: false,
+    errors: {},
+
+    show(material) {
+        this.material = material;
+        this.sent = false;
+        this.errors = {};
+        this.open = true;
+        this.$nextTick(() => this.$refs.firstField?.focus());
+    },
+
+    async submit(form) {
+        this.sending = true;
+        const result = await submitStatamicForm(form);
+        this.sending = false;
+        this.errors = result.errors;
+
+        if (result.ok) {
+            this.sent = true;
+            window.location.href = this.material.url;
+        }
+    },
+}));
+
 // Alpine.js with the plugins the templates use (x-collapse, x-intersect).
 // Started last, so Alpine expressions can use window.Motion.
 Alpine.plugin(collapse);

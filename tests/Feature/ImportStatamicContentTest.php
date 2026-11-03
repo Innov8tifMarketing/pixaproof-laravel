@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Storage;
 use JothamLec\MarketingToolkit\Redirects\Redirect;
 use Statamic\Entries\Entry as StatamicEntry;
 use Statamic\Facades\Asset;
+use Statamic\Facades\AssetContainer;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Entry;
 use Statamic\Facades\GlobalSet;
@@ -45,10 +46,10 @@ class ImportStatamicContentTest extends TestCase
         $this->assertSame(['page', 'page', 'page'], $pages->map->template()->values()->all());
 
         $this->assertSame(
-            ['hero', 'trust_strip', 'challenge', 'difference', 'layers', 'how_it_works', 'demos', 'industries', 'stats', 'comparison', 'about', 'faq', 'cta'],
+            ['hero', 'trust_strip', 'challenge', 'difference', 'layers', 'how_it_works', 'demos', 'industries', 'stats', 'comparison', 'about', 'materials', 'faq', 'contact_form'],
             array_column($pages['home']->get('blocks'), 'type'),
         );
-        $this->assertSame(['contact_hero', 'offices'], array_column($pages['contact']->get('blocks'), 'type'));
+        $this->assertSame(['contact_hero', 'contact_form', 'offices'], array_column($pages['contact']->get('blocks'), 'type'));
         $this->assertSame('home-hero-panels-1', $pages['home']->get('blocks')[0]['panels'][0]['id']);
 
         $this->assertSame('Verify Every Image. Eliminate Fraud.', $pages['home']->get('seo')['title']);
@@ -164,6 +165,39 @@ class ImportStatamicContentTest extends TestCase
         $this->artisan('pixaproof:import-content')->assertSuccessful();
 
         $this->assertSame(['edited'], array_column($this->page('home')->get('blocks'), 'id'));
+    }
+
+    public function test_it_adds_the_downloadable_materials_as_drafts_linked_from_the_industry_tabs(): void
+    {
+        $this->artisan('pixaproof:import-content')->assertSuccessful();
+
+        $materials = Entry::query()->where('collection', 'downloadable_materials')->orderBy('order')->get();
+
+        $this->assertSame(['pixaproof-brochure', 'property-inspection-use-case', 'insurance-claims-use-case'], $materials->map->slug()->all());
+        $this->assertSame([false, false, false], $materials->map->published()->all());
+        $this->assertSame('https://youtu.be/CA2nlNLwCjM', $materials[1]->get('video_url'));
+        $this->assertSame('materials', AssetContainer::find('materials')->diskHandle());
+
+        $industries = collect($this->page('home')->get('blocks'))->firstWhere('type', 'industries')['industries'];
+        $this->assertSame(
+            ['insurance' => $materials[2]->id(), 'property' => $materials[1]->id()],
+            collect($industries)->filter(fn (array $industry) => isset($industry['material']))->pluck('material', 'tab_key')->all(),
+        );
+    }
+
+    public function test_materials_alone_adds_them_to_a_live_site_and_keeps_edited_ones(): void
+    {
+        $this->artisan('pixaproof:import-content', ['--materials' => true])->assertSuccessful();
+
+        $this->assertNull(Collection::findByHandle('pages'), 'Only the materials are imported');
+        $this->assertSame(3, Entry::whereCollection('downloadable_materials')->count());
+
+        Entry::query()->where('collection', 'downloadable_materials')->where('slug', 'pixaproof-brochure')->first()->set('title', 'Our brochure')->save();
+
+        $this->artisan('pixaproof:import-content', ['--materials' => true])->assertSuccessful();
+
+        $this->assertSame(3, Entry::whereCollection('downloadable_materials')->count());
+        $this->assertSame('Our brochure', Entry::query()->where('collection', 'downloadable_materials')->where('slug', 'pixaproof-brochure')->first()->get('title'));
     }
 
     public function test_it_fails_when_a_redirect_row_is_rejected(): void

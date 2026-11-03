@@ -28,5 +28,7 @@
 
         <x-footer />
     </div>
+
+    @stack('dialogs')
 </body>
 </html>

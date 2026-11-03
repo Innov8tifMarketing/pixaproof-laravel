@@ -91,6 +91,24 @@ ending in `- import: section_options` (the `anchor`), plus `resources/views/comp
 Other templates: `layout`, `errors/404`; each `@extends('layout')` (Statamic applies layouts automatically
 only to Antlers). Navigation renders with `<s:nav:main>` / `<s:nav:footer>`.
 
+### Forms, mail and downloadable materials
+- Statamic forms, defined in git (`resources/forms`, `resources/blueprints/forms`); submissions are in the
+  database (Eloquent driver, CP → Forms). Pages post to them with Alpine (`contactForm` /
+  `materialRequest` in `resources/js/app.js`); spam protection is the `website` honeypot plus Statamic's
+  form rate limit.
+- `contact` (the `contact_form` section): `App\Listeners\SendContactEnquiry` queues the enquiry to
+  `marketing@innov8tif.com`, cc `sales@innov8tif.com` (`services.lead_mail`), and a thank-you to the visitor.
+- `downloadable_materials` collection (orderable, no pages of its own; `App\Support\DownloadableMaterials`):
+  PDFs live in the private `materials` asset container (`storage/app/materials`). A material is offered only
+  when published with a file, in the `materials` section and on an industry tab (its `material` field). The
+  `material_download` form (`App\Listeners\HandleMaterialRequest`) unlocks it for the session, emails the
+  visitor a 7-day signed link to `/downloads/{slug}`, and tells marketing.
+- Mail goes through Resend in production (`MAIL_MAILER=resend`, `RESEND_API_KEY`), as on innov8tif.com,
+  and is queued (Supervisor worker `pixaproof-prod-worker`).
+- A second asset container means Statamic no longer guesses one, so the toolkit's SEO fieldset is overridden
+  in `resources/fieldsets/vendor/marketing-toolkit/seo.yaml` (adds `container: assets`). Re-copy it from
+  vendor when the toolkit is upgraded.
+
 ### SEO, tracking, favicons, redirects
 All from the Marketing Toolkit: `<s:mt:head />` and `<s:mt:body />` in the layout; values in
 Marketing → Brand (global `seo`), Marketing → Settings (global `marketing`: tracking, consent,
@@ -109,12 +127,12 @@ animation helpers used in Alpine expressions.
 
 ## Routes
 
-`routes/web.php` has only `POST /csp-report`. Pages are Statamic entries; `/sitemap.xml`, `/robots.txt`,
+`routes/web.php` has `POST /csp-report` and `GET /downloads/{material}` (a downloadable material's file). Pages are Statamic entries; `/sitemap.xml`, `/robots.txt`,
 `/llms.txt`, favicons and the manifest come from the toolkit; `/cp` is the control panel; `/up` is
 Laravel's health check.
 
 ### Anchor Links (on homepage)
-`/#challenge` `/#solution` `/#how-it-works` `/#demos` `/#solutions` `/#about` `/#faq`
+`/#challenge` `/#solution` `/#how-it-works` `/#demos` `/#solutions` `/#about` `/#resources` `/#faq` `/#contact`
 
 ### 301 Redirects
 The toolkit's redirects (CP: Marketing → Redirects), imported from `database/seo/redirects.csv`. They

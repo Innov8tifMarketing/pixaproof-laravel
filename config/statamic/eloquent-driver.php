@@ -80,8 +80,9 @@ return [
         'model' => FormModel::class,
     ],
 
+    // Forms are defined in resources/forms (in git); what visitors send is kept in the database.
     'form_submissions' => [
-        'driver' => 'file',
+        'driver' => 'eloquent',
         'model' => SubmissionModel::class,
     ],
 
