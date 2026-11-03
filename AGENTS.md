@@ -216,7 +216,7 @@ MT_GTM_ID=                  # optional; the GA4 ID is in Marketing → Settings
 
 MAIL_MAILER=resend
 RESEND_API_KEY=             # 1Password: innov8tif-merged-laravel-secrets / RESEND_API_KEY
-MAIL_FROM_ADDRESS="team@innov8tif.com"   # innov8tif.com is verified in Resend; pixaproof.com is not
+MAIL_FROM_ADDRESS="team@innov8tif.com"   # its domain must be verified in Resend
 LEAD_MAIL_MARKETING_TO=marketing@innov8tif.com
 LEAD_MAIL_SALES_CC=sales@innov8tif.com
 ```
