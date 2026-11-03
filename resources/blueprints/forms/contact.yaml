@@ -8,6 +8,7 @@ tabs:
           -
             handle: name
             field:
+              listable: true
               type: text
               display: Name
               validate:
@@ -17,6 +18,7 @@ tabs:
           -
             handle: email
             field:
+              listable: true
               type: text
               input_type: email
               display: 'Work email'
@@ -27,6 +29,7 @@ tabs:
           -
             handle: company
             field:
+              listable: true
               type: text
               display: Company
               validate:
@@ -45,6 +48,7 @@ tabs:
           -
             handle: interest
             field:
+              listable: true
               type: select
               display: 'Interested in'
               options:

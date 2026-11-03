@@ -13,9 +13,10 @@ use Statamic\Events\FormSubmitted;
 use Statamic\Events\SubmissionCreated;
 
 /**
- * A `material_download` form request: refuses one for a material that is not on offer, then lets
- * the visitor's session download the file, mails them a link that works for a week, and tells
- * marketing. Auto-discovered (typed handle methods).
+ * A `material_download` form request: refuses one for a material that is not on offer and keeps
+ * the material's title with it (the CP lists requests by title), then lets the visitor's session
+ * download the file, mails them a link that works for a week, and tells marketing.
+ * Auto-discovered (typed handle methods).
  */
 class HandleMaterialRequest
 {
@@ -27,9 +28,13 @@ class HandleMaterialRequest
             return;
         }
 
-        if (! DownloadableMaterials::find((string) $event->submission->get('material'))) {
+        $material = DownloadableMaterials::find((string) $event->submission->get('material'));
+
+        if (! $material) {
             throw ValidationException::withMessages(['material' => 'This download is no longer available. Please reload the page.']);
         }
+
+        $event->submission->set('material_title', (string) $material->get('title'));
     }
 
     public function handleSubmissionCreated(SubmissionCreated $event): void
@@ -56,7 +61,7 @@ class HandleMaterialRequest
             $name,
             $email,
             $title,
-            ['Material' => $title, ...SubmissionDetails::of($submission, except: ['material'])],
+            ['Material' => $title, ...SubmissionDetails::of($submission, except: ['material', 'material_title'])],
         ));
 
         Mail::to($email)->queue(new MaterialDownloadMail(

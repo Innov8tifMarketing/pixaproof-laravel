@@ -68,7 +68,9 @@ class DownloadableMaterialsTest extends TestCase
 
         $this->request($material->id())->assertOk()->assertJson(['success' => true, 'submission_created' => true]);
 
-        $this->assertSame('Example Insurance', Form::find('material_download')->submissions()->sole()->get('company'));
+        $request = Form::find('material_download')->submissions()->sole();
+        $this->assertSame('Example Insurance', $request->get('company'));
+        $this->assertSame('Insurance Claims Use Case', $request->get('material_title'));
 
         $this->get(route('materials.download', 'insurance-claims-use-case'))
             ->assertOk()

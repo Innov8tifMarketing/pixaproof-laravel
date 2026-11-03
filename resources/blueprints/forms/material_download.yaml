@@ -6,11 +6,23 @@ tabs:
       -
         fields:
           -
+            handle: material_title
+            field:
+              type: text
+              display: Material
+              instructions: 'Filled in by the site from the material asked for.'
+              listable: true
+              validate:
+                - nullable
+                - string
+                - 'max:255'
+          -
             handle: material
             field:
               type: text
               display: 'Material (entry ID)'
               instructions: 'The downloadable material asked for.'
+              listable: false
               validate:
                 - required
                 - string
@@ -18,6 +30,7 @@ tabs:
           -
             handle: name
             field:
+              listable: true
               type: text
               display: Name
               validate:
@@ -27,6 +40,7 @@ tabs:
           -
             handle: email
             field:
+              listable: true
               type: text
               input_type: email
               display: 'Work email'
@@ -37,6 +51,7 @@ tabs:
           -
             handle: company
             field:
+              listable: true
               type: text
               display: Company
               validate:
