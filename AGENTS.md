@@ -171,9 +171,8 @@ all of `storage/app`) and `offsite-manifest.json`, AES-256 encrypted with this a
 password. Left out (`offsite-backup.exclude`): `data/sqlite` (the dump replaces it),
 `data/backups`, `cache/`, `storage/framework`, `storage/logs` and `storage/statamic`. Kept: every
 backup for 7 days, then one a day to 30 days, then one a month for 12 months. The bucket has
-Object Lock (30 days). Failures are mailed to `BACKUP_NOTIFY_EMAIL` (default jotham@cothink.ing),
-but production has `MAIL_MAILER=log`, so that mail goes nowhere; the Uptime Kuma push
-(`OFFSITE_BACKUP_HEARTBEAT_URL`, up or down) is the real alarm.
+Object Lock (30 days). Failures are mailed to `BACKUP_NOTIFY_EMAIL` (default jotham@cothink.ing)
+through Resend; the Uptime Kuma push (`OFFSITE_BACKUP_HEARTBEAT_URL`, up or down) is the main alarm.
 
 Secrets are in 1Password item `dig73jz7gqe6svm4llq7naj4fy` ("B2 CoThinking Client Backups Keys"):
 `archivePassword_pixaproof`, `keyID`, `applicationKey`, `heartbeat_pixaproof`. Archives made
@@ -215,9 +214,11 @@ APP_URL=https://pixaproof.com
 CACHE_STORE=database        # the toolkit needs a serialising cache (not array)
 MT_GTM_ID=                  # optional; the GA4 ID is in Marketing → Settings
 
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.example.com
-MAIL_FROM_ADDRESS=noreply@pixaproof.com
+MAIL_MAILER=resend
+RESEND_API_KEY=             # 1Password: innov8tif-merged-laravel-secrets / RESEND_API_KEY
+MAIL_FROM_ADDRESS="team@innov8tif.com"   # innov8tif.com is verified in Resend; pixaproof.com is not
+LEAD_MAIL_MARKETING_TO=marketing@innov8tif.com
+LEAD_MAIL_SALES_CC=sales@innov8tif.com
 ```
 
 ## Source Files
