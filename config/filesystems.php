@@ -49,12 +49,18 @@ return [
 
         /*
          * The downloadable materials' files (asset container `materials`). Private: they
-         * are served only by the download route, to someone who filled in the form.
+         * are served only by the download route, to someone who filled in the form. Group
+         * permissions, not Laravel's 0700/0600 for private files: those zero the ACL mask,
+         * and the backup (run as deployer) could not read what PHP-FPM uploaded.
          */
         'materials' => [
             'driver' => 'local',
             'root' => storage_path('app/materials'),
             'visibility' => 'private',
+            'permissions' => [
+                'file' => ['public' => 0664, 'private' => 0660],
+                'dir' => ['public' => 0775, 'private' => 0770],
+            ],
             'throw' => false,
             'report' => false,
         ],

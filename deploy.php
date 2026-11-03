@@ -72,6 +72,8 @@ add('writable_dirs', [
     'data/media',
     // Statamic's CP upload temp dir (statamic/file-uploads); the recipe only covers storage/app.
     'storage/app/private',
+    // The downloadable materials' PDFs (CP uploads, private disk `materials`).
+    'storage/app/materials',
 ]);
 
 set('storage_links', [
